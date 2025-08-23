@@ -1,5 +1,12 @@
-import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { MatCard, MatCardTitle, MatCardContent } from '@angular/material/card';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -13,50 +20,54 @@ import { IRegisterUserRequest, IRegisterUserResponse } from '../../../model/regi
 
 @Component({
   selector: 'home-register-user',
-  imports: [MatCard, MatCardTitle, MatCardContent, MatFormField, MatInput, MatError, MatButtonModule, ReactiveFormsModule],
+  imports: [
+    MatCard,
+    MatCardTitle,
+    MatCardContent,
+    MatFormField,
+    MatInput,
+    MatError,
+    MatButtonModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './register-user.html',
-  styleUrl: './register-user.scss'
+  styleUrl: './register-user.scss',
 })
-export class RegisterUser {
-
+export class RegisterUser implements OnInit {
   constructor(
     private readonly router: Router,
-    private readonly registrationService: RegistrationService
+    private readonly registrationService: RegistrationService,
   ) {}
 
+  form!: FormGroup;
+
+  ngOnInit(): void {
+    this.form = new FormGroup(
+      {
+        firstName: new FormControl('', [Validators.required]),
+        lastName: new FormControl('', [Validators.required]),
+        username: new FormControl('', [Validators.required]),
+        password: new FormControl('', [Validators.required]),
+        confirmPassword: new FormControl('', [Validators.required]),
+        email: new FormControl('', [Validators.required, Validators.email]),
+      },
+      [this.passwordConfirmationValidator()],
+    );
+  }
+
   error!: string;
-  
-  form: FormGroup = new FormGroup({
-    firstName: new FormControl(''),
-    lastName: new FormControl(''),
-    username: new FormControl(''),
-    password: new FormControl(''),
-    confirmPassword: new FormControl(''),
-    email: new FormControl(''),
-  });
 
   register() {
-
-    // Reset the error value when the 'Register' button is clicked.
-    this.error = '';
+    this.form.markAllAsTouched();
 
     if (this.form.valid) {
       const firstName = this.form.get('firstName')?.value || '';
       const lastName = this.form.get('lastName')?.value || '';
       const username = this.form.get('username')?.value || '';
       const password = this.form.get('password')?.value || '';
-      const confirmPassword = this.form.get('confirmPassword')?.value || '';
-      const email = this.form.get('email')?.value || ''
+      const email = this.form.get('email')?.value || '';
 
-
-      // Password and confirm password values must match before registering the user.
-      if (password === confirmPassword) {
-        this.registerUserAction(firstName, lastName, username, password, email);
-      } else {
-        this.error = 'Password and password confirmation must match.';
-      }
-    } else {
-      this.error = 'There was an error logging in.';
+      this.registerUserAction(firstName, lastName, username, password, email);
     }
   }
 
@@ -65,15 +76,20 @@ export class RegisterUser {
     this.router.navigateByUrl(LOGIN_ROUTE);
   }
 
-  registerUserAction(firstNameValue: string, lastNameValue: string, usernameValue: string, passwordValue: string, emailValue: string) {
-
+  registerUserAction(
+    firstNameValue: string,
+    lastNameValue: string,
+    usernameValue: string,
+    passwordValue: string,
+    emailValue: string,
+  ) {
     const registerUserRequest: IRegisterUserRequest = {
       firstName: firstNameValue,
       lastName: lastNameValue,
       username: usernameValue,
       password: passwordValue,
-      email: emailValue
-    }
+      email: emailValue,
+    };
 
     this.registrationService.registerUser(registerUserRequest).subscribe({
       next: (response: IRegisterUserResponse) => {
@@ -85,8 +101,22 @@ export class RegisterUser {
       },
       error: () => {
         this.error = 'There was an error registering the user.';
-      }
+      },
     });
   }
 
+  passwordConfirmationValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const passwordField = control.get('password');
+      const passwordConfirmationField = control.get('confirmPassword');
+
+      if (passwordField?.touched && passwordConfirmationField?.touched) {
+        if (passwordField?.value !== passwordConfirmationField?.value) {
+          return { passwordConfirmationError: true };
+        }
+      }
+
+      return null;
+    };
+  }
 }

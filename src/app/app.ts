@@ -7,9 +7,6 @@ import { HomeFooter } from './footer/home-footer';
   selector: 'app-root',
   imports: [RouterOutlet, HomeHeader, HomeFooter],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
-export class App {
-
-
-}
+export class App {}

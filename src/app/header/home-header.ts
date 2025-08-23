@@ -11,10 +11,9 @@ import { Subscription } from 'rxjs';
   selector: 'home-header',
   imports: [MatButton],
   templateUrl: './home-header.html',
-  styleUrl: './home-header.scss'
+  styleUrl: './home-header.scss',
 })
 export class HomeHeader implements OnInit, OnDestroy {
-  
   subscriptions: Subscription[] = [];
 
   loginStatus = false;
@@ -22,21 +21,21 @@ export class HomeHeader implements OnInit, OnDestroy {
   constructor(
     private readonly sessionStorageService: SessionStorageService,
     private readonly router: Router,
-    private readonly loginService: LoginService
+    private readonly loginService: LoginService,
   ) {}
-  
+
   ngOnInit(): void {
     this.subscriptions.push(
       this.loginService.getLoginStatus().subscribe({
         next: (isLoggedIn: boolean) => {
           this.loginStatus = isLoggedIn;
-        }
-      })
+        },
+      }),
     );
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => {
+    this.subscriptions.forEach((subscription) => {
       subscription.unsubscribe();
     });
   }
@@ -46,5 +45,4 @@ export class HomeHeader implements OnInit, OnDestroy {
     this.sessionStorageService.removeItem(JWT_TOKEN);
     this.router.navigateByUrl(APP_ROOT_ROUTE);
   }
-
 }

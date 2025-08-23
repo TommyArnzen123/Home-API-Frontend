@@ -1,21 +1,20 @@
 .header {
+  width: 100%;
 
-    width: 100%;
+  .application-title {
+    color: white;
+    font-size: 30px;
+    padding-top: 20px;
+    float: left;
+  }
 
-    .application-title {
-        color: white;
-        font-size: 30px;
-        padding-top: 20px;
-        float: left;
+  .button {
+    float: right;
+    padding-top: 10px;
+    padding-right: 10px;
+
+    .button-color {
+      color: white !important;
     }
-
-    .button {
-        float: right;
-        padding-top: 10px;
-        padding-right: 10px;
-
-        .button-color {
-            color: white !important;
-        }
-    }
+  }
 }

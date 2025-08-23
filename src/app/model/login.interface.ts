@@ -1,8 +1,8 @@
 export interface ILoginRequest {
-    username: string;
-    password: string;
+  username: string;
+  password: string;
 }
 
 export interface ILoginResponse {
-    jwtToken: string;
+  jwtToken: string;
 }

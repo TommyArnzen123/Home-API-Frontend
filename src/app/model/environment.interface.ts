@@ -1,3 +1,3 @@
 export interface IEnvironment {
-    backendUrl: string;
+  backendUrl: string;
 }
