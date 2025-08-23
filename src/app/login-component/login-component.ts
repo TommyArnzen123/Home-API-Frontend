@@ -63,6 +63,7 @@ export class LoginComponent {
     this.loginService.login(loginRequest).subscribe({
       next: (response: ILoginResponse) => {
         if (response) {
+          this.loginService.updateLoginStatus(true);
           this.sessionStorageService.setItem(JWT_TOKEN, response.jwtToken);
           this.router.navigateByUrl(APP_ROOT_ROUTE);
         }
