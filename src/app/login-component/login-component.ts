@@ -7,11 +7,11 @@ import { MatError } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginService } from '../services/login.service';
-import { ILoginResponse } from '../model/login.interface';
+import { ILoginRequest, ILoginResponse } from '../model/login.interface';
 import { SessionStorageService } from '../services/session-storage.service';
 import { JWT_TOKEN } from '../constants/session-storage-constants';
 import { Router } from '@angular/router';
-import { APP_ROOT_ROUTE } from '../constants/navigation-constants';
+import { APP_ROOT_ROUTE, REGISTER_USER_ROUTE } from '../constants/navigation-constants';
 
 @Component({
   selector: 'home-login-component',
@@ -35,6 +35,10 @@ export class LoginComponent {
   });
 
   login() {
+
+    // Reset the error value when the 'Login' buttton is clicked.
+    this.error = '';
+
     if (this.form.valid) {
       const username = this.form.get('username')?.value;
       const password = this.form.get('password')?.value;
@@ -45,11 +49,18 @@ export class LoginComponent {
   }
 
   register() {
-    console.log('Register New User');
+    // Route the user to the user registration component.
+    this.router.navigateByUrl(REGISTER_USER_ROUTE);
   }
 
   loginAction(usernameValue: string, passwordValue: string) {
-    this.loginService.login({username: usernameValue, password: passwordValue}).subscribe({
+
+    const loginRequest: ILoginRequest = {
+      username: usernameValue,
+      password: passwordValue,
+    }
+
+    this.loginService.login(loginRequest).subscribe({
       next: (response: ILoginResponse) => {
         if (response) {
           this.sessionStorageService.setItem(JWT_TOKEN, response.jwtToken);
@@ -57,7 +68,7 @@ export class LoginComponent {
         }
       },
       error: () => {
-        console.log("There was an error in the network call.");
+        this.error = 'There was an error logging in.';
       }
     });
   }

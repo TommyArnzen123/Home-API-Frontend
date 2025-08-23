@@ -15,13 +15,14 @@
             @if(error) {
                 <mat-error>{{error}}</mat-error>
             }
+            <br />
         </form>
 
         <div class="left-button">
-            <button (click)="login()" matButton>Login</button>
+            <button (click)="register()" matButton>Register</button>
         </div>
         <div class="right-button">
-            <button (click)="register()" matButton>Register</button>
+            <button (click)="login()" matButton>Login</button>
         </div>
     </mat-card-content>
 </mat-card>
