@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SessionStorageService } from '../services/session-storage.service';
-import { JWT_TOKEN } from '../constants/session-storage-constants';
+import { JWT_TOKEN, USER_ID } from '../constants/session-storage-constants';
 import { Router } from '@angular/router';
 import { APP_ROOT_ROUTE } from '../constants/navigation-constants';
 import { MatButton } from '@angular/material/button';
@@ -42,6 +42,7 @@ export class HomeHeader implements OnInit, OnDestroy {
 
   logout() {
     this.loginService.updateLoginStatus(false);
+    this.sessionStorageService.removeItem(USER_ID);
     this.sessionStorageService.removeItem(JWT_TOKEN);
     this.router.navigateByUrl(APP_ROOT_ROUTE);
   }

@@ -4,5 +4,8 @@ export interface ILoginRequest {
 }
 
 export interface ILoginResponse {
+  userId: string;
+  firstName: string;
+  username: string;
   jwtToken: string;
 }

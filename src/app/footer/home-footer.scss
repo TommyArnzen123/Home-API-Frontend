@@ -1,6 +1,11 @@
 .footer {
-  // background-color: red;
   padding-top: 16px;
   padding-bottom: 16px;
   height: 50px;
+
+  .copyright {
+    float: right;
+    padding-top: 15px;
+    padding-right: 10px;
+  }
 }

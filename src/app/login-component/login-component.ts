@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatCard, MatCardTitle, MatCardContent } from '@angular/material/card';
 import { MatFormField } from '@angular/material/form-field';
@@ -8,10 +8,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginService } from '../services/login.service';
 import { ILoginRequest, ILoginResponse } from '../model/login.interface';
-import { SessionStorageService } from '../services/session-storage.service';
-import { JWT_TOKEN } from '../constants/session-storage-constants';
 import { Router } from '@angular/router';
 import { APP_ROOT_ROUTE, REGISTER_USER_ROUTE } from '../constants/navigation-constants';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'home-login-component',
@@ -28,14 +27,18 @@ import { APP_ROOT_ROUTE, REGISTER_USER_ROUTE } from '../constants/navigation-con
   templateUrl: './login-component.html',
   styleUrl: './login-component.scss',
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
+  subscriptions: Subscription[] = [];
+  error!: string;
+
   constructor(
     private readonly loginService: LoginService,
-    private readonly sessionStorageService: SessionStorageService,
     private readonly router: Router,
   ) {}
 
-  error!: string;
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
 
   form: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required]),
@@ -67,18 +70,18 @@ export class LoginComponent {
     };
 
     if (this.form.valid) {
-      this.loginService.login(loginRequest).subscribe({
-        next: (response: ILoginResponse) => {
-          if (response) {
-            this.loginService.updateLoginStatus(true);
-            this.sessionStorageService.setItem(JWT_TOKEN, response.jwtToken);
-            this.router.navigateByUrl(APP_ROOT_ROUTE);
-          }
-        },
-        error: () => {
-          this.error = 'There was an error logging in.';
-        },
-      });
+      this.subscriptions.push(
+        this.loginService.login(loginRequest).subscribe({
+          next: (response: ILoginResponse) => {
+            if (response) {
+              this.router.navigateByUrl(APP_ROOT_ROUTE);
+            }
+          },
+          error: () => {
+            this.error = 'There was an error logging in.';
+          },
+        }),
+      );
     }
   }
 }

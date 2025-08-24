@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 import { LOGIN_ROUTE } from '../../../constants/navigation-constants';
 import { RegistrationService } from '../../../services/registration.service';
 import { IRegisterUserRequest, IRegisterUserResponse } from '../../../model/registration.interface';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'home-register-user',
@@ -33,13 +34,15 @@ import { IRegisterUserRequest, IRegisterUserResponse } from '../../../model/regi
   templateUrl: './register-user.html',
   styleUrl: './register-user.scss',
 })
-export class RegisterUser implements OnInit {
+export class RegisterUser implements OnInit, OnDestroy {
   constructor(
     private readonly router: Router,
     private readonly registrationService: RegistrationService,
   ) {}
 
+  subscriptions: Subscription[] = [];
   form!: FormGroup;
+  error!: string;
 
   ngOnInit(): void {
     this.form = new FormGroup(
@@ -55,7 +58,11 @@ export class RegisterUser implements OnInit {
     );
   }
 
-  error!: string;
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
+  }
 
   register() {
     this.form.markAllAsTouched();
@@ -91,18 +98,20 @@ export class RegisterUser implements OnInit {
       email: emailValue,
     };
 
-    this.registrationService.registerUser(registerUserRequest).subscribe({
-      next: (response: IRegisterUserResponse) => {
-        if (response) {
-          // The user has been added to the application.
-          // Route the user to the login component.
-          this.router.navigateByUrl(LOGIN_ROUTE);
-        }
-      },
-      error: () => {
-        this.error = 'There was an error registering the user.';
-      },
-    });
+    this.subscriptions.push(
+      this.registrationService.registerUser(registerUserRequest).subscribe({
+        next: (response: IRegisterUserResponse) => {
+          if (response) {
+            // The user has been added to the application.
+            // Route the user to the login component.
+            this.router.navigateByUrl(LOGIN_ROUTE);
+          }
+        },
+        error: () => {
+          this.error = 'There was an error registering the user.';
+        },
+      }),
+    );
   }
 
   passwordConfirmationValidator(): ValidatorFn {
