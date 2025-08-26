@@ -1,1 +1,22 @@
 <h1>{{ greetingMessage }}</h1>
+
+<mat-grid-list cols="4" rowHeight="100px">
+  <mat-grid-tile
+    [colspan]="tiles[0].cols"
+    [rowspan]="tiles[0].rows"
+    [style.background]="tiles[0].color"
+    ><home-item-totals [totalHomes]="3" [totalLocations]="2" [totalDevices]="10"
+  /></mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="tiles[1].cols"
+    [rowspan]="tiles[1].rows"
+    [style.background]="tiles[1].color"
+    >{{ tiles[1].text }}</mat-grid-tile
+  >
+  <mat-grid-tile
+    [colspan]="tiles[2].cols"
+    [rowspan]="tiles[2].rows"
+    [style.background]="tiles[2].color"
+    >{{ tiles[2].text }}</mat-grid-tile
+  >
+</mat-grid-list>

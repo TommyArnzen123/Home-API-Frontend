@@ -2,10 +2,21 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoginService } from '../services/login.service';
 import { Subscription } from 'rxjs';
 import { ILoginResponse } from '../model/login.interface';
+import { GetInfoService } from '../services/get-info.service';
+import { IHomeScreenInfoRequest, IHomeScreenInfoResponse } from '../model/home-screen.interface';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { ItemTotals } from './item-totals/item-totals';
+
+export interface Tile {
+  color: string;
+  cols: number;
+  rows: number;
+  text: string;
+}
 
 @Component({
-  selector: 'home-home-page',
-  imports: [],
+  selector: 'home-page',
+  imports: [ItemTotals, MatGridListModule],
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss',
 })
@@ -14,19 +25,39 @@ export class HomePage implements OnInit, OnDestroy {
   greetingMessage!: string;
   userFirstName!: string;
 
-  constructor(private readonly loginService: LoginService) {}
+  tiles: Tile[] = [
+    { text: 'One', cols: 3, rows: 2, color: 'lightblue' },
+    { text: 'Two', cols: 1, rows: 4, color: 'lightgreen' },
+    { text: 'Three', cols: 3, rows: 2, color: 'lightpink' },
+  ];
+
+  constructor(
+    private readonly loginService: LoginService,
+    private readonly getInfoService: GetInfoService,
+  ) {}
 
   ngOnInit(): void {
-    // Get the user's first name.
     this.subscriptions.push(
       this.loginService.getUserLoginInfo().subscribe({
-        next: (loginInfo: ILoginResponse) => {
-          this.userFirstName = this.formatName(loginInfo.firstName);
+        next: (userInfo: ILoginResponse) => {
+          this.userFirstName = this.formatName(userInfo.firstName);
 
           // Get the current hour and set the greeting message.
           const currentDate = new Date();
           const currentHour = currentDate.getHours();
           this.greetingMessage = this.setGreetingMessage(currentHour);
+
+          const getHomeScreenInfoRequest: IHomeScreenInfoRequest = {
+            userId: userInfo.userId,
+            jwtToken: userInfo.jwtToken,
+          };
+
+          // Get the home screen info.
+          this.getInfoService.getHomeScreenInfo(getHomeScreenInfoRequest).subscribe({
+            next: (response: IHomeScreenInfoResponse) => {
+              console.log(response);
+            },
+          });
         },
       }),
     );
@@ -45,7 +76,7 @@ export class HomePage implements OnInit, OnDestroy {
   setGreetingMessage(currentHour: number): string {
     if (currentHour >= 0 && currentHour <= 11) {
       return 'Good Morning ' + this.userFirstName + '!';
-    } else if (currentHour >= 12 && currentHour <= 4) {
+    } else if (currentHour >= 12 && currentHour <= 16) {
       return 'Good Afternoon ' + this.userFirstName + '!';
     } else {
       return 'Good Evening ' + this.userFirstName + '!';
