@@ -8,6 +8,6 @@ export interface IHomeScreenInfoRequest {
 export interface IHomeScreenInfoResponse {
   userId: string;
   homes: IHome[];
-  numLocations: string;
-  numDevices: string;
+  numLocations: number;
+  numDevices: number;
 }

@@ -25,6 +25,10 @@ export class HomePage implements OnInit, OnDestroy {
   greetingMessage!: string;
   userFirstName!: string;
 
+  totalHomes = 0;
+  totalLocations = 0;
+  totalDevices = 0;
+
   tiles: Tile[] = [
     { text: 'One', cols: 3, rows: 2, color: 'lightblue' },
     { text: 'Two', cols: 1, rows: 4, color: 'lightgreen' },
@@ -55,7 +59,9 @@ export class HomePage implements OnInit, OnDestroy {
           // Get the home screen info.
           this.getInfoService.getHomeScreenInfo(getHomeScreenInfoRequest).subscribe({
             next: (response: IHomeScreenInfoResponse) => {
-              console.log(response);
+              this.totalHomes = response.homes.length;
+              this.totalLocations = response.numLocations;
+              this.totalDevices = response.numDevices;
             },
           });
         },
