@@ -1,11 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { SessionStorageService } from '../services/session-storage.service';
-import { JWT_TOKEN, USER_ID } from '../constants/session-storage-constants';
-import { Router } from '@angular/router';
-import { APP_ROOT_ROUTE } from '../constants/navigation-constants';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { LoginService } from '../services/login.service';
 import { Subscription } from 'rxjs';
+import { ILoginResponse } from '../model/login.interface';
 
 @Component({
   selector: 'home-header',
@@ -18,32 +15,27 @@ export class HomeHeader implements OnInit, OnDestroy {
 
   loginStatus = false;
 
-  constructor(
-    private readonly sessionStorageService: SessionStorageService,
-    private readonly router: Router,
-    private readonly loginService: LoginService,
-  ) {}
+  constructor(private readonly loginService: LoginService) {}
 
   ngOnInit(): void {
     this.subscriptions.push(
-      this.loginService.getLoginStatus().subscribe({
-        next: (isLoggedIn: boolean) => {
-          this.loginStatus = isLoggedIn;
+      this.loginService.getUserLoginInfo().subscribe({
+        next: (loginInfo: ILoginResponse) => {
+          if (loginInfo.jwtToken) {
+            this.loginStatus = true;
+          } else {
+            this.loginStatus = false;
+          }
         },
       }),
     );
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach((subscription) => {
-      subscription.unsubscribe();
-    });
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   logout() {
-    this.loginService.updateLoginStatus(false);
-    this.sessionStorageService.removeItem(USER_ID);
-    this.sessionStorageService.removeItem(JWT_TOKEN);
-    this.router.navigateByUrl(APP_ROOT_ROUTE);
+    this.loginService.logout();
   }
 }

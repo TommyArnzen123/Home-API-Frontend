@@ -5,19 +5,19 @@ import { ILoginRequest, ILoginResponse } from '../model/login.interface';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { SessionStorageService } from './session-storage.service';
 import { JWT_TOKEN, USER_ID } from '../constants/session-storage-constants';
+import { Router } from '@angular/router';
+import { APP_ROOT_ROUTE } from '../constants/navigation-constants';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
-  private _loginBehaviorSubject = new BehaviorSubject<boolean>(false);
   private _loginResponseInfoSubject = new BehaviorSubject<ILoginResponse>({
     userId: '',
     username: '',
     firstName: '',
     jwtToken: '',
   });
-  private loginStatus = this._loginBehaviorSubject.asObservable();
   private userLoginInfo = this._loginResponseInfoSubject.asObservable();
   private loginUrl = '/login';
 
@@ -25,18 +25,11 @@ export class LoginService {
     private readonly httpClient: HttpClient,
     private readonly environmentService: EnvironmentService,
     private readonly sessionStorageService: SessionStorageService,
+    private readonly router: Router,
   ) {}
-
-  getLoginStatus(): Observable<boolean> {
-    return this.loginStatus;
-  }
 
   getUserLoginInfo(): Observable<ILoginResponse> {
     return this.userLoginInfo;
-  }
-
-  updateLoginStatus(isLoggedIn: boolean): void {
-    this._loginBehaviorSubject.next(isLoggedIn);
   }
 
   updateUserLoginInfo(userInfo: ILoginResponse): void {
@@ -53,9 +46,22 @@ export class LoginService {
         tap((response) => {
           this.sessionStorageService.setItem(USER_ID, response.userId);
           this.sessionStorageService.setItem(JWT_TOKEN, response.jwtToken);
-          this.updateLoginStatus(true);
           this.updateUserLoginInfo(response);
         }),
       );
+  }
+
+  logout(): void {
+    this.sessionStorageService.removeItem(USER_ID);
+    this.sessionStorageService.removeItem(JWT_TOKEN);
+
+    const emptyUserLoginInfo: ILoginResponse = {
+      userId: '',
+      firstName: '',
+      username: '',
+      jwtToken: '',
+    };
+    this.updateUserLoginInfo(emptyUserLoginInfo);
+    this.router.navigateByUrl(APP_ROOT_ROUTE);
   }
 }

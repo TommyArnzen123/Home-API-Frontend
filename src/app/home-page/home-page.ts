@@ -63,6 +63,12 @@ export class HomePage implements OnInit, OnDestroy {
               this.totalLocations = response.numLocations;
               this.totalDevices = response.numDevices;
             },
+            error: () => {
+              // If there is an error getting the information on the home screen, log the user out.
+              // They will not be able to use the application without the information returned from the
+              // get home screen info endpoint.
+              this.loginService.logout();
+            },
           });
         },
       }),
