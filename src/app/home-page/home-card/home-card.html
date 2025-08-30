@@ -1,0 +1,10 @@
+<mat-card class="home-card" appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>{{ homeName }}</mat-card-title>
+  </mat-card-header>
+  <img mat-card-image src="home-icon.png" alt="Photo of a Shiba Inu" />
+  <mat-card-actions>
+    <button matButton (click)="viewHome()">View</button>
+    <button matButton (click)="deleteHome()">Delete</button>
+  </mat-card-actions>
+</mat-card>
