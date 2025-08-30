@@ -12,14 +12,25 @@
   /></mat-grid-tile>
   <mat-grid-tile
     [colspan]="tiles[1].cols"
-    [rowspan]="tiles[1].rows"
+    [rowspan]="10"
     [style.background]="tiles[1].color"
-    >{{ tiles[1].text }}</mat-grid-tile
+    style="display: flex; flex-direction: column"
   >
+    <div style="height: 98%; width: 95%; overflow: scroll">
+      <h1>Your Homes</h1>
+      @if (homeInfo.length > 0) {
+        @for (home of homeInfo; track home.homeId) {
+          <div style="margin-bottom: 10px">
+            <home-card [homeId]="home.homeId" [homeName]="home.homeName" />
+          </div>
+        }
+      }
+    </div>
+  </mat-grid-tile>
   <mat-grid-tile
     [colspan]="tiles[2].cols"
     [rowspan]="tiles[2].rows"
     [style.background]="tiles[2].color"
-    >{{ tiles[2].text }}</mat-grid-tile
+    >Register Buttons Go Here.</mat-grid-tile
   >
 </mat-grid-list>

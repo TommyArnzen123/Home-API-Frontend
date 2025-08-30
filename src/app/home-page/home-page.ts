@@ -6,6 +6,8 @@ import { GetInfoService } from '../services/get-info.service';
 import { IHomeScreenInfoRequest, IHomeScreenInfoResponse } from '../model/home-screen.interface';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ItemTotals } from './item-totals/item-totals';
+import { HomeCard } from './home-card/home-card';
+import { IHome } from '../model/get-info.interface';
 
 export interface Tile {
   color: string;
@@ -16,7 +18,7 @@ export interface Tile {
 
 @Component({
   selector: 'home-page',
-  imports: [ItemTotals, MatGridListModule],
+  imports: [ItemTotals, MatGridListModule, HomeCard],
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss',
 })
@@ -24,6 +26,7 @@ export class HomePage implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   greetingMessage!: string;
   userFirstName!: string;
+  homeInfo: IHome[] = [];
 
   totalHomes = 0;
   totalLocations = 0;
@@ -32,7 +35,7 @@ export class HomePage implements OnInit, OnDestroy {
   tiles: Tile[] = [
     { text: 'One', cols: 3, rows: 2, color: 'lightblue' },
     { text: 'Two', cols: 1, rows: 4, color: 'lightgreen' },
-    { text: 'Three', cols: 3, rows: 2, color: 'lightpink' },
+    { text: 'Three', cols: 3, rows: 8, color: 'lightpink' },
   ];
 
   constructor(
@@ -62,6 +65,7 @@ export class HomePage implements OnInit, OnDestroy {
               this.totalHomes = response.homes.length;
               this.totalLocations = response.numLocations;
               this.totalDevices = response.numDevices;
+              this.homeInfo = response.homes;
             },
             error: () => {
               // If there is an error getting the information on the home screen, log the user out.
