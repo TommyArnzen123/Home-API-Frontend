@@ -6,6 +6,7 @@ import { LoginService } from './login.service';
 import { Subscription } from 'rxjs';
 import { ILoginResponse } from '../model/login.interface';
 import { IHomeScreenInfoRequest, IHomeScreenInfoResponse } from '../model/home-screen.interface';
+import { IDeviceInformationCurrentDay, ILocation } from '../model/get-info.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,8 @@ import { IHomeScreenInfoRequest, IHomeScreenInfoResponse } from '../model/home-s
 export class GetInfoService {
   getInfoRoot = '/getInfo';
   getHomeScreenInfoPath = '/homeScreenInfo';
+  getLocationsByHomeIdPath = '/locationsByHome';
+  getInformationByDeviceCurrentDay = '/informationByDeviceCurrentDay';
 
   constructor(
     private readonly httpClient: HttpClient,
@@ -28,6 +31,26 @@ export class GetInfoService {
         '/' +
         request.userId,
       { headers: this.generateHeaderWithBearerToken(request.jwtToken) },
+    );
+  }
+
+  getLocationsByHomeId(homeId: string) {
+    return this.httpClient.get<ILocation[]>(
+      this.environmentService.getEnvironment().backendUrl +
+        this.getInfoRoot +
+        this.getLocationsByHomeIdPath +
+        '/' +
+        homeId,
+    );
+  }
+
+  getViewDeviceInformation(deviceId: string) {
+    return this.httpClient.get<IDeviceInformationCurrentDay>(
+      this.environmentService.getEnvironment().backendUrl +
+        this.getInfoRoot +
+        this.getInformationByDeviceCurrentDay +
+        '/' +
+        deviceId,
     );
   }
 

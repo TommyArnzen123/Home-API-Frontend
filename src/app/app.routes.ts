@@ -6,9 +6,13 @@ import {
   HOME_PAGE_ROUTE,
   LOGIN_ROUTE,
   REGISTER_USER_ROUTE,
+  VIEW_DEVICE,
+  VIEW_HOME,
 } from './constants/navigation-constants';
 import { HomePage } from './home-page/home-page';
 import { RegisterUser } from './registration/user/register-user/register-user';
+import { ViewHome } from './home/view-home/view-home';
+import { ViewDevice } from './device/view-device/view-device';
 
 export const routes: Routes = [
   {
@@ -26,5 +30,13 @@ export const routes: Routes = [
   {
     path: REGISTER_USER_ROUTE,
     component: RegisterUser,
+  },
+  {
+    path: VIEW_HOME + '/:homeId',
+    component: ViewHome,
+  },
+  {
+    path: VIEW_DEVICE + '/:deviceId',
+    component: ViewDevice,
   },
 ];

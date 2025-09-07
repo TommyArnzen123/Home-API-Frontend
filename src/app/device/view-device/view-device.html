@@ -1,0 +1,64 @@
+<div
+  style="
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+  "
+>
+  <div style="float: left">
+    @if (deviceInformation && deviceInformation.deviceName) {
+      <h1>{{ deviceInformation.deviceName }}</h1>
+    } @else {
+      <h1>Device Name Unavailable</h1>
+    }
+  </div>
+
+  <div style="float: right">
+    <button (click)="deleteDeviceButtonAction()">Delete Device</button>
+  </div>
+</div>
+
+<mat-grid-list cols="4" rowHeight="100px">
+  <mat-grid-tile [colspan]="4" [rowspan]="2" [style.background]="'lightblue'">
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      "
+    >
+      <h1>Current Temperature</h1>
+      @if (deviceInformation && deviceInformation.mostRecentTemperatureAvailable) {
+        <div style="font-size: 50px">{{ deviceInformation.mostRecentTemperature }}</div>
+      } @else {
+        <div>Current Temperature Information Not Available</div>
+      }
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="4" [rowspan]="2" [style.background]="'lightgreen'">
+    <div style="display: flex; flex-direction: column; justify-content: space-between">
+      <h1>Temperatures by Hour (Today)</h1>
+      <div style="display: flex; flex-direction: row; justify-content: space-between">
+        @if (
+          deviceInformation && deviceInformation.averageTemperaturesByHourCurrentDay.length > 0
+        ) {
+          @for (
+            tempByHour of deviceInformation.averageTemperaturesByHourCurrentDay;
+            track tempByHour.hour
+          ) {
+            <div style="margin-bottom: 10px">
+              <display-temp-by-hour
+                [hour]="tempByHour.hour"
+                [temperature]="tempByHour.averageTemperature"
+              />
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>
