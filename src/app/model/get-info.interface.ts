@@ -29,3 +29,17 @@ export interface ITemperature {
   deviceId: number;
   temperature: number;
 }
+
+export interface IAverageTemperatureByHour {
+  hour: number;
+  averageTemperature: number;
+}
+
+export interface IDeviceInformationCurrentDay {
+  deviceId: number;
+  locationId: number;
+  deviceName: string;
+  mostRecentTemperature: number;
+  mostRecentTemperatureAvailable: boolean;
+  averageTemperaturesByHourCurrentDay: IAverageTemperatureByHour[];
+}
