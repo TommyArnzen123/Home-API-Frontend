@@ -36,7 +36,7 @@
         <div style="font-size: 50px">{{ deviceInformation.mostRecentTemperature }}</div>
         @if (currentTemperatureDate) {
           <div style="font-size: 25px; margin-top: 20px">
-            {{ currentTemperatureDate | date: 'MM/dd/yyyy HH:mm a' }}
+            {{ currentTemperatureDate | date: 'MM/dd/yyyy h:mm a' }}
           </div>
         }
       } @else {
