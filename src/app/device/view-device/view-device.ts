@@ -6,6 +6,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { DisplayTempByHour } from './display-temp-by-hour/display-temp-by-hour';
 import { MatButton } from '@angular/material/button';
 import { DatePipe } from '@angular/common';
+import { ModalService } from '../../services/modal.service';
+import { IModal } from '../../model/modal.interface';
 
 @Component({
   selector: 'view-device',
@@ -21,6 +23,7 @@ export class ViewDevice implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly getInfoService: GetInfoService,
+    private readonly modalService: ModalService,
   ) {
     this.deviceId = this.route.snapshot.paramMap.get('deviceId');
   }
@@ -40,5 +43,10 @@ export class ViewDevice implements OnInit {
 
   deleteDeviceButtonAction(): void {
     console.log('Delete device button clicked. - ' + this.deviceId);
+    const modalInfo: IModal = {
+      title: 'Title',
+      content: 'Content',
+    };
+    this.modalService.showModalElement(modalInfo);
   }
 }
