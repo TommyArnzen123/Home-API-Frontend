@@ -8,6 +8,8 @@ import { MatButton } from '@angular/material/button';
 import { DatePipe } from '@angular/common';
 import { ModalService } from '../../services/modal.service';
 import { IModal } from '../../model/modal.interface';
+import { DeleteService } from '../../services/delete.service';
+import { DELETE_DEVICE_BY_ID_ERROR } from '../../error/error-constants';
 
 @Component({
   selector: 'view-device',
@@ -23,6 +25,7 @@ export class ViewDevice implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly getInfoService: GetInfoService,
+    private readonly deleteService: DeleteService,
     private readonly modalService: ModalService,
   ) {
     this.deviceId = this.route.snapshot.paramMap.get('deviceId');
@@ -42,11 +45,18 @@ export class ViewDevice implements OnInit {
   }
 
   deleteDeviceButtonAction(): void {
-    console.log('Delete device button clicked. - ' + this.deviceId);
-    const modalInfo: IModal = {
-      title: 'Title',
-      content: 'Content',
-    };
-    this.modalService.showModalElement(modalInfo);
+    if (this.deviceId) {
+      this.deleteService.deleteDeviceById(this.deviceId).subscribe({
+        next: (result) => {
+          console.log(result);
+
+          // Route the user to the 'View Location' screen for the location the device was associated with.
+        },
+        error: (error) => {
+          console.log(error);
+          this.modalService.showModalElement(DELETE_DEVICE_BY_ID_ERROR);
+        },
+      });
+    }
   }
 }
