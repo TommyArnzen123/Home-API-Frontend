@@ -41,5 +41,6 @@ export interface IDeviceInformationCurrentDay {
   deviceName: string;
   mostRecentTemperature: number;
   mostRecentTemperatureAvailable: boolean;
+  mostRecentTemperatureAvailableDateTime: string;
   averageTemperaturesByHourCurrentDay: IAverageTemperatureByHour[];
 }

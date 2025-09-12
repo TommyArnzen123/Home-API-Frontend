@@ -16,7 +16,7 @@
   </div>
 
   <div style="float: right">
-    <button (click)="deleteDeviceButtonAction()">Delete Device</button>
+    <button matButton="outlined" (click)="deleteDeviceButtonAction()">Delete Device</button>
   </div>
 </div>
 
@@ -34,6 +34,11 @@
       <h1>Current Temperature</h1>
       @if (deviceInformation && deviceInformation.mostRecentTemperatureAvailable) {
         <div style="font-size: 50px">{{ deviceInformation.mostRecentTemperature }}</div>
+        @if (currentTemperatureDate) {
+          <div style="font-size: 25px; margin-top: 20px">
+            {{ currentTemperatureDate | date: 'MM/dd/yyyy HH:mm a' }}
+          </div>
+        }
       } @else {
         <div>Current Temperature Information Not Available</div>
       }
