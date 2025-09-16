@@ -9,4 +9,5 @@ import { Component, Input } from '@angular/core';
 export class DisplayTempByHour {
   @Input({ required: true }) hour!: number;
   @Input({ required: true }) temperature!: number;
+  @Input({ required: true }) temperatureAvailable!: boolean;
 }

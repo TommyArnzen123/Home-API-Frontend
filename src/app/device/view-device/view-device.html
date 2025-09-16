@@ -1,13 +1,5 @@
-<div
-  style="
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    align-items: center;
-    justify-content: space-between;
-  "
->
-  <div style="float: left">
+<div class="device-name-and-delete-button-container">
+  <div class="device-name">
     @if (deviceInformation && deviceInformation.deviceName) {
       <h1>{{ deviceInformation.deviceName }}</h1>
     } @else {
@@ -15,53 +7,40 @@
     }
   </div>
 
-  <div style="float: right">
+  <div class="delete-button">
     <button matButton="outlined" (click)="deleteDeviceButtonAction()">Delete Device</button>
   </div>
 </div>
 
 <mat-grid-list cols="4" rowHeight="100px">
   <mat-grid-tile [colspan]="4" [rowspan]="2" [style.background]="'lightblue'">
-    <div
-      style="
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        gap: 10px;
-      "
-    >
-      <h1>Current Temperature</h1>
+    <div class="most-recent-temperature-container">
+      <h1>Most Recent Temperature Recorded</h1>
       @if (deviceInformation && deviceInformation.mostRecentTemperatureAvailable) {
-        <div style="font-size: 50px">{{ deviceInformation.mostRecentTemperature }}</div>
+        <div class="temperature-display">{{ deviceInformation.mostRecentTemperature }}</div>
         @if (currentTemperatureDate) {
-          <div style="font-size: 25px; margin-top: 20px">
+          <div class="date-recorded-display">
             {{ currentTemperatureDate | date: 'MM/dd/yyyy h:mm a' }}
           </div>
         }
       } @else {
-        <div>Current Temperature Information Not Available</div>
+        <div>Most Recent Temperature Information Not Available</div>
       }
     </div>
   </mat-grid-tile>
+
   <mat-grid-tile [colspan]="4" [rowspan]="2" [style.background]="'lightgreen'">
-    <div style="display: flex; flex-direction: column; justify-content: space-between">
-      <h1>Temperatures by Hour (Today)</h1>
-      <div style="display: flex; flex-direction: row; justify-content: space-between">
-        @if (
-          deviceInformation && deviceInformation.averageTemperaturesByHourCurrentDay.length > 0
-        ) {
-          @for (
-            tempByHour of deviceInformation.averageTemperaturesByHourCurrentDay;
-            track tempByHour.hour
-          ) {
-            <div style="margin-bottom: 10px">
-              <display-temp-by-hour
-                [hour]="tempByHour.hour"
-                [temperature]="tempByHour.averageTemperature"
-              />
-            </div>
-          }
+    <div class="temperature-by-hour-container">
+      <h1 class="title">Temperatures by Hour (Past 24 hours)</h1>
+      <div class="hourly-display">
+        @for (tempByHour of generateHourlyTemperatureReading(); track tempByHour.hour) {
+          <div class="individual-temperature-item">
+            <display-temp-by-hour
+              [hour]="tempByHour.hour"
+              [temperature]="tempByHour.averageTemperature"
+              [temperatureAvailable]="tempByHour.temperatureAvailable || false"
+            />
+          </div>
         }
       </div>
     </div>

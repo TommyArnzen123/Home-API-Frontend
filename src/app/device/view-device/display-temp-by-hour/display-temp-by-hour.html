@@ -1,4 +1,8 @@
 <div class="temperature-container">
   <div class="hour-style">{{ hour }}</div>
-  <div class="temperature-style">{{ temperature }}</div>
+  @if (temperatureAvailable) {
+    <div class="temperature-style">{{ temperature }}</div>
+  } @else {
+    <div class="temperature-style">N/A</div>
+  }
 </div>

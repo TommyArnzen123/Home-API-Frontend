@@ -33,6 +33,7 @@ export interface ITemperature {
 export interface IAverageTemperatureByHour {
   hour: number;
   averageTemperature: number;
+  temperatureAvailable?: boolean;
 }
 
 export interface IDeviceInformationCurrentDay {
