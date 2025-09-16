@@ -1,6 +1,6 @@
 // Convert 24 hour (military) time value to 12 hour (standard) time value.
-export function militaryTimeToStandardTime(militaryTime: string): string {
-  return '';
+export function militaryTimeToStandardTime(militaryTime: number): number {
+  return 0;
 }
 
 // Add a degree symbol to a temperature value and a 'C' or 'F'
