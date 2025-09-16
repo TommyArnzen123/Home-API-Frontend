@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { IModal, IModalActions } from '../model/modal.interface';
-import { ModalElement } from '../shared/modal-element/modal-element';
+import { ModalElement } from '../shared/components/modal-element/modal-element';
 
 @Injectable({
   providedIn: 'root',
