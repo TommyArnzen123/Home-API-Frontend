@@ -3,8 +3,9 @@ export function militaryTimeToStandardTime(militaryTime: string): string {
   return '';
 }
 
-// Add a degree symbol to a temperature value.
-export function formatTemperature(): string {
+// Add a degree symbol to a temperature value and a 'C' or 'F'
+// depending on the temperature setting.
+export function formatTemperature(temperature: number, isFahrenheit: boolean): string {
   return '';
 }
 
