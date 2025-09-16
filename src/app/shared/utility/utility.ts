@@ -10,6 +10,6 @@ export function formatTemperature(temperature: number, isFahrenheit: boolean): s
 }
 
 // Convert Fahrenheit to Celsius.
-export function fahrenheitToCelsius(): number {
+export function fahrenheitToCelsius(tempFahrenheit: number): number {
   return 0;
 }
