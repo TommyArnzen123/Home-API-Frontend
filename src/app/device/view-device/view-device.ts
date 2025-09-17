@@ -15,6 +15,7 @@ import {
   DELETE_DEVICE_BY_ID_ERROR,
   GET_DEVICE_INFORMATION_BY_DEVICE_ID,
 } from '../../error/error-constants';
+import { IModal, IModalActions } from '../../model/modal.interface';
 
 const averageTempInfo: IAverageTemperatureByHour[] = [
   { hour: 0, averageTemperature: 0, temperatureAvailable: false },
@@ -81,6 +82,7 @@ export class ViewDevice implements OnInit {
   deviceInformation!: IDeviceInformationCurrentDay;
   currentTemperatureDate!: Date;
   averageTemperatureByHour: IAverageTemperatureByHour[] = [];
+  deviceExists = false;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -101,6 +103,10 @@ export class ViewDevice implements OnInit {
             // this.deviceInformation.averageTemperaturesByHourCurrentDay,
             averageTempInfoMock, // Comment this line out for live data.
           );
+
+          if (response.deviceId === Number(this.deviceId)) {
+            this.deviceExists = true;
+          }
         },
         error: () => {
           this.modalService.showModalElement(GET_DEVICE_INFORMATION_BY_DEVICE_ID);
@@ -111,7 +117,23 @@ export class ViewDevice implements OnInit {
     }
   }
 
-  deleteDeviceButtonAction(): void {
+  deleteDeviceVerification(): void {
+    const deleteVerificationModal: IModal = {
+      title: 'Confirmation',
+      content: 'Are you sure you want to delete the device?',
+      primaryText: 'Delete',
+      secondaryText: 'Cancel',
+    };
+
+    const deleteVerificationActions: IModalActions = {
+      primaryAction: () => this.deleteDeviceButtonAction(),
+      secondaryAction: () => this.modalService.closeModalElement(),
+    };
+
+    this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
+  }
+
+  deleteDeviceButtonAction() {
     if (this.deviceId) {
       this.deleteService.deleteDeviceById(this.deviceId).subscribe({
         next: (result) => {

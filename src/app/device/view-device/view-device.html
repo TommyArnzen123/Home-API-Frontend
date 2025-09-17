@@ -7,9 +7,11 @@
     }
   </div>
 
-  <div class="delete-button">
-    <button matButton="outlined" (click)="deleteDeviceButtonAction()">Delete Device</button>
-  </div>
+  @if (deviceExists) {
+    <div class="delete-button">
+      <button matButton="outlined" (click)="deleteDeviceVerification()">Delete Device</button>
+    </div>
+  }
 </div>
 
 <mat-grid-list cols="4" rowHeight="100px">

@@ -19,6 +19,7 @@ export class ModalElement {
   title: string;
   content: string;
   primaryText: string;
+  secondaryText!: string;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { modalContent: IModal; actions?: IModalActions },
@@ -29,6 +30,9 @@ export class ModalElement {
     this.primaryText = this.data.modalContent.primaryText
       ? this.data.modalContent.primaryText
       : 'Ok';
+    this.secondaryText = this.data.modalContent.secondaryText
+      ? this.data.modalContent.secondaryText
+      : 'Cancel';
   }
 
   primaryButtonAction(): void {
@@ -37,6 +41,12 @@ export class ModalElement {
     }
 
     this.closeModal();
+  }
+
+  secondaryButtonAction(): void {
+    if (this.data.actions?.secondaryAction) {
+      this.data.actions.secondaryAction(); // Execute the secondary action if set.
+    }
   }
 
   closeModal(): void {
