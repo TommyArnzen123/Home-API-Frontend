@@ -8,11 +8,13 @@ import {
   REGISTER_USER_ROUTE,
   VIEW_DEVICE,
   VIEW_HOME,
+  VIEW_LOCATION,
 } from './constants/navigation-constants';
 import { HomePage } from './home-page/home-page';
 import { RegisterUser } from './registration/user/register-user/register-user';
 import { ViewHome } from './home/view-home/view-home';
 import { ViewDevice } from './device/view-device/view-device';
+import { ViewLocation } from './location/view-location/view-location';
 
 export const routes: Routes = [
   {
@@ -34,6 +36,10 @@ export const routes: Routes = [
   {
     path: VIEW_HOME + '/:homeId',
     component: ViewHome,
+  },
+  {
+    path: VIEW_LOCATION + '/:locationId',
+    component: ViewLocation,
   },
   {
     path: VIEW_DEVICE + '/:deviceId',

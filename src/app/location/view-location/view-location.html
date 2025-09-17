@@ -1,0 +1,17 @@
+<div class="location-name-and-delete-button-container">
+  <div class="location-name">Location Name</div>
+
+  <div class="delete-button">
+    <button matButton="outlined" (click)="deleteLocationButtonAction()">Delete Location</button>
+  </div>
+</div>
+
+<mat-grid-list cols="4" rowHeight="100px">
+  <mat-grid-tile [colspan]="4" [rowspan]="2" [style.background]="'lightblue'">
+    <div>123</div>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="4" [rowspan]="2" [style.background]="'lightgreen'">
+    <div>456</div>
+  </mat-grid-tile>
+</mat-grid-list>
