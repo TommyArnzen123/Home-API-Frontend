@@ -5,6 +5,7 @@ import { DeleteService } from '../../services/delete.service';
 import { ModalService } from '../../services/modal.service';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButton } from '@angular/material/button';
+import { IModal, IModalActions } from '../../model/modal.interface';
 
 @Component({
   selector: 'view-location',
@@ -27,25 +28,40 @@ export class ViewLocation {
 
   ngOnInit(): void {
     if (this.locationId) {
-      // this.getInfoService.getViewDeviceInformation(this.deviceId).subscribe({
-      //   next: (response: IDeviceInformationCurrentDay) => {
-      //     this.deviceInformation = response;
-      //     this.currentTemperatureDate = new Date(response.mostRecentTemperatureAvailableDateTime);
-      //     this.insertAverageTemperatureByHourInformation(
-      //       // this.deviceInformation.averageTemperaturesByHourCurrentDay,
-      //       averageTempInfoMock, // Comment this line out for live data.
-      //     );
-      //   },
-      //   error: () => {
-      //     this.modalService.showModalElement(GET_DEVICE_INFORMATION_BY_DEVICE_ID);
-      //   },
-      // });
+      // Run network call to get information for the selected location.
     } else {
       // Display an error message that the deviceId is not available, so the network call to get the information for the device cannot be run.
     }
   }
 
-  deleteLocationButtonAction(): void {
-    console.log('Delete button clicked.');
+  deleteLocationVerification(): void {
+    const deleteVerificationModal: IModal = {
+      title: 'Confirmation',
+      content: 'Are you sure you want to delete the location?',
+      primaryText: 'Delete',
+      secondaryText: 'Cancel',
+    };
+
+    const deleteVerificationActions: IModalActions = {
+      primaryAction: () => this.deleteLocationButtonAction(),
+      secondaryAction: () => this.modalService.closeModalElement(),
+    };
+
+    this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
+  }
+
+  deleteLocationButtonAction() {
+    if (this.locationId) {
+      console.log('Delete location action execute.');
+      // this.deleteService.deleteDeviceById(this.deviceId).subscribe({
+      //   next: (result) => {
+      //     console.log(result);
+      //     // Route the user to the 'View Location' screen for the location the device was associated with.
+      //   },
+      //   error: () => {
+      //     this.modalService.showModalElement(DELETE_DEVICE_BY_ID_ERROR);
+      //   },
+      // });
+    }
   }
 }

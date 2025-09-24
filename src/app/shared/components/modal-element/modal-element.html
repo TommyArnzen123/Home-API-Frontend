@@ -2,7 +2,7 @@
 <mat-dialog-content>{{ content }}</mat-dialog-content>
 <mat-dialog-actions>
   @if (data.actions?.secondaryAction) {
-    <button matButton="filled" (click)="secondaryButtonAction()">{{ secondaryText }}</button>
+    <button matButton="outlined" (click)="secondaryButtonAction()">{{ secondaryText }}</button>
   }
   <button matButton="filled" (click)="primaryButtonAction()">{{ primaryText }}</button>
 </mat-dialog-actions>
