@@ -15,6 +15,7 @@ import { RegisterUser } from './registration/user/register-user/register-user';
 import { ViewHome } from './home/view-home/view-home';
 import { ViewDevice } from './device/view-device/view-device';
 import { ViewLocation } from './location/view-location/view-location';
+import { LoadingComponent } from './loading-component/loading-component';
 
 export const routes: Routes = [
   {
@@ -44,5 +45,9 @@ export const routes: Routes = [
   {
     path: VIEW_DEVICE + '/:deviceId',
     component: ViewDevice,
+  },
+  {
+    path: 'loadingMessage',
+    component: LoadingComponent,
   },
 ];

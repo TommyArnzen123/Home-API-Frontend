@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EnvironmentService } from './environment.service';
 import { ILoginRequest, ILoginResponse } from '../model/login.interface';
@@ -7,6 +7,7 @@ import { SessionStorageService } from './session-storage.service';
 import { JWT_TOKEN, USER_ID } from '../constants/session-storage-constants';
 import { Router } from '@angular/router';
 import { APP_ROOT_ROUTE } from '../constants/navigation-constants';
+import { LoadingContextToken } from '../interceptor/http-context-tokens';
 
 @Injectable({
   providedIn: 'root',
@@ -41,6 +42,7 @@ export class LoginService {
       .post<ILoginResponse>(
         this.environmentService.getEnvironment().backendUrl + this.loginUrl,
         loginRequest,
+        { context: new HttpContext().set(LoadingContextToken, 'Logging In') },
       )
       .pipe(
         tap((response) => {
