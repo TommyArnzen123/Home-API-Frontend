@@ -1,25 +1,20 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { computed, Injectable, Signal, signal } from '@angular/core';
 import { EnvironmentService } from './environment.service';
-import { ILoginRequest, ILoginResponse } from '../model/login.interface';
+import { ILoginRequest, IUser } from '../model/login.interface';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { SessionStorageService } from './session-storage.service';
-import { JWT_TOKEN, USER_ID } from '../constants/session-storage-constants';
+import { USER_LOGIN_INFO_KEY } from '../constants/session-storage-constants';
 import { Router } from '@angular/router';
-import { APP_ROOT_ROUTE } from '../constants/navigation-constants';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';
+import { HOME_PAGE_ROUTE, LOGIN_ROUTE } from '../constants/navigation-constants';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
-  private _loginResponseInfoSubject = new BehaviorSubject<ILoginResponse>({
-    userId: '',
-    username: '',
-    firstName: '',
-    jwtToken: '',
-  });
-  private userLoginInfo = this._loginResponseInfoSubject.asObservable();
+  #loginResponseInfo$ = signal<IUser | null>(null);
+  private userLoginInfo = this.#loginResponseInfo$.asReadonly();
   private loginUrl = '/login';
 
   constructor(
@@ -27,43 +22,47 @@ export class LoginService {
     private readonly environmentService: EnvironmentService,
     private readonly sessionStorageService: SessionStorageService,
     private readonly router: Router,
-  ) {}
+  ) {
+    this.loadUserFromSessionStorage();
+  }
 
-  getUserLoginInfo(): Observable<ILoginResponse> {
+  loadUserFromSessionStorage() {
+    const userInfo = this.sessionStorageService.getItem(USER_LOGIN_INFO_KEY);
+
+    if (userInfo) {
+      const user = JSON.parse(userInfo);
+      this.#loginResponseInfo$.set(user);
+    }
+  }
+
+  isLoggedIn = computed(() => !!this.userLoginInfo());
+
+  getUserLoginInfo(): Signal<IUser | null> {
     return this.userLoginInfo;
   }
 
-  updateUserLoginInfo(userInfo: ILoginResponse): void {
-    this._loginResponseInfoSubject.next(userInfo);
+  private updateUserLoginInfo(userInfo: IUser | null): void {
+    this.#loginResponseInfo$.set(userInfo);
   }
 
-  login(loginRequest: ILoginRequest): Observable<ILoginResponse> {
+  login(loginRequest: ILoginRequest): Observable<IUser> {
     return this.httpClient
-      .post<ILoginResponse>(
+      .post<IUser>(
         this.environmentService.getEnvironment().backendUrl + this.loginUrl,
         loginRequest,
         { context: new HttpContext().set(LoadingContextToken, 'Logging In') },
       )
       .pipe(
         tap((response) => {
-          this.sessionStorageService.setItem(USER_ID, response.userId);
-          this.sessionStorageService.setItem(JWT_TOKEN, response.jwtToken);
+          this.sessionStorageService.setItem(USER_LOGIN_INFO_KEY, JSON.stringify(response));
           this.updateUserLoginInfo(response);
         }),
       );
   }
 
   logout(): void {
-    this.sessionStorageService.removeItem(USER_ID);
-    this.sessionStorageService.removeItem(JWT_TOKEN);
-
-    const emptyUserLoginInfo: ILoginResponse = {
-      userId: '',
-      firstName: '',
-      username: '',
-      jwtToken: '',
-    };
-    this.updateUserLoginInfo(emptyUserLoginInfo);
-    this.router.navigateByUrl(APP_ROOT_ROUTE);
+    this.sessionStorageService.removeItem(USER_LOGIN_INFO_KEY); // Remove the user login info from session storage.
+    this.updateUserLoginInfo(null); // Remove the user login info from memory.
+    this.router.navigateByUrl(LOGIN_ROUTE); // Route to the login screen.
   }
 }

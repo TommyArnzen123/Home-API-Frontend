@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
-import { HomeLoginController } from './login-controller/home-login-controller';
 import { LoginComponent } from './login-component/login-component';
 import {
-  APP_ROOT_ROUTE,
   HOME_PAGE_ROUTE,
   LOGIN_ROUTE,
   REGISTER_USER_ROUTE,
@@ -16,19 +14,17 @@ import { ViewHome } from './home/view-home/view-home';
 import { ViewDevice } from './device/view-device/view-device';
 import { ViewLocation } from './location/view-location/view-location';
 import { LoadingComponent } from './loading-component/loading-component';
+import { isUserAuthenticated } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
-    path: APP_ROOT_ROUTE,
-    component: HomeLoginController,
+    path: HOME_PAGE_ROUTE,
+    component: HomePage,
+    canActivate: [isUserAuthenticated],
   },
   {
     path: LOGIN_ROUTE,
     component: LoginComponent,
-  },
-  {
-    path: HOME_PAGE_ROUTE,
-    component: HomePage,
   },
   {
     path: REGISTER_USER_ROUTE,

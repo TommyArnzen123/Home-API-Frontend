@@ -1,2 +1,1 @@
-export const JWT_TOKEN = 'jwt-token';
-export const USER_ID = 'user-id';
+export const USER_LOGIN_INFO_KEY = 'USER_LOGIN_INFO';
