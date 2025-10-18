@@ -24,3 +24,10 @@ export interface IRegisterHomeResponse {
   userId: number;
   homeName: string;
 }
+
+// TO BE IMPLEMENTED.
+export interface IRegisterLocationRequest {}
+export interface IRegisterLocationResponse {}
+
+export interface IRegisterDeviceRequest {}
+export interface IRegisterDeviceResponse {}
