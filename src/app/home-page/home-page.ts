@@ -8,6 +8,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { ItemTotals } from './item-totals/item-totals';
 import { HomeCard } from './home-card/home-card';
 import { IHome } from '../model/get-info.interface';
+import { Router } from '@angular/router';
+import { REGISTER_HOME_ROUTE } from '../constants/navigation-constants';
 
 export interface Tile {
   color: string;
@@ -42,6 +44,7 @@ export class HomePage implements OnInit, OnDestroy {
   constructor(
     private readonly loginService: LoginService,
     private readonly getInfoService: GetInfoService,
+    private readonly router: Router,
   ) {}
 
   private isIUser(value: IUser | null): value is IUser {
@@ -90,40 +93,9 @@ export class HomePage implements OnInit, OnDestroy {
     }
   }
 
-  // this.subscriptions.push(
-  //   this.loginService.getUserLoginInfo().subscribe({
-  //     next: (userInfo: IUser) => {
-  //       this.userFirstName = this.formatName(userInfo.firstName);
-
-  //       // Get the current hour and set the greeting message.
-  //       const currentDate = new Date();
-  //       const currentHour = currentDate.getHours();
-  //       this.greetingMessage = this.setGreetingMessage(currentHour);
-
-  //       const getHomeScreenInfoRequest: IHomeScreenInfoRequest = {
-  //         userId: userInfo.userId,
-  //         jwtToken: userInfo.jwtToken,
-  //       };
-
-  //       // Get the home screen info.
-  //       this.getInfoService.getHomeScreenInfo(getHomeScreenInfoRequest).subscribe({
-  //         next: (response: IHomeScreenInfoResponse) => {
-  //           this.totalHomes = response.homes.length;
-  //           this.totalLocations = response.numLocations;
-  //           this.totalDevices = response.numDevices;
-  //           this.homeInfo = response.homes;
-  //         },
-  //         error: () => {
-  //           // If there is an error getting the information on the home screen, log the user out.
-  //           // They will not be able to use the application without the information returned from the
-  //           // get home screen info endpoint.
-  //           this.loginService.logout();
-  //         },
-  //       });
-  //     },
-  //   }),
-  // );
-  // }
+  registerHome() {
+    this.router.navigateByUrl(REGISTER_HOME_ROUTE);
+  }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());

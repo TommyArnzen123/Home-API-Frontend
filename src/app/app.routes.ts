@@ -3,6 +3,7 @@ import { LoginComponent } from './login-component/login-component';
 import {
   HOME_PAGE_ROUTE,
   LOGIN_ROUTE,
+  REGISTER_HOME_ROUTE,
   REGISTER_USER_ROUTE,
   VIEW_DEVICE,
   VIEW_HOME,
@@ -15,6 +16,7 @@ import { ViewDevice } from './device/view-device/view-device';
 import { ViewLocation } from './location/view-location/view-location';
 import { LoadingComponent } from './loading-component/loading-component';
 import { isUserAuthenticated } from './guards/auth.guard';
+import { RegisterHome } from './registration/home/register-home/register-home';
 
 export const routes: Routes = [
   {
@@ -29,6 +31,10 @@ export const routes: Routes = [
   {
     path: REGISTER_USER_ROUTE,
     component: RegisterUser,
+  },
+  {
+    path: REGISTER_HOME_ROUTE,
+    component: RegisterHome,
   },
   {
     path: VIEW_HOME + '/:homeId',

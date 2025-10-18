@@ -1,0 +1,23 @@
+<mat-card class="centered-content">
+  <mat-card-title>Register New Home</mat-card-title>
+  <br />
+  <mat-card-content>
+    <form [formGroup]="form">
+      <mat-form-field>
+        <input type="text" matInput placeholder="Home Name" formControlName="homeName" />
+      </mat-form-field>
+      <br />
+      @if (form.get('homeName')?.touched && form.get('homeName')?.hasError('required')) {
+        <mat-error>Please enter home name.</mat-error>
+      }
+      <br />
+    </form>
+
+    <div class="left-button">
+      <button (click)="returnToHomePage()" matButton>Return to Home Page</button>
+    </div>
+    <div class="right-button">
+      <button (click)="register()" matButton>Register Home</button>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -14,3 +14,13 @@ export interface IRegisterUserResponse {
   password: string;
   email: string;
 }
+
+export interface IRegisterHomeRequest {
+  userId: number;
+  homeName: string;
+}
+
+export interface IRegisterHomeResponse {
+  userId: number;
+  homeName: string;
+}
