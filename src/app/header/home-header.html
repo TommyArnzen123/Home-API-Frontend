@@ -1,7 +1,7 @@
 <div class="header">
   <div class="application-title">Home API</div>
 
-  @if (loginStatus) {
+  @if (isLoggedIn()) {
     <div class="button">
       <button matButton class="button-color" (click)="logout()">Logout</button>
     </div>

@@ -3,8 +3,6 @@ import { Injectable, OnInit } from '@angular/core';
 import { EnvironmentService } from './environment.service';
 import { SessionStorageService } from './session-storage.service';
 import { LoginService } from './login.service';
-import { Subscription } from 'rxjs';
-import { ILoginResponse } from '../model/login.interface';
 import { IHomeScreenInfoRequest, IHomeScreenInfoResponse } from '../model/home-screen.interface';
 import { IDeviceInformationCurrentDay, ILocation } from '../model/get-info.interface';
 

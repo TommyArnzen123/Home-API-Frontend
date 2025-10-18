@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal, Signal } from '@angular/core';
 import { LoginService } from '../services/login.service';
 import { Subscription } from 'rxjs';
-import { ILoginResponse } from '../model/login.interface';
+import { IUser } from '../model/login.interface';
 import { GetInfoService } from '../services/get-info.service';
 import { IHomeScreenInfoRequest, IHomeScreenInfoResponse } from '../model/home-screen.interface';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -24,6 +24,7 @@ export interface Tile {
 })
 export class HomePage implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
+
   greetingMessage!: string;
   userFirstName!: string;
   homeInfo: IHome[] = [];
@@ -43,41 +44,86 @@ export class HomePage implements OnInit, OnDestroy {
     private readonly getInfoService: GetInfoService,
   ) {}
 
-  ngOnInit(): void {
-    this.subscriptions.push(
-      this.loginService.getUserLoginInfo().subscribe({
-        next: (userInfo: ILoginResponse) => {
-          this.userFirstName = this.formatName(userInfo.firstName);
-
-          // Get the current hour and set the greeting message.
-          const currentDate = new Date();
-          const currentHour = currentDate.getHours();
-          this.greetingMessage = this.setGreetingMessage(currentHour);
-
-          const getHomeScreenInfoRequest: IHomeScreenInfoRequest = {
-            userId: userInfo.userId,
-            jwtToken: userInfo.jwtToken,
-          };
-
-          // Get the home screen info.
-          this.getInfoService.getHomeScreenInfo(getHomeScreenInfoRequest).subscribe({
-            next: (response: IHomeScreenInfoResponse) => {
-              this.totalHomes = response.homes.length;
-              this.totalLocations = response.numLocations;
-              this.totalDevices = response.numDevices;
-              this.homeInfo = response.homes;
-            },
-            error: () => {
-              // If there is an error getting the information on the home screen, log the user out.
-              // They will not be able to use the application without the information returned from the
-              // get home screen info endpoint.
-              this.loginService.logout();
-            },
-          });
-        },
-      }),
+  private isIUser(value: IUser | null): value is IUser {
+    return (
+      value !== null &&
+      typeof value.firstName === 'string' &&
+      typeof value.username === 'string' &&
+      typeof value.username === 'string' &&
+      typeof value.jwtToken === 'string'
     );
   }
+
+  ngOnInit(): void {
+    const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
+
+    if (this.isIUser(user())) {
+      this.userFirstName = this.formatName(user()!.firstName);
+
+      // Get the current hour and set the greeting message.
+      const currentDate = new Date();
+      const currentHour = currentDate.getHours();
+      this.greetingMessage = this.setGreetingMessage(currentHour);
+
+      const getHomeScreenInfoRequest: IHomeScreenInfoRequest = {
+        userId: user()!.userId,
+        jwtToken: user()!.jwtToken,
+      };
+
+      // Get the home screen info.
+      this.getInfoService.getHomeScreenInfo(getHomeScreenInfoRequest).subscribe({
+        next: (response: IHomeScreenInfoResponse) => {
+          this.totalHomes = response.homes.length;
+          this.totalLocations = response.numLocations;
+          this.totalDevices = response.numDevices;
+          this.homeInfo = response.homes;
+        },
+        error: () => {
+          // If there is an error getting the information on the home screen, log the user out.
+          // They will not be able to use the application without the information returned from the
+          // get home screen info endpoint.
+          this.loginService.logout();
+        },
+      });
+    } else {
+      this.loginService.logout();
+    }
+  }
+
+  // this.subscriptions.push(
+  //   this.loginService.getUserLoginInfo().subscribe({
+  //     next: (userInfo: IUser) => {
+  //       this.userFirstName = this.formatName(userInfo.firstName);
+
+  //       // Get the current hour and set the greeting message.
+  //       const currentDate = new Date();
+  //       const currentHour = currentDate.getHours();
+  //       this.greetingMessage = this.setGreetingMessage(currentHour);
+
+  //       const getHomeScreenInfoRequest: IHomeScreenInfoRequest = {
+  //         userId: userInfo.userId,
+  //         jwtToken: userInfo.jwtToken,
+  //       };
+
+  //       // Get the home screen info.
+  //       this.getInfoService.getHomeScreenInfo(getHomeScreenInfoRequest).subscribe({
+  //         next: (response: IHomeScreenInfoResponse) => {
+  //           this.totalHomes = response.homes.length;
+  //           this.totalLocations = response.numLocations;
+  //           this.totalDevices = response.numDevices;
+  //           this.homeInfo = response.homes;
+  //         },
+  //         error: () => {
+  //           // If there is an error getting the information on the home screen, log the user out.
+  //           // They will not be able to use the application without the information returned from the
+  //           // get home screen info endpoint.
+  //           this.loginService.logout();
+  //         },
+  //       });
+  //     },
+  //   }),
+  // );
+  // }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());

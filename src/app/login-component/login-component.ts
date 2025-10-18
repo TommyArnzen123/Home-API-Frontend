@@ -7,9 +7,9 @@ import { MatError } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginService } from '../services/login.service';
-import { ILoginRequest, ILoginResponse } from '../model/login.interface';
+import { ILoginRequest, IUser } from '../model/login.interface';
 import { Router } from '@angular/router';
-import { APP_ROOT_ROUTE, REGISTER_USER_ROUTE } from '../constants/navigation-constants';
+import { HOME_PAGE_ROUTE, REGISTER_USER_ROUTE } from '../constants/navigation-constants';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -63,18 +63,18 @@ export class LoginComponent implements OnDestroy {
     this.router.navigateByUrl(REGISTER_USER_ROUTE);
   }
 
-  loginAction(usernameValue: string, passwordValue: string) {
+  loginAction(username: string, password: string) {
     const loginRequest: ILoginRequest = {
-      username: usernameValue,
-      password: passwordValue,
+      username,
+      password,
     };
 
     if (this.form.valid) {
       this.subscriptions.push(
         this.loginService.login(loginRequest).subscribe({
-          next: (response: ILoginResponse) => {
+          next: (response: IUser) => {
             if (response) {
-              this.router.navigateByUrl(APP_ROOT_ROUTE);
+              this.router.navigateByUrl(HOME_PAGE_ROUTE);
             }
           },
           error: () => {
