@@ -21,7 +21,7 @@
       @if (homeInfo.length > 0) {
         @for (home of homeInfo; track home.homeId) {
           <div style="margin-bottom: 10px">
-            <home-card [homeId]="home.homeId" [homeName]="home.homeName" />
+            <home-card [homeId]="home.homeId" [homeName]="home.homeName" (homeDeleted)="homeDeletedAction($event)" />
           </div>
         }
       }

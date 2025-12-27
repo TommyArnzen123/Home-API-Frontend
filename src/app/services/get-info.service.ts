@@ -5,6 +5,7 @@ import { SessionStorageService } from './session-storage.service';
 import { LoginService } from './login.service';
 import { IHomeScreenInfoRequest, IHomeScreenInfoResponse } from '../model/home-screen.interface';
 import { IDeviceInformationCurrentDay, ILocation } from '../model/get-info.interface';
+import { IViewHomeInfoRequest, IViewHomeInfoResponse } from '../model/view-home.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,7 @@ import { IDeviceInformationCurrentDay, ILocation } from '../model/get-info.inter
 export class GetInfoService {
   getInfoRoot = '/getInfo';
   getHomeScreenInfoPath = '/homeScreenInfo';
+  getViewHomeInfoPath = '/viewHomeInfo';
   getLocationsByHomeIdPath = '/locationsByHome';
   getInformationByDeviceCurrentDay = '/informationByDeviceCurrentDay';
 
@@ -28,6 +30,17 @@ export class GetInfoService {
         this.getHomeScreenInfoPath +
         '/' +
         request.userId,
+      { headers: this.generateHeaderWithBearerToken(request.jwtToken) },
+    );
+  }
+
+  getViewHomeInfo(request: IViewHomeInfoRequest) {
+    return this.httpClient.get<IViewHomeInfoResponse>(
+      this.environmentService.getEnvironment().backendUrl +
+        this.getInfoRoot +
+        this.getViewHomeInfoPath +
+        '/' +
+        request.homeId,
       { headers: this.generateHeaderWithBearerToken(request.jwtToken) },
     );
   }

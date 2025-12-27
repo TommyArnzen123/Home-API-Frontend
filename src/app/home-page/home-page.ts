@@ -10,6 +10,7 @@ import { HomeCard } from './home-card/home-card';
 import { IHome } from '../model/get-info.interface';
 import { Router } from '@angular/router';
 import { REGISTER_HOME_ROUTE } from '../constants/navigation-constants';
+import { IDeleteHomeResponse } from '../model/delete-actions.interface';
 
 export interface Tile {
   color: string;
@@ -88,6 +89,7 @@ export class HomePage implements OnInit, OnDestroy {
           this.loginService.logout();
         },
       });
+
     } else {
       this.loginService.logout();
     }
@@ -115,5 +117,13 @@ export class HomePage implements OnInit, OnDestroy {
     } else {
       return 'Good Evening ' + this.userFirstName + '!';
     }
+  }
+
+  homeDeletedAction(deleteHomeResponse: IDeleteHomeResponse) {
+    this.totalHomes = this.totalHomes - 1;
+    this.totalLocations = this.totalLocations - deleteHomeResponse.totalLocations;
+    this.totalDevices = this.totalDevices - deleteHomeResponse.totalDevices;
+
+    this.homeInfo = this.homeInfo.filter(home => home.homeId !== deleteHomeResponse.homeId);
   }
 }
