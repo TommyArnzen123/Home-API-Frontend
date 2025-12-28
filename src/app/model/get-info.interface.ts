@@ -16,18 +16,20 @@ export interface ILocation {
   locationId: number;
   homeId: number;
   locationName: string;
+  devices: IDevice[];
 }
 
 export interface IDevice {
   deviceId: number;
   locationId: number;
   deviceName: string;
+  temperature: ITemperature;
 }
 
 export interface ITemperature {
   temperatureId: number;
-  deviceId: number;
   temperature: number;
+  dateRecorded: Date;
 }
 
 export interface IAverageTemperatureByHour {

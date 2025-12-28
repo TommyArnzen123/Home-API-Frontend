@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit, signal, Signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, Signal } from '@angular/core';
 import { LoginService } from '../services/login.service';
 import { Subscription } from 'rxjs';
 import { IUser } from '../model/login.interface';
 import { GetInfoService } from '../services/get-info.service';
 import { IHomeScreenInfoRequest, IHomeScreenInfoResponse } from '../model/home-screen.interface';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { ItemTotals } from './item-totals/item-totals';
+import { ItemTotals } from '../item-totals/item-totals';
 import { HomeCard } from './home-card/home-card';
 import { IHome } from '../model/get-info.interface';
 import { Router } from '@angular/router';

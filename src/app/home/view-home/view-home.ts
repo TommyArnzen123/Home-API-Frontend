@@ -7,10 +7,12 @@ import { LoginService } from '../../services/login.service';
 import { IViewHomeInfoRequest, IViewHomeInfoResponse } from '../../model/view-home.interface';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { Tile } from '../../home-page/home-page';
+import { ItemTotals } from '../../item-totals/item-totals';
+import { LocationCard } from './location-card/location-card';
 
 @Component({
   selector: 'view-home',
-  imports: [MatGridListModule],
+  imports: [MatGridListModule, ItemTotals, LocationCard],
   templateUrl: './view-home.html',
   styleUrl: './view-home.scss',
 })
@@ -32,7 +34,6 @@ export class ViewHome implements OnInit {
     private readonly getInfoService: GetInfoService,
   ) {
     this.homeId = this.route.snapshot.paramMap.get('homeId');
-    console.log(this.homeId);
   }
 
   ngOnInit(): void {
@@ -52,7 +53,6 @@ export class ViewHome implements OnInit {
             this.homeName = response.homeName;
             this.locations = response.locations;
             this.totalDevices = response.numDevices;
-            console.log(response);
           },
           error: () => {
             // If there is an error getting the information on the home screen, log the user out.
