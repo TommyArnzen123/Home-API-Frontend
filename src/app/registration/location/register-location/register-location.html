@@ -1,1 +1,23 @@
-<p>register-location works!</p>
+<mat-card class="centered-content">
+  <mat-card-title>Register New Location</mat-card-title>
+  <br />
+  <mat-card-content>
+    <form [formGroup]="form">
+      <mat-form-field>
+        <input type="text" matInput placeholder="Location Name" formControlName="locationName" />
+      </mat-form-field>
+      <br />
+      @if (form.get('locationName')?.touched && form.get('locationName')?.hasError('required')) {
+        <mat-error>Please enter location name.</mat-error>
+      }
+      <br />
+    </form>
+
+    <div class="left-button">
+      <button (click)="returnToViewHomeInformationScreen()" matButton>Return to View Home</button>
+    </div>
+    <div class="right-button">
+      <button (click)="register()" matButton>Register Location</button>
+    </div>
+  </mat-card-content>
+</mat-card>

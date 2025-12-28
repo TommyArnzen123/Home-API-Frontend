@@ -25,9 +25,18 @@ export interface IRegisterHomeResponse {
   homeName: string;
 }
 
-// TO BE IMPLEMENTED.
-export interface IRegisterLocationRequest {}
-export interface IRegisterLocationResponse {}
+export interface IRegisterLocationRequest {
+  homeId: number;
+  locationName: string;
+}
 
+
+export interface IRegisterLocationResponse {
+  homeId: number;
+  locationName: string;
+}
+
+
+// TO BE IMPLEMENTED.
 export interface IRegisterDeviceRequest {}
 export interface IRegisterDeviceResponse {}

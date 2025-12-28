@@ -1,5 +1,5 @@
 import { Component, OnInit, Signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ILocation } from '../../model/get-info.interface';
 import { GetInfoService } from '../../services/get-info.service';
 import { IUser } from '../../model/login.interface';
@@ -9,6 +9,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { Tile } from '../../home-page/home-page';
 import { ItemTotals } from '../../item-totals/item-totals';
 import { LocationCard } from './location-card/location-card';
+import { REGISTER_LOCATION_ROUTE } from '../../constants/navigation-constants';
 
 @Component({
   selector: 'view-home',
@@ -30,6 +31,7 @@ export class ViewHome implements OnInit {
 
   constructor(
     private readonly route: ActivatedRoute,
+    private readonly router: Router,
     private readonly loginService: LoginService,
     private readonly getInfoService: GetInfoService,
   ) {
@@ -76,4 +78,8 @@ export class ViewHome implements OnInit {
       typeof value.jwtToken === 'string'
     );
   }
+
+  registerLocation() {
+      this.router.navigate([REGISTER_LOCATION_ROUTE, this.homeId]);
+    }
 }

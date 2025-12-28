@@ -41,7 +41,7 @@ export const routes: Routes = [
     component: RegisterHome,
   },
   {
-    path: REGISTER_LOCATION_ROUTE,
+    path: REGISTER_LOCATION_ROUTE + '/:homeId',
     component: RegisterLocation,
   },
   {

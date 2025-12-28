@@ -4,6 +4,8 @@ import { EnvironmentService } from './environment.service';
 import {
   IRegisterHomeRequest,
   IRegisterHomeResponse,
+  IRegisterLocationRequest,
+  IRegisterLocationResponse,
   IRegisterUserRequest,
   IRegisterUserResponse,
 } from '../model/registration.interface';
@@ -22,6 +24,7 @@ export class RegistrationService {
   private registrationRoot = '/register';
   private registerUserPath = '/user';
   private registerHomePath = '/home';
+  private registerLocationPath = '/location';
 
   registerUser(registerUserRequest: IRegisterUserRequest): Observable<IRegisterUserResponse> {
     return this.httpClient.post<IRegisterUserResponse>(
@@ -45,6 +48,22 @@ export class RegistrationService {
       {
         headers: this.generateHeaderWithBearerToken(jwtToken),
         context: new HttpContext().set(LoadingContextToken, 'Registering new home'),
+      },
+    );
+  }
+
+  registerLocation(
+    registerLocationRequest: IRegisterLocationRequest,
+    jwtToken: string,
+  ): Observable<IRegisterLocationResponse> {
+    return this.httpClient.post<IRegisterLocationResponse>(
+      this.environmentService.getEnvironment().backendUrl +
+        this.registrationRoot +
+        this.registerLocationPath,
+      registerLocationRequest,
+      {
+        headers: this.generateHeaderWithBearerToken(jwtToken),
+        context: new HttpContext().set(LoadingContextToken, 'Registering new location'),
       },
     );
   }

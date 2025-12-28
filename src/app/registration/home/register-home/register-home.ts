@@ -64,7 +64,7 @@ export class RegisterHome {
       const homeName = this.form.get('homeName')?.value || '';
 
       if (this.user()) {
-        this.registerUserAction(Number(this.user()?.userId), homeName, this.user()?.jwtToken || '');
+        this.registerHomeAction(Number(this.user()?.userId), homeName, this.user()?.jwtToken || '');
       }
     }
   }
@@ -74,7 +74,7 @@ export class RegisterHome {
     this.router.navigateByUrl(HOME_PAGE_ROUTE);
   }
 
-  registerUserAction(userId: number, homeName: string, jwtToken: string) {
+  registerHomeAction(userId: number, homeName: string, jwtToken: string) {
     const registerHomeRequest: IRegisterHomeRequest = {
       userId,
       homeName,
