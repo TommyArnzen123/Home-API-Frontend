@@ -1,16 +1,9 @@
 import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EnvironmentService } from './environment.service';
-import {
-  IRegisterHomeRequest,
-  IRegisterHomeResponse,
-  IRegisterLocationRequest,
-  IRegisterLocationResponse,
-  IRegisterUserRequest,
-  IRegisterUserResponse,
-} from '../model/registration.interface';
 import { Observable } from 'rxjs';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';
+import { IRegisterGenericEntityRequest, IRegisterGenericEntityResponse, IRegisterUserRequest } from '../model/registration.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -26,8 +19,8 @@ export class RegistrationService {
   private registerHomePath = '/home';
   private registerLocationPath = '/location';
 
-  registerUser(registerUserRequest: IRegisterUserRequest): Observable<IRegisterUserResponse> {
-    return this.httpClient.post<IRegisterUserResponse>(
+  registerUser(registerUserRequest: IRegisterUserRequest): Observable<IRegisterGenericEntityResponse> {
+    return this.httpClient.post<IRegisterGenericEntityResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.registrationRoot +
         this.registerUserPath,
@@ -37,10 +30,10 @@ export class RegistrationService {
   }
 
   registerHome(
-    registerHomeRequest: IRegisterHomeRequest,
+    registerHomeRequest: IRegisterGenericEntityRequest,
     jwtToken: string,
-  ): Observable<IRegisterHomeResponse> {
-    return this.httpClient.post<IRegisterHomeResponse>(
+  ): Observable<IRegisterGenericEntityResponse> {
+    return this.httpClient.post<IRegisterGenericEntityResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.registrationRoot +
         this.registerHomePath,
@@ -53,10 +46,10 @@ export class RegistrationService {
   }
 
   registerLocation(
-    registerLocationRequest: IRegisterLocationRequest,
+    registerLocationRequest: IRegisterGenericEntityRequest,
     jwtToken: string,
-  ): Observable<IRegisterLocationResponse> {
-    return this.httpClient.post<IRegisterLocationResponse>(
+  ): Observable<IRegisterGenericEntityResponse> {
+    return this.httpClient.post<IRegisterGenericEntityResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.registrationRoot +
         this.registerLocationPath,

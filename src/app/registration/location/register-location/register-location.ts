@@ -9,8 +9,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RegistrationService } from '../../../services/registration.service';
 import { LoginService } from '../../../services/login.service';
 import { Subscription } from 'rxjs';
-import { HOME_PAGE_ROUTE, VIEW_HOME } from '../../../constants/navigation-constants';
-import { IRegisterLocationRequest, IRegisterLocationResponse } from '../../../model/registration.interface';
+import { VIEW_HOME } from '../../../constants/navigation-constants';
+import { IRegisterGenericEntityRequest, IRegisterGenericEntityResponse } from '../../../model/registration.interface';
+import { ModalService } from '../../../services/modal.service';
+import { REGISTER_LOCATION_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
+import { REGISTER_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
 
 @Component({
   selector: 'register-location',
@@ -34,6 +37,7 @@ export class RegisterLocation {
     private readonly router: Router,
     private readonly registrationService: RegistrationService,
     private readonly loginService: LoginService,
+    private readonly modalService: ModalService,
   ) {
     this.homeId = this.route.snapshot.paramMap.get('homeId');
     this.user = this.loginService.getUserLoginInfo();
@@ -67,28 +71,30 @@ export class RegisterLocation {
   }
 
   returnToViewHomeInformationScreen() {
-    // Return to the view home screen.
+    // Return to the view location screen.
     this.router.navigate([VIEW_HOME, this.homeId]);
   }
 
   registerLocationAction(locationName: string, jwtToken: string) {
 
     if (this.homeId) {
-      const registerLocationRequest:  IRegisterLocationRequest = {
-        homeId: Number(this.homeId),
-        locationName,
+      const registerLocationRequest:  IRegisterGenericEntityRequest = {
+        parentEntityId: Number(this.homeId),
+        name: locationName,
       };
 
       this.subscriptions.push(
         this.registrationService.registerLocation(registerLocationRequest, jwtToken).subscribe({
-          next: (response: IRegisterLocationResponse) => {
+          next: (response: IRegisterGenericEntityResponse) => {
             if (response) {
-              console.log(response);
+              // The location has been added to the application.
+              // Display a modal message and route the user to the view location component.
+              this.modalService.showModalElement(REGISTER_LOCATION_SUCCESS_MESSAGE);
               this.returnToViewHomeInformationScreen();
             }
           },
           error: () => {
-            console.error('There was an error');
+            this.modalService.showModalElement(REGISTER_LOCATION_ERROR_MODAL);
           },
         }),
       );

@@ -3,11 +3,6 @@ import { Router } from '@angular/router';
 import { RegistrationService } from '../../../services/registration.service';
 import { Subscription } from 'rxjs';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  IRegisterHomeRequest,
-  IRegisterHomeResponse,
-  IRegisterUserResponse,
-} from '../../../model/registration.interface';
 import { HOME_PAGE_ROUTE } from '../../../constants/navigation-constants';
 import { LoginService } from '../../../services/login.service';
 import { IUser } from '../../../model/login.interface';
@@ -18,6 +13,7 @@ import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
 import { ModalService } from '../../../services/modal.service';
 import { REGISTER_HOME_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 import { REGISTER_HOME_ERROR_MODAL } from '../../../constants/error-constants';
+import { IRegisterGenericEntityRequest, IRegisterGenericEntityResponse } from '../../../model/registration.interface';
 
 @Component({
   selector: 'register-home',
@@ -79,14 +75,14 @@ export class RegisterHome {
   }
 
   registerHomeAction(userId: number, homeName: string, jwtToken: string) {
-    const registerHomeRequest: IRegisterHomeRequest = {
-      userId,
-      homeName,
+    const registerHomeRequest: IRegisterGenericEntityRequest = {
+      parentEntityId: userId,
+      name: homeName,
     };
 
     this.subscriptions.push(
       this.registrationService.registerHome(registerHomeRequest, jwtToken).subscribe({
-        next: (response: IRegisterHomeResponse) => {
+        next: (response: IRegisterGenericEntityResponse) => {
           if (response) {
             // The home has been added to the application.
             // Display a success modal and route the user to the home page component.

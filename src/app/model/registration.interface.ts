@@ -6,34 +6,13 @@ export interface IRegisterUserRequest {
   email: string;
 }
 
-export interface IRegisterUserResponse {
-  id: number;
-  firstName: string;
-  lastName: string;
-  username: string;
-  password: string;
-  email: string;
+export interface IRegisterGenericEntityRequest {
+  parentEntityId: number;
+  name: string;
 }
 
-export interface IRegisterHomeRequest {
-  userId: number;
-  homeName: string;
-}
-
-export interface IRegisterHomeResponse {
-  userId: number;
-  homeName: string;
-}
-
-export interface IRegisterLocationRequest {
-  homeId: number;
-  locationName: string;
-}
-
-
-export interface IRegisterLocationResponse {
-  id: number; // <-- HERE
-  locationName: string;
+export interface IRegisterGenericEntityResponse {
+  message: String;
 }
 
 

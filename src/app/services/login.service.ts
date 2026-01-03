@@ -2,12 +2,12 @@ import { HttpClient, HttpContext } from '@angular/common/http';
 import { computed, Injectable, Signal, signal } from '@angular/core';
 import { EnvironmentService } from './environment.service';
 import { ILoginRequest, IUser } from '../model/login.interface';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { SessionStorageService } from './session-storage.service';
 import { USER_LOGIN_INFO_KEY } from '../constants/session-storage-constants';
 import { Router } from '@angular/router';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';
-import { HOME_PAGE_ROUTE, LOGIN_ROUTE } from '../constants/navigation-constants';
+import { LOGIN_ROUTE } from '../constants/navigation-constants';
 
 @Injectable({
   providedIn: 'root',

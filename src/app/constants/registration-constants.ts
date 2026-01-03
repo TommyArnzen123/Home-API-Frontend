@@ -9,3 +9,8 @@ export const REGISTER_HOME_SUCCESS_MESSAGE: IModal = {
     title: 'Home Added',
     content: 'Your new home has been registered.',
 }
+
+export const REGISTER_LOCATION_SUCCESS_MESSAGE: IModal = {
+    title: 'Location Added',
+    content: 'Your new location has been registered.',
+}

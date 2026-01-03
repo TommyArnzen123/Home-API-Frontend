@@ -16,10 +16,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LOGIN_ROUTE } from '../../../constants/navigation-constants';
 import { RegistrationService } from '../../../services/registration.service';
-import { IRegisterUserRequest, IRegisterUserResponse } from '../../../model/registration.interface';
+import { IRegisterGenericEntityResponse, IRegisterUserRequest } from '../../../model/registration.interface';
 import { Subscription } from 'rxjs';
 import { ModalService } from '../../../services/modal.service';
-import { IModal } from '../../../model/modal.interface';
 import { REGISTER_USER_ERROR_MODAL } from '../../../constants/error-constants';
 import { REGISTER_USER_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 
@@ -105,7 +104,7 @@ export class RegisterUser implements OnInit, OnDestroy {
 
     this.subscriptions.push(
       this.registrationService.registerUser(registerUserRequest).subscribe({
-        next: (response: IRegisterUserResponse) => {
+        next: (response: IRegisterGenericEntityResponse) => {
           if (response) {
             // The user has been added to the application.
             // Display a modal message and route the user to the login component.
