@@ -18,6 +18,10 @@ import { LOGIN_ROUTE } from '../../../constants/navigation-constants';
 import { RegistrationService } from '../../../services/registration.service';
 import { IRegisterUserRequest, IRegisterUserResponse } from '../../../model/registration.interface';
 import { Subscription } from 'rxjs';
+import { ModalService } from '../../../services/modal.service';
+import { IModal } from '../../../model/modal.interface';
+import { REGISTER_USER_ERROR, REGISTER_USER_ERROR_MODAL } from '../../../constants/error-constants';
+import { REGISTER_USER_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 
 @Component({
   selector: 'home-register-user',
@@ -38,6 +42,7 @@ export class RegisterUser implements OnInit, OnDestroy {
   constructor(
     private readonly router: Router,
     private readonly registrationService: RegistrationService,
+    private readonly modalService: ModalService
   ) {}
 
   subscriptions: Subscription[] = [];
@@ -103,12 +108,13 @@ export class RegisterUser implements OnInit, OnDestroy {
         next: (response: IRegisterUserResponse) => {
           if (response) {
             // The user has been added to the application.
-            // Route the user to the login component.
+            // Display a modal message and route the user to the login component.
+            this.modalService.showModalElement(REGISTER_USER_SUCCESS_MESSAGE);
             this.router.navigateByUrl(LOGIN_ROUTE);
           }
         },
         error: () => {
-          this.error = 'There was an error registering the user.';
+          this.modalService.showModalElement(REGISTER_USER_ERROR_MODAL);
         },
       }),
     );

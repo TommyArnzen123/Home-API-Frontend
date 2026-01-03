@@ -1,5 +1,13 @@
 <h2 mat-dialog-title>{{ title }}</h2>
-<mat-dialog-content>{{ content }}</mat-dialog-content>
+<mat-dialog-content>
+  {{ content }}
+
+  @if (footer) {
+  <br />
+  <br />
+  {{ footer }}
+  }
+</mat-dialog-content>
 <mat-dialog-actions>
   @if (data.actions?.secondaryAction) {
     <button matButton="outlined" (click)="secondaryButtonAction()">{{ secondaryText }}</button>

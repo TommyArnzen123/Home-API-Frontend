@@ -32,7 +32,7 @@ export interface IRegisterLocationRequest {
 
 
 export interface IRegisterLocationResponse {
-  homeId: number;
+  id: number; // <-- HERE
   locationName: string;
 }
 

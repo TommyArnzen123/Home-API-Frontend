@@ -1,6 +1,7 @@
 export interface IModal {
   title: string;
   content: string;
+  footer?: string;
   primaryText?: string;
   secondaryText?: string;
 }

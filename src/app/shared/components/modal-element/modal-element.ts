@@ -18,6 +18,7 @@ import { MatButton } from '@angular/material/button';
 export class ModalElement {
   title: string;
   content: string;
+  footer?: string;
   primaryText: string;
   secondaryText!: string;
 
@@ -27,6 +28,7 @@ export class ModalElement {
   ) {
     this.title = this.data.modalContent.title;
     this.content = this.data.modalContent.content;
+    this.footer = this.data.modalContent.footer ? this.data.modalContent.footer : "";
     this.primaryText = this.data.modalContent.primaryText
       ? this.data.modalContent.primaryText
       : 'Ok';
