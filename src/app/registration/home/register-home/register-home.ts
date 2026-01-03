@@ -15,6 +15,9 @@ import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
+import { ModalService } from '../../../services/modal.service';
+import { REGISTER_HOME_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
+import { REGISTER_HOME_ERROR_MODAL } from '../../../constants/error-constants';
 
 @Component({
   selector: 'register-home',
@@ -38,6 +41,7 @@ export class RegisterHome {
     private readonly router: Router,
     private readonly registrationService: RegistrationService,
     private readonly loginService: LoginService,
+    private readonly modalService: ModalService,
   ) {
     this.user = this.loginService.getUserLoginInfo();
   }
@@ -85,12 +89,13 @@ export class RegisterHome {
         next: (response: IRegisterHomeResponse) => {
           if (response) {
             // The home has been added to the application.
-            // Route the user to the home page component.
+            // Display a success modal and route the user to the home page component.
+            this.modalService.showModalElement(REGISTER_HOME_SUCCESS_MESSAGE);
             this.router.navigateByUrl(HOME_PAGE_ROUTE);
           }
         },
         error: () => {
-          console.error('There was an error');
+          this.modalService.showModalElement(REGISTER_HOME_ERROR_MODAL);
         },
       }),
     );

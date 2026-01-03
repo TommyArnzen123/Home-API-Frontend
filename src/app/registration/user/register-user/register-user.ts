@@ -20,7 +20,7 @@ import { IRegisterUserRequest, IRegisterUserResponse } from '../../../model/regi
 import { Subscription } from 'rxjs';
 import { ModalService } from '../../../services/modal.service';
 import { IModal } from '../../../model/modal.interface';
-import { REGISTER_USER_ERROR, REGISTER_USER_ERROR_MODAL } from '../../../constants/error-constants';
+import { REGISTER_USER_ERROR_MODAL } from '../../../constants/error-constants';
 import { REGISTER_USER_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 
 @Component({
