@@ -1,10 +1,9 @@
 import { Component, OnInit, Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ILocation } from '../../model/get-info.interface';
+import { ILocation, IViewHomeInfoRequest, IViewHomeInfoResponse } from '../../model/get-info.interface';
 import { GetInfoService } from '../../services/get-info.service';
 import { IUser } from '../../model/login.interface';
 import { LoginService } from '../../services/login.service';
-import { IViewHomeInfoRequest, IViewHomeInfoResponse } from '../../model/view-home.interface';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { Tile } from '../../home-page/home-page';
 import { ItemTotals } from '../../item-totals/item-totals';

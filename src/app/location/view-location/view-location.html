@@ -1,17 +1,39 @@
-<div class="location-name-and-delete-button-container">
-  <div class="location-name"><h1>Location Name</h1></div>
-
-  <div class="delete-button">
-    <button matButton="outlined" (click)="deleteLocationVerification()">Delete Location</button>
-  </div>
-</div>
+<h1>{{ locationName }}</h1>
 
 <mat-grid-list cols="4" rowHeight="100px">
-  <mat-grid-tile [colspan]="4" [rowspan]="2" [style.background]="'lightblue'">
-    <div>123</div>
+  <mat-grid-tile
+    [colspan]="tiles[0].cols"
+    [rowspan]="tiles[0].rows"
+    [style.background]="tiles[0].color"
+    ><home-item-totals
+      [displayTotalHomes]="false"
+      [displayTotalLocations]="false"
+      [displayTotalDevices]="true"
+      [totalDevices]="totalDevices"
+  /></mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="tiles[1].cols"
+    [rowspan]="10"
+    [style.background]="tiles[1].color"
+    style="display: flex; flex-direction: column"
+  >
+   <div style="height: 98%; width: 95%; overflow: scroll">
+      <h1>Devices</h1>
+      @if (devices.length > 0) {
+        @for (device of devices; track device.deviceId) {
+          <div style="margin-bottom: 10px">
+            <device-card [deviceId]="device.deviceId" [deviceName]="device.deviceName" />
+          </div>
+        }
+      }
+    </div>
   </mat-grid-tile>
-
-  <mat-grid-tile [colspan]="4" [rowspan]="2" [style.background]="'lightgreen'">
-    <div>456</div>
-  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="tiles[2].cols"
+    [rowspan]="tiles[2].rows"
+    [style.background]="tiles[2].color"
+  >
+    <div>Register New Device Button Goes Here.</div>
+    <div><button (click)="registerDevice()">Register New Device</button></div>
+</mat-grid-tile>
 </mat-grid-list>

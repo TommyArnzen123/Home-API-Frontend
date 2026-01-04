@@ -14,7 +14,6 @@ export interface IHome {
 
 export interface ILocation {
   locationId: number;
-  homeId: number;
   locationName: string;
   devices: IDevice[];
 }
@@ -46,4 +45,21 @@ export interface IDeviceInformationCurrentDay {
   mostRecentTemperatureAvailable: boolean;
   mostRecentTemperatureAvailableDateTime: string;
   averageTemperaturesByHourCurrentDay: IAverageTemperatureByHour[];
+}
+
+export interface IViewHomeInfoRequest {
+  homeId: string;
+  jwtToken: string;
+}
+
+export interface IViewHomeInfoResponse {
+  homeId: number;
+  homeName: string;
+  locations: ILocation[];
+  numDevices: number;
+}
+
+export interface IViewLocationInfoRequest {
+  locationId: string;
+  jwtToken: string;
 }

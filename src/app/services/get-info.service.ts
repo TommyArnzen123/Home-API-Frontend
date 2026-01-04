@@ -4,18 +4,17 @@ import { EnvironmentService } from './environment.service';
 import { SessionStorageService } from './session-storage.service';
 import { LoginService } from './login.service';
 import { IHomeScreenInfoRequest, IHomeScreenInfoResponse } from '../model/home-screen.interface';
-import { IDeviceInformationCurrentDay, ILocation } from '../model/get-info.interface';
-import { IViewHomeInfoRequest, IViewHomeInfoResponse } from '../model/view-home.interface';
+import { IDeviceInformationCurrentDay, ILocation, IViewHomeInfoRequest, IViewHomeInfoResponse, IViewLocationInfoRequest } from '../model/get-info.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GetInfoService {
-  getInfoRoot = '/getInfo';
-  getHomeScreenInfoPath = '/homeScreenInfo';
-  getViewHomeInfoPath = '/viewHomeInfo';
-  getLocationsByHomeIdPath = '/locationsByHome';
-  getInformationByDeviceCurrentDay = '/informationByDeviceCurrentDay';
+  private getInfoRoot = '/getInfo';
+  private getHomeScreenInfoPath = '/homeScreenInfo';
+  private getViewHomeInfoPath = '/viewHomeInfo';
+  private getViewLocationInfoPath = '/viewLocationInfo';
+  private getInformationByDeviceCurrentDay = '/informationByDeviceCurrentDay';
 
   constructor(
     private readonly httpClient: HttpClient,
@@ -45,13 +44,14 @@ export class GetInfoService {
     );
   }
 
-  getLocationsByHomeId(homeId: string) {
-    return this.httpClient.get<ILocation[]>(
+  getViewLocationInfo(request: IViewLocationInfoRequest) {
+    return this.httpClient.get<ILocation>(
       this.environmentService.getEnvironment().backendUrl +
         this.getInfoRoot +
-        this.getLocationsByHomeIdPath +
+        this.getViewLocationInfoPath +
         '/' +
-        homeId,
+        request.locationId,
+        { headers: this.generateHeaderWithBearerToken(request.jwtToken) },
     );
   }
 
