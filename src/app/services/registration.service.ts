@@ -18,6 +18,7 @@ export class RegistrationService {
   private registerUserPath = '/user';
   private registerHomePath = '/home';
   private registerLocationPath = '/location';
+  private registerDevicePath = '/device';
 
   registerUser(registerUserRequest: IRegisterUserRequest): Observable<IRegisterGenericEntityResponse> {
     return this.httpClient.post<IRegisterGenericEntityResponse>(
@@ -57,6 +58,22 @@ export class RegistrationService {
       {
         headers: this.generateHeaderWithBearerToken(jwtToken),
         context: new HttpContext().set(LoadingContextToken, 'Registering new location'),
+      },
+    );
+  }
+
+  registerDevice(
+    registerDeviceRequest: IRegisterGenericEntityRequest,
+    jwtToken: string,
+  ): Observable<IRegisterGenericEntityResponse> {
+    return this.httpClient.post<IRegisterGenericEntityResponse>(
+      this.environmentService.getEnvironment().backendUrl +
+        this.registrationRoot +
+        this.registerDevicePath,
+      registerDeviceRequest,
+      {
+        headers: this.generateHeaderWithBearerToken(jwtToken),
+        context: new HttpContext().set(LoadingContextToken, 'Registering new device'),
       },
     );
   }

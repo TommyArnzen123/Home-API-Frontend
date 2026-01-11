@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { VIEW_HOME } from '../../constants/navigation-constants';
 import { DeleteService } from '../../services/delete.service';
 import { IDeleteHomeRequest, IDeleteHomeResponse } from '../../model/delete-actions.interface';
+import { ModalService } from '../../services/modal.service';
+import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
+import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 
 @Component({
   selector: 'home-card',
@@ -18,7 +21,11 @@ export class HomeCard {
   @Output() homeDeleted = new EventEmitter<IDeleteHomeResponse>();
 
 
-  constructor(private readonly router: Router, private readonly deleteService: DeleteService) {}
+  constructor(
+    private readonly router: Router,
+    private readonly deleteService: DeleteService,
+    private readonly modalService: ModalService
+  ) {}
 
   viewHome(): void {
     this.router.navigate([VIEW_HOME, this.homeId]);
@@ -33,14 +40,18 @@ export class HomeCard {
 
       this.deleteService.deleteHomeById(deleteHomeRequest).subscribe({
         next: (response: IDeleteHomeResponse) => {
+
+          // Emit home deletion response to the home-page component to
+          // update the entity displays.
           this.homeDeleted.emit(response);
+          this.modalService.showModalElement(DELETE_HOME_SUCCESS_MESSAGE);
         },
         error: () => {
-          console.log('There was an error.');
+          this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);
         }
       });
     } else {
-      console.log('The home ID is not set.');
+      this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);
     }
   }
 }

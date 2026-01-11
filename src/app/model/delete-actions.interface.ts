@@ -4,6 +4,25 @@ export interface IDeleteHomeRequest {
 
 export interface IDeleteHomeResponse {
     homeId: number;
-    totalLocations: number;
-    totalDevices: number;
+    numLocations: number;
+    numDevices: number;
+}
+
+export interface IDeleteLocationRequest {
+    locationId: number;
+}
+
+export interface IDeleteLocationResponse {
+    locationId: number;
+    numDevices: number;
+    homeId: number;
+}
+
+export interface IDeleteDeviceRequest {
+    deviceId: number;
+}
+
+export interface IDeleteDeviceResponse {
+    deviceId: number;
+    locationId: number;
 }

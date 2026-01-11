@@ -1,1 +1,23 @@
-<p>register-device works!</p>
+<mat-card class="centered-content">
+  <mat-card-title>Register New Device</mat-card-title>
+  <br />
+  <mat-card-content>
+    <form [formGroup]="form">
+      <mat-form-field>
+        <input type="text" matInput placeholder="Device Name" formControlName="deviceName" />
+      </mat-form-field>
+      <br />
+      @if (form.get('deviceName')?.touched && form.get('deviceName')?.hasError('required')) {
+        <mat-error>Please enter device name.</mat-error>
+      }
+      <br />
+    </form>
+
+    <div class="left-button">
+      <button (click)="returnToViewLocationInformationScreen()" matButton>Return to View Location</button>
+    </div>
+    <div class="right-button">
+      <button (click)="register()" matButton>Register Device</button>
+    </div>
+  </mat-card-content>
+</mat-card>

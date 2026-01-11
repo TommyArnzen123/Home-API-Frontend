@@ -8,7 +8,12 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { Tile } from '../../home-page/home-page';
 import { ItemTotals } from '../../item-totals/item-totals';
 import { LocationCard } from './location-card/location-card';
-import { REGISTER_LOCATION_ROUTE } from '../../constants/navigation-constants';
+import { HOME_PAGE_ROUTE, REGISTER_LOCATION_ROUTE } from '../../constants/navigation-constants';
+import { DeleteService } from '../../services/delete.service';
+import { IDeleteHomeRequest, IDeleteHomeResponse, IDeleteLocationResponse } from '../../model/delete-actions.interface';
+import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
+import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
+import { ModalService } from '../../services/modal.service';
 
 @Component({
   selector: 'view-home',
@@ -17,7 +22,7 @@ import { REGISTER_LOCATION_ROUTE } from '../../constants/navigation-constants';
   styleUrl: './view-home.scss',
 })
 export class ViewHome implements OnInit {
-  homeId: string | null = null;
+  homeId: number | null = null;
   homeName: string | null = null;
   locations: ILocation[] = [];
   totalDevices: number = 0;
@@ -33,8 +38,10 @@ export class ViewHome implements OnInit {
     private readonly router: Router,
     private readonly loginService: LoginService,
     private readonly getInfoService: GetInfoService,
+    private readonly deleteService: DeleteService,
+    private readonly modalService: ModalService
   ) {
-    this.homeId = this.route.snapshot.paramMap.get('homeId');
+    this.homeId = Number(this.route.snapshot.paramMap.get('homeId'));
   }
 
   ngOnInit(): void {
@@ -79,6 +86,36 @@ export class ViewHome implements OnInit {
   }
 
   registerLocation() {
-      this.router.navigate([REGISTER_LOCATION_ROUTE, this.homeId]);
-    }
+    this.router.navigate([REGISTER_LOCATION_ROUTE, this.homeId]);
+  }
+
+  deleteHome() {
+    if (this.homeId) {
+    
+          const deleteHomeRequest: IDeleteHomeRequest = {
+            homeId: this.homeId,
+          };
+    
+          this.deleteService.deleteHomeById(deleteHomeRequest).subscribe({
+            next: (response: IDeleteHomeResponse) => {
+              this.modalService.showModalElement(DELETE_HOME_SUCCESS_MESSAGE);
+
+              // Route to the home screen page.
+              this.router.navigate([HOME_PAGE_ROUTE]);
+            },
+            error: () => {
+              this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);
+            }
+          });
+        } else {
+          this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);
+        }
+  }
+
+  locationDeletedAction(deleteLocationResponse: IDeleteLocationResponse) {
+    this.totalDevices = this.totalDevices - deleteLocationResponse.numDevices;
+
+    // Remove the deleted location from the registered locations list.
+    this.locations = this.locations.filter(location => location.locationId !== deleteLocationResponse.locationId);
+  }
 }

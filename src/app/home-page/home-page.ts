@@ -125,10 +125,10 @@ export class HomePage implements OnInit, OnDestroy {
     this.totalHomes = this.totalHomes - 1;
 
     // Remove the deleted locations from the registered locations count.
-    this.totalLocations = this.totalLocations - deleteHomeResponse.totalLocations;
+    this.totalLocations = this.totalLocations - deleteHomeResponse.numLocations;
 
     // Remove the deleted devices from the registered devices count.
-    this.totalDevices = this.totalDevices - deleteHomeResponse.totalDevices;
+    this.totalDevices = this.totalDevices - deleteHomeResponse.numDevices;
 
     // Remove the deleted home from the registered homes list.
     this.homeInfo = this.homeInfo.filter(home => home.homeId !== deleteHomeResponse.homeId);

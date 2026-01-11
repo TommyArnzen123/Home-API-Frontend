@@ -55,7 +55,7 @@ export class GetInfoService {
     );
   }
 
-  getViewDeviceInformation(deviceId: string) {
+  getViewDeviceInformation(deviceId: number) {
     return this.httpClient.get<IDeviceInformationCurrentDay>(
       this.environmentService.getEnvironment().backendUrl +
         this.getInfoRoot +

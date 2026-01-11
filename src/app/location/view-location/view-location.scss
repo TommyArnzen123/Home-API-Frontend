@@ -1,3 +1,11 @@
+.titleElements {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
 .location-name-and-delete-button-container {
   display: flex;
   flex-direction: row;

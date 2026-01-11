@@ -45,7 +45,7 @@ export const routes: Routes = [
     component: RegisterLocation,
   },
   {
-    path: REGISTER_DEVICE_ROUTE,
+    path: REGISTER_DEVICE_ROUTE + '/:locationId',
     component: RegisterDevice,
   },
   {

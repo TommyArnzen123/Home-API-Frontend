@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GetInfoService } from '../../services/get-info.service';
 import {
   IAverageTemperatureByHour,
@@ -11,11 +11,11 @@ import { MatButton } from '@angular/material/button';
 import { DatePipe } from '@angular/common';
 import { ModalService } from '../../services/modal.service';
 import { DeleteService } from '../../services/delete.service';
-import {
-  DELETE_DEVICE_BY_ID_ERROR,
-  GET_DEVICE_INFORMATION_BY_DEVICE_ID,
-} from '../../error/error-constants';
 import { IModal, IModalActions } from '../../model/modal.interface';
+import { IDeleteDeviceRequest, IDeleteDeviceResponse } from '../../model/delete-actions.interface';
+import { DELETE_DEVICE_ERROR_MODAL } from '../../constants/error-constants';
+import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../constants/delete-constants';
+import { VIEW_LOCATION } from '../../constants/navigation-constants';
 
 const averageTempInfo: IAverageTemperatureByHour[] = [
   { hour: 0, averageTemperature: 0, temperatureAvailable: false },
@@ -78,7 +78,7 @@ const averageTempInfoMock: IAverageTemperatureByHour[] = [
   styleUrl: './view-device.scss',
 })
 export class ViewDevice implements OnInit {
-  deviceId: string | null = null;
+  deviceId: number | null = null;
   deviceInformation!: IDeviceInformationCurrentDay;
   currentTemperatureDate!: Date;
   averageTemperatureByHour: IAverageTemperatureByHour[] = [];
@@ -87,10 +87,11 @@ export class ViewDevice implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly getInfoService: GetInfoService,
+    private readonly router: Router,
     private readonly deleteService: DeleteService,
     private readonly modalService: ModalService,
   ) {
-    this.deviceId = this.route.snapshot.paramMap.get('deviceId');
+    this.deviceId = Number(this.route.snapshot.paramMap.get('deviceId'));
   }
 
   ngOnInit(): void {
@@ -109,7 +110,7 @@ export class ViewDevice implements OnInit {
           }
         },
         error: () => {
-          this.modalService.showModalElement(GET_DEVICE_INFORMATION_BY_DEVICE_ID);
+          console.log('Get view device information error.');
         },
       });
     } else {
@@ -135,16 +136,24 @@ export class ViewDevice implements OnInit {
 
   deleteDeviceButtonAction() {
     if (this.deviceId) {
-      this.deleteService.deleteDeviceById(this.deviceId).subscribe({
-        next: (result) => {
-          console.log(result);
 
-          // Route the user to the 'View Location' screen for the location the device was associated with.
+      const deleteDeviceRequest: IDeleteDeviceRequest = {
+        deviceId: this.deviceId,
+      }
+
+      this.deleteService.deleteDeviceById(deleteDeviceRequest).subscribe({
+        next: (response: IDeleteDeviceResponse) => {
+          this.modalService.showModalElement(DELETE_DEVICE_SUCCESS_MESSAGE);
+                    
+          // Route to the view location page.
+          this.router.navigate([VIEW_LOCATION, response.locationId]);
         },
         error: () => {
-          this.modalService.showModalElement(DELETE_DEVICE_BY_ID_ERROR);
+          this.modalService.showModalElement(DELETE_DEVICE_ERROR_MODAL);
         },
       });
+    } else {
+      this.modalService.showModalElement(DELETE_DEVICE_ERROR_MODAL);
     }
   }
 

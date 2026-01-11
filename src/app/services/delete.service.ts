@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EnvironmentService } from './environment.service';
-import { IDeleteHomeRequest, IDeleteHomeResponse } from '../model/delete-actions.interface';
+import { IDeleteDeviceRequest, IDeleteDeviceResponse, IDeleteHomeRequest, IDeleteHomeResponse, IDeleteLocationRequest, IDeleteLocationResponse } from '../model/delete-actions.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +9,7 @@ import { IDeleteHomeRequest, IDeleteHomeResponse } from '../model/delete-actions
 export class DeleteService {
   private deleteRoot = '/delete';
   private deleteHomePath = '/home';
+  private deleteLocationPath = '/location';
   private deleteDevicePath = '/device';
 
   constructor(
@@ -26,13 +27,23 @@ export class DeleteService {
     );
   }
 
-  deleteDeviceById(deviceId: string) {
-    return this.httpClient.delete<string>(
+  deleteLocationById(request: IDeleteLocationRequest) {
+    return this.httpClient.delete<IDeleteLocationResponse>(
+      this.environmentService.getEnvironment().backendUrl +
+        this.deleteRoot +
+        this.deleteLocationPath +
+        '/' +
+        request.locationId,
+    );
+  }
+
+  deleteDeviceById(request: IDeleteDeviceRequest) {
+    return this.httpClient.delete<IDeleteDeviceResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.deleteRoot +
         this.deleteDevicePath +
         '/' +
-        deviceId,
+        request.deviceId,
     );
   }
 }

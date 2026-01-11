@@ -48,7 +48,7 @@ export interface IDeviceInformationCurrentDay {
 }
 
 export interface IViewHomeInfoRequest {
-  homeId: string;
+  homeId: number;
   jwtToken: string;
 }
 
@@ -60,6 +60,6 @@ export interface IViewHomeInfoResponse {
 }
 
 export interface IViewLocationInfoRequest {
-  locationId: string;
+  locationId: number;
   jwtToken: string;
 }

@@ -71,7 +71,7 @@ export class RegisterLocation {
   }
 
   returnToViewHomeInformationScreen() {
-    // Return to the view location screen.
+    // Return to the view home screen.
     this.router.navigate([VIEW_HOME, this.homeId]);
   }
 
@@ -88,7 +88,7 @@ export class RegisterLocation {
           next: (response: IRegisterGenericEntityResponse) => {
             if (response) {
               // The location has been added to the application.
-              // Display a modal message and route the user to the view location component.
+              // Display a modal message and route the user to the view home component.
               this.modalService.showModalElement(REGISTER_LOCATION_SUCCESS_MESSAGE);
               this.returnToViewHomeInformationScreen();
             }
@@ -98,6 +98,6 @@ export class RegisterLocation {
           },
         }),
       );
-  }
+    }
   }
 }

@@ -1,4 +1,7 @@
-<h1>{{ homeName }}</h1>
+<div class="titleElements">
+  <h1>{{ homeName }}</h1>
+  <button (click)="deleteHome()">Delete Home</button>
+</div>
 
 <mat-grid-list cols="4" rowHeight="100px">
   <mat-grid-tile
@@ -23,7 +26,9 @@
       @if (locations.length > 0) {
         @for (location of locations; track location.locationId) {
           <div style="margin-bottom: 10px">
-            <location-card [locationId]="location.locationId" [locationName]="location.locationName" />
+            <location-card [locationId]="location.locationId" 
+            [locationName]="location.locationName" 
+            (locationDeleted)="locationDeletedAction($event)"/>
           </div>
         }
       }
