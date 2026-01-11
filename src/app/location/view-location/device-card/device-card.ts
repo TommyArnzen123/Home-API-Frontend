@@ -7,10 +7,12 @@ import { IDeleteDeviceRequest, IDeleteDeviceResponse } from '../../../model/dele
 import { ModalService } from '../../../services/modal.service';
 import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../../constants/delete-constants';
 import { DELETE_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
+import { MatButton } from '@angular/material/button';
+import { IModal, IModalActions } from '../../../model/modal.interface';
 
 @Component({
   selector: 'device-card',
-  imports: [MatCard, MatCardHeader, MatCardTitle, MatCardActions],
+  imports: [MatCard, MatButton, MatCardHeader, MatCardTitle, MatCardActions],
   templateUrl: './device-card.html',
   styleUrl: './device-card.scss'
 })
@@ -28,6 +30,22 @@ export class DeviceCard {
   viewDevice(): void {
     this.router.navigate([VIEW_DEVICE, this.deviceId]);
   }
+
+  deleteDeviceVerification(): void {
+      const deleteVerificationModal: IModal = {
+        title: 'Confirmation',
+        content: 'Are you sure you want to delete the device?',
+        primaryText: 'Delete',
+        secondaryText: 'Cancel',
+      };
+  
+      const deleteVerificationActions: IModalActions = {
+        primaryAction: () => this.deleteDevice(),
+        secondaryAction: () => this.modalService.closeModalElement(),
+      };
+  
+      this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
+    }
 
   deleteDevice() {
     if (this.deviceId) {

@@ -14,6 +14,7 @@ export interface IHome {
 
 export interface ILocation {
   locationId: number;
+  homeId: number;
   locationName: string;
   devices: IDevice[];
 }

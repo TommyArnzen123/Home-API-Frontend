@@ -26,6 +26,7 @@ import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../constants/delete-constant
 export class ViewLocation {
   locationId: number | null = null;
   locationName: string | null = null;
+  homeId: number | null = null;
   devices: IDevice[] = [];
   totalDevices: number = 0;
 
@@ -60,6 +61,7 @@ export class ViewLocation {
         // Get the location info.
         this.getInfoService.getViewLocationInfo(getViewLocationInfoRequest).subscribe({
           next: (response: ILocation) => {
+            this.homeId = response.homeId;
             this.locationName = response.locationName;
             this.devices = response.devices;
             this.totalDevices = response.devices.length;
@@ -91,6 +93,27 @@ export class ViewLocation {
     this.router.navigate([REGISTER_DEVICE_ROUTE, this.locationId]);
   }
 
+  returnToViewHome() {
+    // Route to the view home page.
+    this.router.navigate([VIEW_HOME, this.homeId]);
+  }
+
+  deleteLocationVerification(): void {
+    const deleteVerificationModal: IModal = {
+      title: 'Confirmation',
+      content: 'Are you sure you want to delete the location?',
+      primaryText: 'Delete',
+      secondaryText: 'Cancel',
+    };
+
+    const deleteVerificationActions: IModalActions = {
+      primaryAction: () => this.deleteLocation(),
+      secondaryAction: () => this.modalService.closeModalElement(),
+    };
+
+    this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
+  }
+
   deleteLocation() {
     if (this.locationId) {
       const deleteLocationRequest: IDeleteLocationRequest = {
@@ -101,8 +124,7 @@ export class ViewLocation {
         next: (response: IDeleteLocationResponse) => {
           this.modalService.showModalElement(DELETE_LOCATION_SUCCESS_MESSAGE);
           
-          // Route to the home screen page.
-          this.router.navigate([VIEW_HOME, response.homeId]);
+          this.returnToViewHome();
         },
         error: () => {
           this.modalService.showModalElement(DELETE_LOCATION_ERROR_MODAL);

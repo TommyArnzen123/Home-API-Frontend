@@ -3,8 +3,8 @@
     <mat-card-title>{{ locationName }}</mat-card-title>
   </mat-card-header>
   <img mat-card-image src="home-icon.png" alt="Photo of a Shiba Inu" />
-  <mat-card-actions>
-    <button matButton (click)="viewLocation()">View</button>
-    <button matButton (click)="deleteLocation()">Delete</button>
+  <mat-card-actions class="flexDisplay">
+    <button matButton="outlined" (click)="viewLocation()">View</button>
+    <button matButton="outlined" (click)="deleteLocationVerification()">Delete</button>
   </mat-card-actions>
 </mat-card>

@@ -1,9 +1,9 @@
-.titleElements {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-    margin-bottom: 10px;
+.flexDisplay {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .location-name-and-delete-button-container {

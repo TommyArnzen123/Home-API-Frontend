@@ -7,10 +7,12 @@ import { IDeleteHomeRequest, IDeleteHomeResponse } from '../../model/delete-acti
 import { ModalService } from '../../services/modal.service';
 import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
+import { MatButton } from '@angular/material/button';
+import { IModal, IModalActions } from '../../model/modal.interface';
 
 @Component({
   selector: 'home-card',
-  imports: [MatCard, MatCardHeader, MatCardTitle, MatCardActions],
+  imports: [MatCard, MatButton, MatCardHeader, MatCardTitle, MatCardActions],
   templateUrl: './home-card.html',
   styleUrl: './home-card.scss',
 })
@@ -30,6 +32,22 @@ export class HomeCard {
   viewHome(): void {
     this.router.navigate([VIEW_HOME, this.homeId]);
   }
+
+  deleteHomeVerification(): void {
+      const deleteVerificationModal: IModal = {
+        title: 'Confirmation',
+        content: 'Are you sure you want to delete the home?',
+        primaryText: 'Delete',
+        secondaryText: 'Cancel',
+      };
+  
+      const deleteVerificationActions: IModalActions = {
+        primaryAction: () => this.deleteHome(),
+        secondaryAction: () => this.modalService.closeModalElement(),
+      };
+  
+      this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
+    }
 
   deleteHome(): void {
     if (this.homeId) {

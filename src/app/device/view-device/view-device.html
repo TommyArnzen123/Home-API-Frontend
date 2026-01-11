@@ -7,6 +7,12 @@
     }
   </div>
 
+  @if (locationId) {
+    <div>
+      <button matButton="outlined" (click)="returnToViewLocation()">Return to Location</button>
+    </div>
+  }
+
   @if (deviceExists) {
     <div class="delete-button">
       <button matButton="outlined" (click)="deleteDeviceVerification()">Delete Device</button>

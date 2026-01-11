@@ -7,10 +7,12 @@ import { IDeleteLocationRequest, IDeleteLocationResponse } from '../../../model/
 import { ModalService } from '../../../services/modal.service';
 import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../../constants/delete-constants';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
+import { MatButton } from '@angular/material/button';
+import { IModal, IModalActions } from '../../../model/modal.interface';
 
 @Component({
   selector: 'location-card',
-  imports: [MatCard, MatCardHeader, MatCardTitle, MatCardActions],
+  imports: [MatCard, MatButton, MatCardHeader, MatCardTitle, MatCardActions],
   templateUrl: './location-card.html',
   styleUrl: './location-card.scss'
 })
@@ -29,6 +31,22 @@ export class LocationCard {
   viewLocation(): void {
     this.router.navigate([VIEW_LOCATION, this.locationId]);
   }
+
+  deleteLocationVerification(): void {
+      const deleteVerificationModal: IModal = {
+        title: 'Confirmation',
+        content: 'Are you sure you want to delete the location?',
+        primaryText: 'Delete',
+        secondaryText: 'Cancel',
+      };
+  
+      const deleteVerificationActions: IModalActions = {
+        primaryAction: () => this.deleteLocation(),
+        secondaryAction: () => this.modalService.closeModalElement(),
+      };
+  
+      this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
+    }
 
   deleteLocation() {
     if (this.locationId) {

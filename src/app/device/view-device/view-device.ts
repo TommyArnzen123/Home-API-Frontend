@@ -79,6 +79,7 @@ const averageTempInfoMock: IAverageTemperatureByHour[] = [
 })
 export class ViewDevice implements OnInit {
   deviceId: number | null = null;
+  locationId: number | null = null;
   deviceInformation!: IDeviceInformationCurrentDay;
   currentTemperatureDate!: Date;
   averageTemperatureByHour: IAverageTemperatureByHour[] = [];
@@ -98,6 +99,7 @@ export class ViewDevice implements OnInit {
     if (this.deviceId) {
       this.getInfoService.getViewDeviceInformation(this.deviceId).subscribe({
         next: (response: IDeviceInformationCurrentDay) => {
+          this.locationId = response.locationId;
           this.deviceInformation = response;
           this.currentTemperatureDate = new Date(response.mostRecentTemperatureAvailableDateTime);
           this.insertAverageTemperatureByHourInformation(
@@ -133,6 +135,11 @@ export class ViewDevice implements OnInit {
 
     this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
   }
+
+  returnToViewLocation() {
+      // Route to the view location page.
+      this.router.navigate([VIEW_LOCATION, this.locationId]);
+    }
 
   deleteDeviceButtonAction() {
     if (this.deviceId) {

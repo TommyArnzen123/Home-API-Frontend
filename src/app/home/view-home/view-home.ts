@@ -14,10 +14,12 @@ import { IDeleteHomeRequest, IDeleteHomeResponse, IDeleteLocationResponse } from
 import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 import { ModalService } from '../../services/modal.service';
+import { MatButton } from '@angular/material/button';
+import { IModal, IModalActions } from '../../model/modal.interface';
 
 @Component({
   selector: 'view-home',
-  imports: [MatGridListModule, ItemTotals, LocationCard],
+  imports: [MatGridListModule, MatButton, ItemTotals, LocationCard],
   templateUrl: './view-home.html',
   styleUrl: './view-home.scss',
 })
@@ -89,6 +91,27 @@ export class ViewHome implements OnInit {
     this.router.navigate([REGISTER_LOCATION_ROUTE, this.homeId]);
   }
 
+  returnToHomeScreen() {
+    // Route to the home screen page.
+    this.router.navigate([HOME_PAGE_ROUTE]);
+  }
+
+  deleteHomeVerification(): void {
+      const deleteVerificationModal: IModal = {
+        title: 'Confirmation',
+        content: 'Are you sure you want to delete the home?',
+        primaryText: 'Delete',
+        secondaryText: 'Cancel',
+      };
+  
+      const deleteVerificationActions: IModalActions = {
+        primaryAction: () => this.deleteHome(),
+        secondaryAction: () => this.modalService.closeModalElement(),
+      };
+  
+      this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
+    }
+
   deleteHome() {
     if (this.homeId) {
     
@@ -100,8 +123,7 @@ export class ViewHome implements OnInit {
             next: (response: IDeleteHomeResponse) => {
               this.modalService.showModalElement(DELETE_HOME_SUCCESS_MESSAGE);
 
-              // Route to the home screen page.
-              this.router.navigate([HOME_PAGE_ROUTE]);
+              this.returnToHomeScreen();
             },
             error: () => {
               this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);

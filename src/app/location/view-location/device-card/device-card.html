@@ -3,8 +3,8 @@
     <mat-card-title>{{ deviceName }}</mat-card-title>
   </mat-card-header>
   <img mat-card-image src="home-icon.png" alt="Photo of a Shiba Inu" />
-  <mat-card-actions>
-    <button matButton (click)="viewDevice()">View</button>
-    <button matButton (click)="deleteDevice()">Delete</button>
+  <mat-card-actions class="flexDisplay">
+    <button matButton="outlined" (click)="viewDevice()">View</button>
+    <button matButton="outlined" (click)="deleteDeviceVerification()">Delete</button>
   </mat-card-actions>
 </mat-card>
