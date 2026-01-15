@@ -16,10 +16,11 @@ import { REGISTER_DEVICE_ROUTE, VIEW_HOME } from '../../constants/navigation-con
 import { IDeleteDeviceResponse, IDeleteLocationRequest, IDeleteLocationResponse } from '../../model/delete-actions.interface';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../constants/delete-constants';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'view-location',
-  imports: [MatGridListModule, MatButton, ItemTotals, DeviceCard],
+  imports: [MatGridListModule, MatButton, MatIcon, ItemTotals, DeviceCard],
   templateUrl: './view-location.html',
   styleUrl: './view-location.scss',
 })

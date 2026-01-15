@@ -1,7 +1,7 @@
 <div class="flexDisplay">
   <h1>{{ locationName }}</h1>
   @if (homeId) {<button matButton="outlined" (click)="returnToViewHome()">Return to Home</button>}
-  <button matButton="outlined" (click)="deleteLocationVerification()">Delete Location</button>
+  <button matButton="outlined" (click)="deleteLocationVerification()"><mat-icon>delete</mat-icon>Delete Location</button>
 </div>
 
 <mat-grid-list cols="4" rowHeight="100px">

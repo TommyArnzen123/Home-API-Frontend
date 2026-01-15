@@ -9,10 +9,11 @@ import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 import { MatButton } from '@angular/material/button';
 import { IModal, IModalActions } from '../../model/modal.interface';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'home-card',
-  imports: [MatCard, MatButton, MatCardHeader, MatCardTitle, MatCardActions],
+  imports: [MatCard, MatButton, MatIcon, MatCardHeader, MatCardTitle, MatCardActions],
   templateUrl: './home-card.html',
   styleUrl: './home-card.scss',
 })

@@ -16,6 +16,7 @@ import { IDeleteDeviceRequest, IDeleteDeviceResponse } from '../../model/delete-
 import { DELETE_DEVICE_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 import { VIEW_LOCATION } from '../../constants/navigation-constants';
+import { MatIcon } from '@angular/material/icon';
 
 const averageTempInfo: IAverageTemperatureByHour[] = [
   { hour: 0, averageTemperature: 0, temperatureAvailable: false },
@@ -73,7 +74,7 @@ const averageTempInfoMock: IAverageTemperatureByHour[] = [
 
 @Component({
   selector: 'view-device',
-  imports: [DisplayTempByHour, MatGridListModule, MatButton, DatePipe],
+  imports: [DisplayTempByHour, MatGridListModule, MatButton, MatIcon, DatePipe],
   templateUrl: './view-device.html',
   styleUrl: './view-device.scss',
 })

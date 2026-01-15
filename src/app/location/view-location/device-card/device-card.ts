@@ -9,10 +9,11 @@ import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../../constants/delete-constan
 import { DELETE_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
 import { MatButton } from '@angular/material/button';
 import { IModal, IModalActions } from '../../../model/modal.interface';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'device-card',
-  imports: [MatCard, MatButton, MatCardHeader, MatCardTitle, MatCardActions],
+  imports: [MatCard, MatButton, MatIcon, MatCardHeader, MatCardTitle, MatCardActions],
   templateUrl: './device-card.html',
   styleUrl: './device-card.scss'
 })

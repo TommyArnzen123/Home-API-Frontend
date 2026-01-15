@@ -16,10 +16,11 @@ import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 import { ModalService } from '../../services/modal.service';
 import { MatButton } from '@angular/material/button';
 import { IModal, IModalActions } from '../../model/modal.interface';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'view-home',
-  imports: [MatGridListModule, MatButton, ItemTotals, LocationCard],
+  imports: [MatGridListModule, MatButton, MatIcon, ItemTotals, LocationCard],
   templateUrl: './view-home.html',
   styleUrl: './view-home.scss',
 })
