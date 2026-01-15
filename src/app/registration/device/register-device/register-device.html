@@ -11,13 +11,12 @@
         <mat-error>Please enter device name.</mat-error>
       }
       <br />
-    </form>
-
-    <div class="left-button">
-      <button (click)="returnToViewLocationInformationScreen()" matButton>Return to View Location</button>
+      <div class="left-button">
+      <button (click)="returnToViewLocationInformationScreen()" type="button" matButton>Return to View Location</button>
     </div>
     <div class="right-button">
-      <button (click)="register()" matButton>Register Device</button>
+      <button (click)="register()" type="submit" matButton>Register Device</button>
     </div>
+    </form>
   </mat-card-content>
 </mat-card>

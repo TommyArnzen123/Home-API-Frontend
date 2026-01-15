@@ -11,13 +11,12 @@
         <mat-error>Please enter home name.</mat-error>
       }
       <br />
-    </form>
-
-    <div class="left-button">
-      <button (click)="returnToHomePage()" matButton>Return to Home Page</button>
+      <div class="left-button">
+      <button (click)="returnToHomePage()" type="button" matButton>Return to Home Page</button>
     </div>
     <div class="right-button">
-      <button (click)="register()" matButton>Register Home</button>
+      <button (click)="register()" type="submit" matButton>Register Home</button>
     </div>
+    </form>
   </mat-card-content>
 </mat-card>

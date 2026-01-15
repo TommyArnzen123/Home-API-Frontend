@@ -97,20 +97,20 @@ export class ViewHome implements OnInit {
   }
 
   deleteHomeVerification(): void {
-      const deleteVerificationModal: IModal = {
-        title: 'Confirmation',
-        content: 'Are you sure you want to delete the home?',
-        primaryText: 'Delete',
-        secondaryText: 'Cancel',
-      };
-  
-      const deleteVerificationActions: IModalActions = {
-        primaryAction: () => this.deleteHome(),
-        secondaryAction: () => this.modalService.closeModalElement(),
-      };
-  
-      this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
-    }
+    const deleteVerificationModal: IModal = {
+      title: 'Confirmation',
+      content: 'Are you sure you want to delete the home?',
+      primaryText: 'Delete',
+      secondaryText: 'Cancel',
+    };
+
+    const deleteVerificationActions: IModalActions = {
+      primaryAction: () => this.deleteHome(),
+      secondaryAction: () => this.modalService.closeModalElement(),
+    };
+
+    this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
+  }
 
   deleteHome() {
     if (this.homeId) {

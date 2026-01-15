@@ -71,13 +71,12 @@
         <mat-error>{{ error }}</mat-error>
       }
       <br />
+      <div class="left-button">
+        <button (click)="returnToLogin()" type="button" matButton>Return to Login</button>
+      </div>
+      <div class="right-button">
+        <button (click)="register()" type="submit" matButton>Register</button>
+      </div>
     </form>
-
-    <div class="left-button">
-      <button (click)="returnToLogin()" matButton>Return to Login</button>
-    </div>
-    <div class="right-button">
-      <button (click)="register()" matButton>Register</button>
-    </div>
   </mat-card-content>
 </mat-card>
