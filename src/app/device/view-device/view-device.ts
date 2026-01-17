@@ -17,6 +17,7 @@ import { DELETE_DEVICE_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 import { VIEW_LOCATION } from '../../constants/navigation-constants';
 import { MatIcon } from '@angular/material/icon';
+import { BreadcrumbService } from '../../services/breadcrumb.service';
 
 const averageTempInfo: IAverageTemperatureByHour[] = [
   { hour: 0, averageTemperature: 0, temperatureAvailable: false },
@@ -92,8 +93,10 @@ export class ViewDevice implements OnInit {
     private readonly router: Router,
     private readonly deleteService: DeleteService,
     private readonly modalService: ModalService,
+    private readonly breadcrumbService: BreadcrumbService,
   ) {
     this.deviceId = Number(this.route.snapshot.paramMap.get('deviceId'));
+    this.breadcrumbService.updateDeviceId(this.deviceId);
   }
 
   ngOnInit(): void {
@@ -138,23 +141,22 @@ export class ViewDevice implements OnInit {
   }
 
   returnToViewLocation() {
-      // Route to the view location page.
-      this.router.navigate([VIEW_LOCATION, this.locationId]);
-    }
+    // Route to the view location page.
+    this.router.navigate([VIEW_LOCATION, this.locationId]);
+  }
 
   deleteDeviceButtonAction() {
     if (this.deviceId) {
-
       const deleteDeviceRequest: IDeleteDeviceRequest = {
         deviceId: this.deviceId,
-      }
+      };
 
       this.deleteService.deleteDeviceById(deleteDeviceRequest).subscribe({
         next: (response: IDeleteDeviceResponse) => {
           this.modalService.showModalElement(DELETE_DEVICE_SUCCESS_MESSAGE);
-                    
+
           // Route to the view location page.
-          this.router.navigate([VIEW_LOCATION, response.locationId]);
+          this.returnToViewLocation();
         },
         error: () => {
           this.modalService.showModalElement(DELETE_DEVICE_ERROR_MODAL);

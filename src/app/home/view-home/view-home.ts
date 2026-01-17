@@ -1,6 +1,10 @@
 import { Component, OnInit, Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ILocation, IViewHomeInfoRequest, IViewHomeInfoResponse } from '../../model/get-info.interface';
+import {
+  ILocation,
+  IViewHomeInfoRequest,
+  IViewHomeInfoResponse,
+} from '../../model/get-info.interface';
 import { GetInfoService } from '../../services/get-info.service';
 import { IUser } from '../../model/login.interface';
 import { LoginService } from '../../services/login.service';
@@ -10,13 +14,18 @@ import { ItemTotals } from '../../item-totals/item-totals';
 import { LocationCard } from './location-card/location-card';
 import { HOME_PAGE_ROUTE, REGISTER_LOCATION_ROUTE } from '../../constants/navigation-constants';
 import { DeleteService } from '../../services/delete.service';
-import { IDeleteHomeRequest, IDeleteHomeResponse, IDeleteLocationResponse } from '../../model/delete-actions.interface';
+import {
+  IDeleteHomeRequest,
+  IDeleteHomeResponse,
+  IDeleteLocationResponse,
+} from '../../model/delete-actions.interface';
 import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 import { ModalService } from '../../services/modal.service';
 import { MatButton } from '@angular/material/button';
 import { IModal, IModalActions } from '../../model/modal.interface';
 import { MatIcon } from '@angular/material/icon';
+import { BreadcrumbService } from '../../services/breadcrumb.service';
 
 @Component({
   selector: 'view-home',
@@ -31,10 +40,10 @@ export class ViewHome implements OnInit {
   totalDevices: number = 0;
 
   tiles: Tile[] = [
-      { text: 'One', cols: 3, rows: 2, color: 'lightblue' },
-      { text: 'Two', cols: 1, rows: 4, color: 'lightgreen' },
-      { text: 'Three', cols: 3, rows: 8, color: 'lightpink' },
-    ];
+    { text: 'One', cols: 3, rows: 2, color: 'lightblue' },
+    { text: 'Two', cols: 1, rows: 4, color: 'lightgreen' },
+    { text: 'Three', cols: 3, rows: 8, color: 'lightpink' },
+  ];
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -42,16 +51,17 @@ export class ViewHome implements OnInit {
     private readonly loginService: LoginService,
     private readonly getInfoService: GetInfoService,
     private readonly deleteService: DeleteService,
-    private readonly modalService: ModalService
+    private readonly modalService: ModalService,
+    private readonly breadcrumbService: BreadcrumbService,
   ) {
     this.homeId = Number(this.route.snapshot.paramMap.get('homeId'));
+    this.breadcrumbService.updateHomeId(this.homeId);
   }
 
   ngOnInit(): void {
     const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
 
     if (this.isIUser(user())) {
-
       if (this.homeId) {
         const getViewHomeInfoRequest: IViewHomeInfoRequest = {
           homeId: this.homeId,
@@ -115,30 +125,31 @@ export class ViewHome implements OnInit {
 
   deleteHome() {
     if (this.homeId) {
-    
-          const deleteHomeRequest: IDeleteHomeRequest = {
-            homeId: this.homeId,
-          };
-    
-          this.deleteService.deleteHomeById(deleteHomeRequest).subscribe({
-            next: (response: IDeleteHomeResponse) => {
-              this.modalService.showModalElement(DELETE_HOME_SUCCESS_MESSAGE);
+      const deleteHomeRequest: IDeleteHomeRequest = {
+        homeId: this.homeId,
+      };
 
-              this.returnToHomeScreen();
-            },
-            error: () => {
-              this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);
-            }
-          });
-        } else {
+      this.deleteService.deleteHomeById(deleteHomeRequest).subscribe({
+        next: (response: IDeleteHomeResponse) => {
+          this.modalService.showModalElement(DELETE_HOME_SUCCESS_MESSAGE);
+
+          this.returnToHomeScreen();
+        },
+        error: () => {
           this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);
-        }
+        },
+      });
+    } else {
+      this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);
+    }
   }
 
   locationDeletedAction(deleteLocationResponse: IDeleteLocationResponse) {
     this.totalDevices = this.totalDevices - deleteLocationResponse.numDevices;
 
     // Remove the deleted location from the registered locations list.
-    this.locations = this.locations.filter(location => location.locationId !== deleteLocationResponse.locationId);
+    this.locations = this.locations.filter(
+      (location) => location.locationId !== deleteLocationResponse.locationId,
+    );
   }
 }

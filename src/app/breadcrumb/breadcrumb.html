@@ -1,0 +1,26 @@
+<div class="breadcrumb-display">
+  @if (homeId()) {
+    <div class="breadcrumb-item clickable" (click)="viewHomeScreen()">Home Screen</div>
+
+    @if (!locationId()) {
+      <div>></div>
+      <div class="non-clickable">View Home</div>
+    }
+  }
+
+  @if (locationId()) {
+    <div>></div>
+    <div class="breadcrumb-item clickable" (click)="viewHomeById()">View Home</div>
+    @if (!deviceId()) {
+      <div>></div>
+      <div class="non-clickable">View Location</div>
+    }
+  }
+
+  @if (deviceId()) {
+    <div>></div>
+    <div class="breadcrumb-item clickable" (click)="viewLocationById()">View Location</div>
+    <div>></div>
+    <div class="non-clickable">View Device</div>
+  }
+</div>

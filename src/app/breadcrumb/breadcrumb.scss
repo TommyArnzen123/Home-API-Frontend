@@ -1,0 +1,17 @@
+.breadcrumb-display {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+
+  .breadcrumb-item {
+    cursor: pointer;
+  }
+
+  .clickable {
+    color: blue;
+  }
+
+  .non-clickable {
+    color: black;
+  }
+}

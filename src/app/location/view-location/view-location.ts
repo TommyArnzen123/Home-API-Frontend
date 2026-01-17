@@ -13,10 +13,15 @@ import { IUser } from '../../model/login.interface';
 import { ItemTotals } from '../../item-totals/item-totals';
 import { DeviceCard } from './device-card/device-card';
 import { REGISTER_DEVICE_ROUTE, VIEW_HOME } from '../../constants/navigation-constants';
-import { IDeleteDeviceResponse, IDeleteLocationRequest, IDeleteLocationResponse } from '../../model/delete-actions.interface';
+import {
+  IDeleteDeviceResponse,
+  IDeleteLocationRequest,
+  IDeleteLocationResponse,
+} from '../../model/delete-actions.interface';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 import { MatIcon } from '@angular/material/icon';
+import { BreadcrumbService } from '../../services/breadcrumb.service';
 
 @Component({
   selector: 'view-location',
@@ -32,10 +37,10 @@ export class ViewLocation {
   totalDevices: number = 0;
 
   tiles: Tile[] = [
-      { text: 'One', cols: 3, rows: 2, color: 'lightblue' },
-      { text: 'Two', cols: 1, rows: 4, color: 'lightgreen' },
-      { text: 'Three', cols: 3, rows: 8, color: 'lightpink' },
-    ];
+    { text: 'One', cols: 3, rows: 2, color: 'lightblue' },
+    { text: 'Two', cols: 1, rows: 4, color: 'lightgreen' },
+    { text: 'Three', cols: 3, rows: 8, color: 'lightpink' },
+  ];
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -43,16 +48,17 @@ export class ViewLocation {
     private readonly loginService: LoginService,
     private readonly getInfoService: GetInfoService,
     private readonly deleteService: DeleteService,
-    private readonly modalService: ModalService
+    private readonly modalService: ModalService,
+    private readonly breadcrumbService: BreadcrumbService,
   ) {
     this.locationId = Number(this.route.snapshot.paramMap.get('locationId'));
+    this.breadcrumbService.updateLocationId(this.locationId);
   }
 
   ngOnInit(): void {
     const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
 
     if (this.isIUser(user())) {
-
       if (this.locationId) {
         const getViewLocationInfoRequest: IViewLocationInfoRequest = {
           locationId: this.locationId,
@@ -119,17 +125,17 @@ export class ViewLocation {
     if (this.locationId) {
       const deleteLocationRequest: IDeleteLocationRequest = {
         locationId: this.locationId,
-      }
-      
+      };
+
       this.deleteService.deleteLocationById(deleteLocationRequest).subscribe({
         next: (response: IDeleteLocationResponse) => {
           this.modalService.showModalElement(DELETE_LOCATION_SUCCESS_MESSAGE);
-          
+
           this.returnToViewHome();
         },
         error: () => {
           this.modalService.showModalElement(DELETE_LOCATION_ERROR_MODAL);
-        }
+        },
       });
     } else {
       this.modalService.showModalElement(DELETE_LOCATION_ERROR_MODAL);
@@ -140,6 +146,8 @@ export class ViewLocation {
     this.totalDevices = this.totalDevices - 1;
 
     // Remove the deleted device from the registered devices list.
-    this.devices = this.devices.filter(device => device.deviceId !== deleteDeviceResponse.deviceId);
+    this.devices = this.devices.filter(
+      (device) => device.deviceId !== deleteDeviceResponse.deviceId,
+    );
   }
 }

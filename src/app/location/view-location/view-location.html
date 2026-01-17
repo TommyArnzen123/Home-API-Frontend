@@ -1,7 +1,8 @@
 <div class="flexDisplay">
   <h1>{{ locationName }}</h1>
-  @if (homeId) {<button matButton="outlined" (click)="returnToViewHome()">Return to Home</button>}
-  <button matButton="outlined" (click)="deleteLocationVerification()"><mat-icon>delete</mat-icon>Delete Location</button>
+  <button matButton="outlined" (click)="deleteLocationVerification()">
+    <mat-icon>delete</mat-icon>Delete Location
+  </button>
 </div>
 
 <mat-grid-list cols="4" rowHeight="100px">
@@ -21,14 +22,16 @@
     [style.background]="tiles[1].color"
     style="display: flex; flex-direction: column"
   >
-   <div style="height: 98%; width: 95%; overflow: scroll">
+    <div style="height: 98%; width: 95%; overflow: scroll">
       <h1>Devices</h1>
       @if (devices.length > 0) {
         @for (device of devices; track device.deviceId) {
           <div style="margin-bottom: 10px">
-            <device-card [deviceId]="device.deviceId" 
-            [deviceName]="device.deviceName" 
-            (deviceDeleted)="deviceDeletedAction($event)"/>
+            <device-card
+              [deviceId]="device.deviceId"
+              [deviceName]="device.deviceName"
+              (deviceDeleted)="deviceDeletedAction($event)"
+            />
           </div>
         }
       }
@@ -41,5 +44,5 @@
   >
     <div>Register New Device Button Goes Here.</div>
     <div><button (click)="registerDevice()">Register New Device</button></div>
-</mat-grid-tile>
+  </mat-grid-tile>
 </mat-grid-list>

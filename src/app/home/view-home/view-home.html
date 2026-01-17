@@ -1,7 +1,8 @@
 <div class="titleElements">
   <h1>{{ homeName }}</h1>
-  <button matButton="outlined" (click)="returnToHomeScreen()">Return to Home Screen</button>
-  <button matButton="outlined" (click)="deleteHomeVerification()"><mat-icon>delete</mat-icon>Delete Home</button>
+  <button matButton="outlined" (click)="deleteHomeVerification()">
+    <mat-icon>delete</mat-icon>Delete Home
+  </button>
 </div>
 
 <mat-grid-list cols="4" rowHeight="100px">
@@ -22,14 +23,16 @@
     [style.background]="tiles[1].color"
     style="display: flex; flex-direction: column"
   >
-   <div style="height: 98%; width: 95%; overflow: scroll">
+    <div style="height: 98%; width: 95%; overflow: scroll">
       <h1>Locations</h1>
       @if (locations.length > 0) {
         @for (location of locations; track location.locationId) {
           <div style="margin-bottom: 10px">
-            <location-card [locationId]="location.locationId" 
-            [locationName]="location.locationName" 
-            (locationDeleted)="locationDeletedAction($event)"/>
+            <location-card
+              [locationId]="location.locationId"
+              [locationName]="location.locationName"
+              (locationDeleted)="locationDeletedAction($event)"
+            />
           </div>
         }
       }
@@ -42,5 +45,5 @@
   >
     <div>Register New Location Button Goes Here.</div>
     <div><button (click)="registerLocation()">Register New Location</button></div>
-</mat-grid-tile>
+  </mat-grid-tile>
 </mat-grid-list>

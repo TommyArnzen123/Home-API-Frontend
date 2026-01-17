@@ -11,6 +11,7 @@ import { IHome } from '../model/get-info.interface';
 import { Router } from '@angular/router';
 import { REGISTER_HOME_ROUTE } from '../constants/navigation-constants';
 import { IDeleteHomeResponse } from '../model/delete-actions.interface';
+import { BreadcrumbService } from '../services/breadcrumb.service';
 
 export interface Tile {
   color: string;
@@ -46,7 +47,10 @@ export class HomePage implements OnInit, OnDestroy {
     private readonly loginService: LoginService,
     private readonly getInfoService: GetInfoService,
     private readonly router: Router,
-  ) {}
+    private readonly breadcrumbService: BreadcrumbService,
+  ) {
+    this.breadcrumbService.clearService();
+  }
 
   private isIUser(value: IUser | null): value is IUser {
     return (
@@ -89,7 +93,6 @@ export class HomePage implements OnInit, OnDestroy {
           this.loginService.logout();
         },
       });
-
     } else {
       this.loginService.logout();
     }
@@ -120,7 +123,6 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   homeDeletedAction(deleteHomeResponse: IDeleteHomeResponse) {
-
     // Remove one home from the registered homes count.
     this.totalHomes = this.totalHomes - 1;
 
@@ -131,6 +133,6 @@ export class HomePage implements OnInit, OnDestroy {
     this.totalDevices = this.totalDevices - deleteHomeResponse.numDevices;
 
     // Remove the deleted home from the registered homes list.
-    this.homeInfo = this.homeInfo.filter(home => home.homeId !== deleteHomeResponse.homeId);
+    this.homeInfo = this.homeInfo.filter((home) => home.homeId !== deleteHomeResponse.homeId);
   }
 }
