@@ -1,13 +1,13 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
-import { computed, Injectable, Signal, signal } from '@angular/core';
-import { EnvironmentService } from './environment.service';
-import { ILoginRequest, IUser } from '../model/login.interface';
+import { computed, inject, Injectable, Signal, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
+import { EnvironmentService } from './environment.service';
 import { SessionStorageService } from './session-storage.service';
 import { USER_LOGIN_INFO_KEY } from '../constants/session-storage-constants';
-import { Router } from '@angular/router';
-import { LoadingContextToken } from '../interceptor/http-context-tokens';
 import { LOGIN_ROUTE } from '../constants/navigation-constants';
+import { LoadingContextToken } from '../interceptor/http-context-tokens';
+import { ILoginRequest, IUser } from '../model/login.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -17,12 +17,12 @@ export class LoginService {
   private userLoginInfo = this.#loginResponseInfo$.asReadonly();
   private loginUrl = '/login';
 
-  constructor(
-    private readonly httpClient: HttpClient,
-    private readonly environmentService: EnvironmentService,
-    private readonly sessionStorageService: SessionStorageService,
-    private readonly router: Router,
-  ) {
+  private readonly httpClient = inject(HttpClient);
+  private readonly environmentService = inject(EnvironmentService);
+  private readonly sessionStorageService = inject(SessionStorageService);
+  private readonly router = inject(Router);
+
+  constructor() {
     this.loadUserFromSessionStorage();
   }
 

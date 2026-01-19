@@ -1,31 +1,32 @@
-import { Component, OnInit, Signal } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { Subscription } from 'rxjs';
+import { GetInfoService } from '../../services/get-info.service';
+import { LoginService } from '../../services/login.service';
+import { DeleteService } from '../../services/delete.service';
+import { ModalService } from '../../services/modal.service';
+import { BreadcrumbService } from '../../services/breadcrumb.service';
+import { ItemTotals } from '../../item-totals/item-totals';
+import { LocationCard } from './location-card/location-card';
+import { Tile } from '../../home-page/home-page';
+import { HOME_PAGE_ROUTE, REGISTER_LOCATION_ROUTE } from '../../constants/navigation-constants';
+import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
+import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 import {
   ILocation,
   IViewHomeInfoRequest,
   IViewHomeInfoResponse,
 } from '../../model/get-info.interface';
-import { GetInfoService } from '../../services/get-info.service';
 import { IUser } from '../../model/login.interface';
-import { LoginService } from '../../services/login.service';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { Tile } from '../../home-page/home-page';
-import { ItemTotals } from '../../item-totals/item-totals';
-import { LocationCard } from './location-card/location-card';
-import { HOME_PAGE_ROUTE, REGISTER_LOCATION_ROUTE } from '../../constants/navigation-constants';
-import { DeleteService } from '../../services/delete.service';
 import {
   IDeleteHomeRequest,
   IDeleteHomeResponse,
   IDeleteLocationResponse,
 } from '../../model/delete-actions.interface';
-import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
-import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
-import { ModalService } from '../../services/modal.service';
-import { MatButton } from '@angular/material/button';
 import { IModal, IModalActions } from '../../model/modal.interface';
-import { MatIcon } from '@angular/material/icon';
-import { BreadcrumbService } from '../../services/breadcrumb.service';
 
 @Component({
   selector: 'view-home',
@@ -33,7 +34,9 @@ import { BreadcrumbService } from '../../services/breadcrumb.service';
   templateUrl: './view-home.html',
   styleUrl: './view-home.scss',
 })
-export class ViewHome implements OnInit {
+export class ViewHome implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   homeId: number | null = null;
   homeName: string | null = null;
   locations: ILocation[] = [];
@@ -45,15 +48,15 @@ export class ViewHome implements OnInit {
     { text: 'Three', cols: 3, rows: 8, color: 'lightpink' },
   ];
 
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
-    private readonly loginService: LoginService,
-    private readonly getInfoService: GetInfoService,
-    private readonly deleteService: DeleteService,
-    private readonly modalService: ModalService,
-    private readonly breadcrumbService: BreadcrumbService,
-  ) {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly loginService = inject(LoginService);
+  private readonly getInfoService = inject(GetInfoService);
+  private readonly deleteService = inject(DeleteService);
+  private readonly modalService = inject(ModalService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+
+  constructor() {
     this.homeId = Number(this.route.snapshot.paramMap.get('homeId'));
     this.breadcrumbService.updateHomeId(this.homeId);
   }
@@ -69,23 +72,29 @@ export class ViewHome implements OnInit {
         };
 
         // Get the home screen info.
-        this.getInfoService.getViewHomeInfo(getViewHomeInfoRequest).subscribe({
-          next: (response: IViewHomeInfoResponse) => {
-            this.homeName = response.homeName;
-            this.locations = response.locations;
-            this.totalDevices = response.numDevices;
-          },
-          error: () => {
-            // If there is an error getting the information on the home screen, log the user out.
-            // They will not be able to use the application without the information returned from the
-            // get home screen info endpoint.
-            this.loginService.logout();
-          },
-        });
+        this.subscriptions.push(
+          this.getInfoService.getViewHomeInfo(getViewHomeInfoRequest).subscribe({
+            next: (response: IViewHomeInfoResponse) => {
+              this.homeName = response.homeName;
+              this.locations = response.locations;
+              this.totalDevices = response.numDevices;
+            },
+            error: () => {
+              // If there is an error getting the information on the home screen, log the user out.
+              // They will not be able to use the application without the information returned from the
+              // get home screen info endpoint.
+              this.loginService.logout();
+            },
+          }),
+        );
       }
     } else {
       this.loginService.logout();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   private isIUser(value: IUser | null): value is IUser {
@@ -129,16 +138,18 @@ export class ViewHome implements OnInit {
         homeId: this.homeId,
       };
 
-      this.deleteService.deleteHomeById(deleteHomeRequest).subscribe({
-        next: (response: IDeleteHomeResponse) => {
-          this.modalService.showModalElement(DELETE_HOME_SUCCESS_MESSAGE);
+      this.subscriptions.push(
+        this.deleteService.deleteHomeById(deleteHomeRequest).subscribe({
+          next: (response: IDeleteHomeResponse) => {
+            this.modalService.showModalElement(DELETE_HOME_SUCCESS_MESSAGE);
 
-          this.returnToHomeScreen();
-        },
-        error: () => {
-          this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);
-        },
-      });
+            this.returnToHomeScreen();
+          },
+          error: () => {
+            this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);
+          },
+        }),
+      );
     } else {
       this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);
     }

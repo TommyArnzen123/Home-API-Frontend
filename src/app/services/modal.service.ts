@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { IModal, IModalActions } from '../model/modal.interface';
 import { ModalElement } from '../shared/components/modal-element/modal-element';
+import { IModal, IModalActions } from '../model/modal.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ModalService {
-  constructor(private readonly modal: MatDialog) {}
+  private readonly modal = inject(MatDialog);
 
   showModalElement(modalContent: IModal, actions?: IModalActions) {
     this.modal.open(ModalElement, {

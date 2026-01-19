@@ -1,27 +1,28 @@
-import { Component, Signal } from '@angular/core';
+import { Component, inject, Signal, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatButton } from '@angular/material/button';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIcon } from '@angular/material/icon';
+import { Subscription } from 'rxjs';
 import { GetInfoService } from '../../services/get-info.service';
 import { DeleteService } from '../../services/delete.service';
 import { ModalService } from '../../services/modal.service';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatButton } from '@angular/material/button';
+import { LoginService } from '../../services/login.service';
+import { BreadcrumbService } from '../../services/breadcrumb.service';
+import { Tile } from '../../home-page/home-page';
+import { DeviceCard } from './device-card/device-card';
+import { ItemTotals } from '../../item-totals/item-totals';
 import { IModal, IModalActions } from '../../model/modal.interface';
 import { IDevice, ILocation, IViewLocationInfoRequest } from '../../model/get-info.interface';
-import { Tile } from '../../home-page/home-page';
-import { LoginService } from '../../services/login.service';
 import { IUser } from '../../model/login.interface';
-import { ItemTotals } from '../../item-totals/item-totals';
-import { DeviceCard } from './device-card/device-card';
-import { REGISTER_DEVICE_ROUTE, VIEW_HOME } from '../../constants/navigation-constants';
 import {
   IDeleteDeviceResponse,
   IDeleteLocationRequest,
   IDeleteLocationResponse,
 } from '../../model/delete-actions.interface';
+import { REGISTER_DEVICE_ROUTE, VIEW_HOME } from '../../constants/navigation-constants';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../constants/delete-constants';
-import { MatIcon } from '@angular/material/icon';
-import { BreadcrumbService } from '../../services/breadcrumb.service';
 
 @Component({
   selector: 'view-location',
@@ -29,7 +30,9 @@ import { BreadcrumbService } from '../../services/breadcrumb.service';
   templateUrl: './view-location.html',
   styleUrl: './view-location.scss',
 })
-export class ViewLocation {
+export class ViewLocation implements OnDestroy {
+  subscriptions: Subscription[] = [];
+
   locationId: number | null = null;
   locationName: string | null = null;
   homeId: number | null = null;
@@ -42,17 +45,21 @@ export class ViewLocation {
     { text: 'Three', cols: 3, rows: 8, color: 'lightpink' },
   ];
 
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
-    private readonly loginService: LoginService,
-    private readonly getInfoService: GetInfoService,
-    private readonly deleteService: DeleteService,
-    private readonly modalService: ModalService,
-    private readonly breadcrumbService: BreadcrumbService,
-  ) {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly loginService = inject(LoginService);
+  private readonly getInfoService = inject(GetInfoService);
+  private readonly deleteService = inject(DeleteService);
+  private readonly modalService = inject(ModalService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+
+  constructor() {
     this.locationId = Number(this.route.snapshot.paramMap.get('locationId'));
     this.breadcrumbService.updateLocationId(this.locationId);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   ngOnInit(): void {
@@ -66,20 +73,22 @@ export class ViewLocation {
         };
 
         // Get the location info.
-        this.getInfoService.getViewLocationInfo(getViewLocationInfoRequest).subscribe({
-          next: (response: ILocation) => {
-            this.homeId = response.homeId;
-            this.locationName = response.locationName;
-            this.devices = response.devices;
-            this.totalDevices = response.devices.length;
-          },
-          error: () => {
-            // If there is an error getting the information on the home screen, log the user out.
-            // They will not be able to use the application without the information returned from the
-            // get home screen info endpoint.
-            this.loginService.logout();
-          },
-        });
+        this.subscriptions.push(
+          this.getInfoService.getViewLocationInfo(getViewLocationInfoRequest).subscribe({
+            next: (response: ILocation) => {
+              this.homeId = response.homeId;
+              this.locationName = response.locationName;
+              this.devices = response.devices;
+              this.totalDevices = response.devices.length;
+            },
+            error: () => {
+              // If there is an error getting the information on the home screen, log the user out.
+              // They will not be able to use the application without the information returned from the
+              // get home screen info endpoint.
+              this.loginService.logout();
+            },
+          }),
+        );
       }
     } else {
       this.loginService.logout();
@@ -127,16 +136,18 @@ export class ViewLocation {
         locationId: this.locationId,
       };
 
-      this.deleteService.deleteLocationById(deleteLocationRequest).subscribe({
-        next: (response: IDeleteLocationResponse) => {
-          this.modalService.showModalElement(DELETE_LOCATION_SUCCESS_MESSAGE);
+      this.subscriptions.push(
+        this.deleteService.deleteLocationById(deleteLocationRequest).subscribe({
+          next: (response: IDeleteLocationResponse) => {
+            this.modalService.showModalElement(DELETE_LOCATION_SUCCESS_MESSAGE);
 
-          this.returnToViewHome();
-        },
-        error: () => {
-          this.modalService.showModalElement(DELETE_LOCATION_ERROR_MODAL);
-        },
-      });
+            this.returnToViewHome();
+          },
+          error: () => {
+            this.modalService.showModalElement(DELETE_LOCATION_ERROR_MODAL);
+          },
+        }),
+      );
     } else {
       this.modalService.showModalElement(DELETE_LOCATION_ERROR_MODAL);
     }

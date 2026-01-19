@@ -1,7 +1,7 @@
 import { HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
-import { LoadingService } from '../services/loading.service';
 import { inject } from '@angular/core';
 import { finalize } from 'rxjs';
+import { LoadingService } from '../services/loading.service';
 import { LoadingContextToken, SkipLoadingContextToken } from './http-context-tokens';
 
 export const LoadingInterceptor: HttpInterceptorFn = (

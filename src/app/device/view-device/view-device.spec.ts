@@ -8,9 +8,8 @@ describe('ViewDevice', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ViewDevice]
-    })
-    .compileComponents();
+      imports: [ViewDevice],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ViewDevice);
     component = fixture.componentInstance;

@@ -1,10 +1,15 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { EnvironmentService } from './environment.service';
-import { SessionStorageService } from './session-storage.service';
 import { LoginService } from './login.service';
 import { IHomeScreenInfoRequest, IHomeScreenInfoResponse } from '../model/home-screen.interface';
-import { IDeviceInformationCurrentDay, ILocation, IViewHomeInfoRequest, IViewHomeInfoResponse, IViewLocationInfoRequest } from '../model/get-info.interface';
+import {
+  IDeviceInformationCurrentDay,
+  ILocation,
+  IViewHomeInfoRequest,
+  IViewHomeInfoResponse,
+  IViewLocationInfoRequest,
+} from '../model/get-info.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -16,11 +21,9 @@ export class GetInfoService {
   private getViewLocationInfoPath = '/viewLocationInfo';
   private getInformationByDeviceCurrentDay = '/informationByDeviceCurrentDay';
 
-  constructor(
-    private readonly httpClient: HttpClient,
-    private readonly environmentService: EnvironmentService,
-    private readonly loginService: LoginService,
-  ) {}
+  private readonly httpClient = inject(HttpClient);
+  private readonly environmentService = inject(EnvironmentService);
+  private readonly loginService = inject(LoginService);
 
   getHomeScreenInfo(request: IHomeScreenInfoRequest) {
     return this.httpClient.get<IHomeScreenInfoResponse>(
@@ -51,7 +54,7 @@ export class GetInfoService {
         this.getViewLocationInfoPath +
         '/' +
         request.locationId,
-        { headers: this.generateHeaderWithBearerToken(request.jwtToken) },
+      { headers: this.generateHeaderWithBearerToken(request.jwtToken) },
     );
   }
 

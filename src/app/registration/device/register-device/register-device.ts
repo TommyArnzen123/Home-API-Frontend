@@ -1,50 +1,55 @@
-import { Component, Signal } from '@angular/core';
-import { IUser } from '../../../model/login.interface';
+import { Component, inject, Signal, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RegistrationService } from '../../../services/registration.service';
-import { LoginService } from '../../../services/login.service';
-import { ModalService } from '../../../services/modal.service';
-import { Subscription } from 'rxjs';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { VIEW_LOCATION } from '../../../constants/navigation-constants';
-import { IRegisterGenericEntityRequest, IRegisterGenericEntityResponse } from '../../../model/registration.interface';
-import { REGISTER_DEVICE_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
-import { REGISTER_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
 import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { Subscription } from 'rxjs';
+import { RegistrationService } from '../../../services/registration.service';
+import { LoginService } from '../../../services/login.service';
+import { ModalService } from '../../../services/modal.service';
+import { VIEW_LOCATION } from '../../../constants/navigation-constants';
+import { REGISTER_DEVICE_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
+import { REGISTER_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
+import { IUser } from '../../../model/login.interface';
+import {
+  IRegisterGenericEntityRequest,
+  IRegisterGenericEntityResponse,
+} from '../../../model/registration.interface';
 
 @Component({
   selector: 'register-device',
-  imports: [MatCard,
+  imports: [
+    MatCard,
     MatCardTitle,
     MatCardContent,
     MatFormField,
     MatInput,
     MatError,
     MatButtonModule,
-    ReactiveFormsModule,],
+    ReactiveFormsModule,
+  ],
   templateUrl: './register-device.html',
   styleUrl: './register-device.scss',
 })
-export class RegisterDevice {
+export class RegisterDevice implements OnDestroy {
+  subscriptions: Subscription[] = [];
+  form!: FormGroup;
+
   user: Signal<IUser | null>;
   locationId!: string | null;
 
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
-    private readonly registrationService: RegistrationService,
-    private readonly loginService: LoginService,
-    private readonly modalService: ModalService,
-  ) {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly registrationService = inject(RegistrationService);
+  private readonly loginService = inject(LoginService);
+  private readonly modalService = inject(ModalService);
+
+  constructor() {
     this.locationId = this.route.snapshot.paramMap.get('locationId');
     this.user = this.loginService.getUserLoginInfo();
   }
-
-  subscriptions: Subscription[] = [];
-  form!: FormGroup;
 
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -76,9 +81,8 @@ export class RegisterDevice {
   }
 
   registerDeviceAction(deviceName: string, jwtToken: string) {
-
     if (this.locationId) {
-      const registerDeviceRequest:  IRegisterGenericEntityRequest = {
+      const registerDeviceRequest: IRegisterGenericEntityRequest = {
         parentEntityId: Number(this.locationId),
         name: deviceName,
       };

@@ -6,8 +6,8 @@ import {
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import { IModal, IModalActions } from '../../../model/modal.interface';
 import { MatButton } from '@angular/material/button';
+import { IModal, IModalActions } from '../../../model/modal.interface';
 
 @Component({
   selector: 'modal-element',
@@ -28,7 +28,7 @@ export class ModalElement {
   ) {
     this.title = this.data.modalContent.title;
     this.content = this.data.modalContent.content;
-    this.footer = this.data.modalContent.footer ? this.data.modalContent.footer : "";
+    this.footer = this.data.modalContent.footer ? this.data.modalContent.footer : '';
     this.primaryText = this.data.modalContent.primaryText
       ? this.data.modalContent.primaryText
       : 'Ok';

@@ -4,8 +4,8 @@ import {
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
-import { LoginService } from '../services/login.service';
 import { inject } from '@angular/core';
+import { LoginService } from '../services/login.service';
 import { LOGIN_ROUTE } from '../constants/navigation-constants';
 
 export const isUserAuthenticated: CanActivateFn = (

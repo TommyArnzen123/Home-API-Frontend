@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import { IEnvironment } from '../model/environment.interface';
 
 @Injectable({

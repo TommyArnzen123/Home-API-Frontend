@@ -1,18 +1,20 @@
 import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { EnvironmentService } from './environment.service';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { EnvironmentService } from './environment.service';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';
-import { IRegisterGenericEntityRequest, IRegisterGenericEntityResponse, IRegisterUserRequest } from '../model/registration.interface';
+import {
+  IRegisterGenericEntityRequest,
+  IRegisterGenericEntityResponse,
+  IRegisterUserRequest,
+} from '../model/registration.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RegistrationService {
-  constructor(
-    private readonly httpClient: HttpClient,
-    private readonly environmentService: EnvironmentService,
-  ) {}
+  private readonly httpClient = inject(HttpClient);
+  private readonly environmentService = inject(EnvironmentService);
 
   private registrationRoot = '/register';
   private registerUserPath = '/user';
@@ -20,7 +22,9 @@ export class RegistrationService {
   private registerLocationPath = '/location';
   private registerDevicePath = '/device';
 
-  registerUser(registerUserRequest: IRegisterUserRequest): Observable<IRegisterGenericEntityResponse> {
+  registerUser(
+    registerUserRequest: IRegisterUserRequest,
+  ): Observable<IRegisterGenericEntityResponse> {
     return this.httpClient.post<IRegisterGenericEntityResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.registrationRoot +

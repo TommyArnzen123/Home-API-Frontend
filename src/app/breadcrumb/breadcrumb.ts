@@ -1,6 +1,6 @@
 import { Component, inject, Signal } from '@angular/core';
-import { BreadcrumbService } from '../services/breadcrumb.service';
 import { Router } from '@angular/router';
+import { BreadcrumbService } from '../services/breadcrumb.service';
 import { HOME_PAGE_ROUTE, VIEW_HOME, VIEW_LOCATION } from '../constants/navigation-constants';
 
 @Component({
@@ -10,13 +10,14 @@ import { HOME_PAGE_ROUTE, VIEW_HOME, VIEW_LOCATION } from '../constants/navigati
   styleUrl: './breadcrumb.scss',
 })
 export class Breadcrumb {
-  private readonly breadcrumbService = inject(BreadcrumbService);
   private readonly router = inject(Router);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+
   homeId: Signal<number | null> = this.breadcrumbService.getHomeId();
   locationId: Signal<number | null> = this.breadcrumbService.getLocationId();
   deviceId: Signal<number | null> = this.breadcrumbService.getDeviceId();
 
-  viewHomeScreen(): void {
+  viewHomePage(): void {
     this.router.navigate([HOME_PAGE_ROUTE]);
   }
 

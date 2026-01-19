@@ -1,7 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { EnvironmentService } from './environment.service';
-import { IDeleteDeviceRequest, IDeleteDeviceResponse, IDeleteHomeRequest, IDeleteHomeResponse, IDeleteLocationRequest, IDeleteLocationResponse } from '../model/delete-actions.interface';
+import {
+  IDeleteDeviceRequest,
+  IDeleteDeviceResponse,
+  IDeleteHomeRequest,
+  IDeleteHomeResponse,
+  IDeleteLocationRequest,
+  IDeleteLocationResponse,
+} from '../model/delete-actions.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -12,11 +19,9 @@ export class DeleteService {
   private deleteLocationPath = '/location';
   private deleteDevicePath = '/device';
 
-  constructor(
-    private readonly httpClient: HttpClient,
-    private readonly environmentService: EnvironmentService,
-  ) {}
-  
+  private readonly httpClient = inject(HttpClient);
+  private readonly environmentService = inject(EnvironmentService);
+
   deleteHomeById(request: IDeleteHomeRequest) {
     return this.httpClient.delete<IDeleteHomeResponse>(
       this.environmentService.getEnvironment().backendUrl +

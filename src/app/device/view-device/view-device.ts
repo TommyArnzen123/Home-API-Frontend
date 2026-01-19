@@ -1,23 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatButton } from '@angular/material/button';
+import { DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { Subscription } from 'rxjs';
 import { GetInfoService } from '../../services/get-info.service';
+import { ModalService } from '../../services/modal.service';
+import { DeleteService } from '../../services/delete.service';
+import { BreadcrumbService } from '../../services/breadcrumb.service';
+import { DisplayTempByHour } from './display-temp-by-hour/display-temp-by-hour';
+import { DELETE_DEVICE_ERROR_MODAL } from '../../constants/error-constants';
+import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../constants/delete-constants';
+import { VIEW_LOCATION } from '../../constants/navigation-constants';
 import {
   IAverageTemperatureByHour,
   IDeviceInformationCurrentDay,
 } from '../../model/get-info.interface';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { DisplayTempByHour } from './display-temp-by-hour/display-temp-by-hour';
-import { MatButton } from '@angular/material/button';
-import { DatePipe } from '@angular/common';
-import { ModalService } from '../../services/modal.service';
-import { DeleteService } from '../../services/delete.service';
 import { IModal, IModalActions } from '../../model/modal.interface';
 import { IDeleteDeviceRequest, IDeleteDeviceResponse } from '../../model/delete-actions.interface';
-import { DELETE_DEVICE_ERROR_MODAL } from '../../constants/error-constants';
-import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../constants/delete-constants';
-import { VIEW_LOCATION } from '../../constants/navigation-constants';
-import { MatIcon } from '@angular/material/icon';
-import { BreadcrumbService } from '../../services/breadcrumb.service';
 
 const averageTempInfo: IAverageTemperatureByHour[] = [
   { hour: 0, averageTemperature: 0, temperatureAvailable: false },
@@ -75,53 +76,56 @@ const averageTempInfoMock: IAverageTemperatureByHour[] = [
 
 @Component({
   selector: 'view-device',
-  imports: [DisplayTempByHour, MatGridListModule, MatButton, MatIcon, DatePipe],
+  imports: [MatGridListModule, MatButton, MatIcon, DisplayTempByHour, DatePipe],
   templateUrl: './view-device.html',
   styleUrl: './view-device.scss',
 })
-export class ViewDevice implements OnInit {
+export class ViewDevice implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   deviceId: number | null = null;
   locationId: number | null = null;
   deviceInformation!: IDeviceInformationCurrentDay;
-  currentTemperatureDate!: Date;
+  mostRecentTemperatureDate!: Date;
   averageTemperatureByHour: IAverageTemperatureByHour[] = [];
-  deviceExists = false;
 
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly getInfoService: GetInfoService,
-    private readonly router: Router,
-    private readonly deleteService: DeleteService,
-    private readonly modalService: ModalService,
-    private readonly breadcrumbService: BreadcrumbService,
-  ) {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly getInfoService = inject(GetInfoService);
+  private readonly deleteService = inject(DeleteService);
+  private readonly modalService = inject(ModalService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+
+  constructor() {
     this.deviceId = Number(this.route.snapshot.paramMap.get('deviceId'));
     this.breadcrumbService.updateDeviceId(this.deviceId);
   }
 
   ngOnInit(): void {
     if (this.deviceId) {
-      this.getInfoService.getViewDeviceInformation(this.deviceId).subscribe({
-        next: (response: IDeviceInformationCurrentDay) => {
-          this.locationId = response.locationId;
-          this.deviceInformation = response;
-          this.currentTemperatureDate = new Date(response.mostRecentTemperatureAvailableDateTime);
-          this.insertAverageTemperatureByHourInformation(
-            // this.deviceInformation.averageTemperaturesByHourCurrentDay,
-            averageTempInfoMock, // Comment this line out for live data.
-          );
-
-          if (response.deviceId === Number(this.deviceId)) {
-            this.deviceExists = true;
-          }
-        },
-        error: () => {
-          console.log('Get view device information error.');
-        },
-      });
-    } else {
-      // Display an error message that the deviceId is not available, so the network call to get the information for the device cannot be run.
+      this.subscriptions.push(
+        this.getInfoService.getViewDeviceInformation(this.deviceId).subscribe({
+          next: (response: IDeviceInformationCurrentDay) => {
+            this.locationId = response.locationId;
+            this.deviceInformation = response;
+            this.mostRecentTemperatureDate = new Date(
+              response.mostRecentTemperatureAvailableDateTime,
+            );
+            this.insertAverageTemperatureByHourInformation(
+              this.deviceInformation.averageTemperaturesByHourCurrentDay,
+              // averageTempInfoMock, // Comment this line out for live data.
+            );
+          },
+          error: () => {
+            console.log('Get view device information error.');
+          },
+        }),
+      );
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   deleteDeviceVerification(): void {
@@ -133,7 +137,7 @@ export class ViewDevice implements OnInit {
     };
 
     const deleteVerificationActions: IModalActions = {
-      primaryAction: () => this.deleteDeviceButtonAction(),
+      primaryAction: () => this.deleteDeviceAction(),
       secondaryAction: () => this.modalService.closeModalElement(),
     };
 
@@ -145,29 +149,32 @@ export class ViewDevice implements OnInit {
     this.router.navigate([VIEW_LOCATION, this.locationId]);
   }
 
-  deleteDeviceButtonAction() {
+  deleteDeviceAction() {
     if (this.deviceId) {
       const deleteDeviceRequest: IDeleteDeviceRequest = {
         deviceId: this.deviceId,
       };
 
-      this.deleteService.deleteDeviceById(deleteDeviceRequest).subscribe({
-        next: (response: IDeleteDeviceResponse) => {
-          this.modalService.showModalElement(DELETE_DEVICE_SUCCESS_MESSAGE);
+      this.subscriptions.push(
+        this.deleteService.deleteDeviceById(deleteDeviceRequest).subscribe({
+          next: (response: IDeleteDeviceResponse) => {
+            this.modalService.showModalElement(DELETE_DEVICE_SUCCESS_MESSAGE);
 
-          // Route to the view location page.
-          this.returnToViewLocation();
-        },
-        error: () => {
-          this.modalService.showModalElement(DELETE_DEVICE_ERROR_MODAL);
-        },
-      });
+            // Route to the view location page.
+            this.returnToViewLocation();
+          },
+          error: () => {
+            this.modalService.showModalElement(DELETE_DEVICE_ERROR_MODAL);
+          },
+        }),
+      );
     } else {
       this.modalService.showModalElement(DELETE_DEVICE_ERROR_MODAL);
     }
   }
 
-  // Generate an array of average temperature by hour objects with the current hour as the last item in the array.
+  // Generate an array of average temperature by hour objects
+  // with the current hour as the last item in the array.
   generateHourlyTemperatureReading(): IAverageTemperatureByHour[] {
     const currentDate = new Date();
     const currentHour = currentDate.getHours();

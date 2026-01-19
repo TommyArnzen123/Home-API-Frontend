@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatCard, MatCardTitle, MatCardContent } from '@angular/material/card';
 import { MatFormField } from '@angular/material/form-field';
@@ -6,11 +6,11 @@ import { MatInput } from '@angular/material/input';
 import { MatError } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
-import { LoginService } from '../services/login.service';
-import { ILoginRequest, IUser } from '../model/login.interface';
 import { Router } from '@angular/router';
-import { HOME_PAGE_ROUTE, REGISTER_USER_ROUTE } from '../constants/navigation-constants';
 import { Subscription } from 'rxjs';
+import { LoginService } from '../services/login.service';
+import { HOME_PAGE_ROUTE, REGISTER_USER_ROUTE } from '../constants/navigation-constants';
+import { ILoginRequest, IUser } from '../model/login.interface';
 
 @Component({
   selector: 'home-login-component',
@@ -31,10 +31,8 @@ export class LoginComponent implements OnDestroy {
   subscriptions: Subscription[] = [];
   error!: string;
 
-  constructor(
-    private readonly loginService: LoginService,
-    private readonly router: Router,
-  ) {}
+  private readonly loginService = inject(LoginService);
+  private readonly router = inject(Router);
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());

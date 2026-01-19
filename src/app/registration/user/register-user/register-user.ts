@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -14,13 +14,16 @@ import { MatError } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LOGIN_ROUTE } from '../../../constants/navigation-constants';
-import { RegistrationService } from '../../../services/registration.service';
-import { IRegisterGenericEntityResponse, IRegisterUserRequest } from '../../../model/registration.interface';
 import { Subscription } from 'rxjs';
+import { RegistrationService } from '../../../services/registration.service';
 import { ModalService } from '../../../services/modal.service';
 import { REGISTER_USER_ERROR_MODAL } from '../../../constants/error-constants';
 import { REGISTER_USER_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
+import { LOGIN_ROUTE } from '../../../constants/navigation-constants';
+import {
+  IRegisterGenericEntityResponse,
+  IRegisterUserRequest,
+} from '../../../model/registration.interface';
 
 @Component({
   selector: 'home-register-user',
@@ -38,15 +41,13 @@ import { REGISTER_USER_SUCCESS_MESSAGE } from '../../../constants/registration-c
   styleUrl: './register-user.scss',
 })
 export class RegisterUser implements OnInit, OnDestroy {
-  constructor(
-    private readonly router: Router,
-    private readonly registrationService: RegistrationService,
-    private readonly modalService: ModalService
-  ) {}
-
   subscriptions: Subscription[] = [];
   form!: FormGroup;
   error!: string;
+
+  private readonly router = inject(Router);
+  private readonly registrationService = inject(RegistrationService);
+  private readonly modalService = inject(ModalService);
 
   ngOnInit(): void {
     this.form = new FormGroup(

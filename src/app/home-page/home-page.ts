@@ -1,17 +1,17 @@
-import { Component, OnDestroy, OnInit, Signal } from '@angular/core';
-import { LoginService } from '../services/login.service';
-import { Subscription } from 'rxjs';
-import { IUser } from '../model/login.interface';
-import { GetInfoService } from '../services/get-info.service';
-import { IHomeScreenInfoRequest, IHomeScreenInfoResponse } from '../model/home-screen.interface';
+import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { ItemTotals } from '../item-totals/item-totals';
-import { HomeCard } from './home-card/home-card';
-import { IHome } from '../model/get-info.interface';
 import { Router } from '@angular/router';
-import { REGISTER_HOME_ROUTE } from '../constants/navigation-constants';
-import { IDeleteHomeResponse } from '../model/delete-actions.interface';
+import { Subscription } from 'rxjs';
+import { LoginService } from '../services/login.service';
+import { GetInfoService } from '../services/get-info.service';
 import { BreadcrumbService } from '../services/breadcrumb.service';
+import { HomeCard } from './home-card/home-card';
+import { ItemTotals } from '../item-totals/item-totals';
+import { REGISTER_HOME_ROUTE } from '../constants/navigation-constants';
+import { IUser } from '../model/login.interface';
+import { IHomeScreenInfoRequest, IHomeScreenInfoResponse } from '../model/home-screen.interface';
+import { IHome } from '../model/get-info.interface';
+import { IDeleteHomeResponse } from '../model/delete-actions.interface';
 
 export interface Tile {
   color: string;
@@ -43,12 +43,12 @@ export class HomePage implements OnInit, OnDestroy {
     { text: 'Three', cols: 3, rows: 8, color: 'lightpink' },
   ];
 
-  constructor(
-    private readonly loginService: LoginService,
-    private readonly getInfoService: GetInfoService,
-    private readonly router: Router,
-    private readonly breadcrumbService: BreadcrumbService,
-  ) {
+  private readonly loginService = inject(LoginService);
+  private readonly getInfoService = inject(GetInfoService);
+  private readonly router = inject(Router);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+
+  constructor() {
     this.breadcrumbService.clearService();
   }
 
@@ -79,31 +79,33 @@ export class HomePage implements OnInit, OnDestroy {
       };
 
       // Get the home screen info.
-      this.getInfoService.getHomeScreenInfo(getHomeScreenInfoRequest).subscribe({
-        next: (response: IHomeScreenInfoResponse) => {
-          this.totalHomes = response.homes.length;
-          this.totalLocations = response.numLocations;
-          this.totalDevices = response.numDevices;
-          this.homeInfo = response.homes;
-        },
-        error: () => {
-          // If there is an error getting the information on the home screen, log the user out.
-          // They will not be able to use the application without the information returned from the
-          // get home screen info endpoint.
-          this.loginService.logout();
-        },
-      });
+      this.subscriptions.push(
+        this.getInfoService.getHomeScreenInfo(getHomeScreenInfoRequest).subscribe({
+          next: (response: IHomeScreenInfoResponse) => {
+            this.totalHomes = response.homes.length;
+            this.totalLocations = response.numLocations;
+            this.totalDevices = response.numDevices;
+            this.homeInfo = response.homes;
+          },
+          error: () => {
+            // If there is an error getting the information on the home screen, log the user out.
+            // They will not be able to use the application without the information returned from the
+            // get home screen info endpoint.
+            this.loginService.logout();
+          },
+        }),
+      );
     } else {
       this.loginService.logout();
     }
   }
 
-  registerHome() {
-    this.router.navigateByUrl(REGISTER_HOME_ROUTE);
-  }
-
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
+
+  registerHome() {
+    this.router.navigateByUrl(REGISTER_HOME_ROUTE);
   }
 
   formatName(name: string): string {

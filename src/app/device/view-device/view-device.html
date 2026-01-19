@@ -7,13 +7,11 @@
     }
   </div>
 
-  @if (deviceExists) {
-    <div class="delete-button">
-      <button matButton="outlined" (click)="deleteDeviceVerification()">
-        <mat-icon>delete</mat-icon>Delete Device
-      </button>
-    </div>
-  }
+  <div class="delete-button">
+    <button matButton="outlined" (click)="deleteDeviceVerification()">
+      <mat-icon>delete</mat-icon>Delete Device
+    </button>
+  </div>
 </div>
 
 <mat-grid-list cols="4" rowHeight="100px">
@@ -22,9 +20,9 @@
       <h1>Most Recent Temperature Recorded</h1>
       @if (deviceInformation && deviceInformation.mostRecentTemperatureAvailable) {
         <div class="temperature-display">{{ deviceInformation.mostRecentTemperature }}</div>
-        @if (currentTemperatureDate) {
+        @if (mostRecentTemperatureDate) {
           <div class="date-recorded-display">
-            {{ currentTemperatureDate | date: 'MM/dd/yyyy h:mm a' }}
+            {{ mostRecentTemperatureDate | date: 'MM/dd/yyyy h:mm a' }}
           </div>
         }
       } @else {

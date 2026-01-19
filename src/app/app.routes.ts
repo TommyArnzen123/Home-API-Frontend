@@ -1,5 +1,15 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './login-component/login-component';
+import { HomePage } from './home-page/home-page';
+import { RegisterUser } from './registration/user/register-user/register-user';
+import { ViewHome } from './home/view-home/view-home';
+import { ViewDevice } from './device/view-device/view-device';
+import { ViewLocation } from './location/view-location/view-location';
+import { LoadingComponent } from './loading-component/loading-component';
+import { RegisterHome } from './registration/home/register-home/register-home';
+import { RegisterLocation } from './registration/location/register-location/register-location';
+import { RegisterDevice } from './registration/device/register-device/register-device';
+import { isUserAuthenticated } from './guards/auth.guard';
 import {
   HOME_PAGE_ROUTE,
   LOGIN_ROUTE,
@@ -11,16 +21,6 @@ import {
   VIEW_HOME,
   VIEW_LOCATION,
 } from './constants/navigation-constants';
-import { HomePage } from './home-page/home-page';
-import { RegisterUser } from './registration/user/register-user/register-user';
-import { ViewHome } from './home/view-home/view-home';
-import { ViewDevice } from './device/view-device/view-device';
-import { ViewLocation } from './location/view-location/view-location';
-import { LoadingComponent } from './loading-component/loading-component';
-import { isUserAuthenticated } from './guards/auth.guard';
-import { RegisterHome } from './registration/home/register-home/register-home';
-import { RegisterLocation } from './registration/location/register-location/register-location';
-import { RegisterDevice } from './registration/device/register-device/register-device';
 
 export const routes: Routes = [
   {

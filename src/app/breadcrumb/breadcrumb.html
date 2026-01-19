@@ -1,6 +1,6 @@
 <div class="breadcrumb-display">
   @if (homeId()) {
-    <div class="breadcrumb-item clickable" (click)="viewHomeScreen()">Home Screen</div>
+    <div class="clickable" (click)="viewHomePage()">Home Page</div>
 
     @if (!locationId()) {
       <div>></div>
@@ -10,7 +10,8 @@
 
   @if (locationId()) {
     <div>></div>
-    <div class="breadcrumb-item clickable" (click)="viewHomeById()">View Home</div>
+    <div class="clickable" (click)="viewHomeById()">View Home</div>
+
     @if (!deviceId()) {
       <div>></div>
       <div class="non-clickable">View Location</div>
@@ -19,7 +20,7 @@
 
   @if (deviceId()) {
     <div>></div>
-    <div class="breadcrumb-item clickable" (click)="viewLocationById()">View Location</div>
+    <div class="clickable" (click)="viewLocationById()">View Location</div>
     <div>></div>
     <div class="non-clickable">View Device</div>
   }

@@ -1,15 +1,16 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, OnDestroy } from '@angular/core';
 import { MatCard, MatCardActions, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { Router } from '@angular/router';
-import { VIEW_HOME } from '../../constants/navigation-constants';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { Subscription } from 'rxjs';
 import { DeleteService } from '../../services/delete.service';
-import { IDeleteHomeRequest, IDeleteHomeResponse } from '../../model/delete-actions.interface';
 import { ModalService } from '../../services/modal.service';
+import { VIEW_HOME } from '../../constants/navigation-constants';
 import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
-import { MatButton } from '@angular/material/button';
+import { IDeleteHomeRequest, IDeleteHomeResponse } from '../../model/delete-actions.interface';
 import { IModal, IModalActions } from '../../model/modal.interface';
-import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'home-card',
@@ -17,58 +18,61 @@ import { MatIcon } from '@angular/material/icon';
   templateUrl: './home-card.html',
   styleUrl: './home-card.scss',
 })
-export class HomeCard {
+export class HomeCard implements OnDestroy {
+  subscriptions: Subscription[] = [];
+
   @Input({ required: true }) homeId!: number;
   @Input({ required: true }) homeName!: string;
 
   @Output() homeDeleted = new EventEmitter<IDeleteHomeResponse>();
 
+  private readonly router = inject(Router);
+  private readonly deleteService = inject(DeleteService);
+  private readonly modalService = inject(ModalService);
 
-  constructor(
-    private readonly router: Router,
-    private readonly deleteService: DeleteService,
-    private readonly modalService: ModalService
-  ) {}
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
 
   viewHome(): void {
     this.router.navigate([VIEW_HOME, this.homeId]);
   }
 
   deleteHomeVerification(): void {
-      const deleteVerificationModal: IModal = {
-        title: 'Confirmation',
-        content: 'Are you sure you want to delete the home?',
-        primaryText: 'Delete',
-        secondaryText: 'Cancel',
-      };
-  
-      const deleteVerificationActions: IModalActions = {
-        primaryAction: () => this.deleteHome(),
-        secondaryAction: () => this.modalService.closeModalElement(),
-      };
-  
-      this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
-    }
+    const deleteVerificationModal: IModal = {
+      title: 'Confirmation',
+      content: 'Are you sure you want to delete the home?',
+      primaryText: 'Delete',
+      secondaryText: 'Cancel',
+    };
+
+    const deleteVerificationActions: IModalActions = {
+      primaryAction: () => this.deleteHome(),
+      secondaryAction: () => this.modalService.closeModalElement(),
+    };
+
+    this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
+  }
 
   deleteHome(): void {
     if (this.homeId) {
-
       const deleteHomeRequest: IDeleteHomeRequest = {
         homeId: this.homeId,
       };
 
-      this.deleteService.deleteHomeById(deleteHomeRequest).subscribe({
-        next: (response: IDeleteHomeResponse) => {
-
-          // Emit home deletion response to the home-page component to
-          // update the entity displays.
-          this.homeDeleted.emit(response);
-          this.modalService.showModalElement(DELETE_HOME_SUCCESS_MESSAGE);
-        },
-        error: () => {
-          this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);
-        }
-      });
+      this.subscriptions.push(
+        this.deleteService.deleteHomeById(deleteHomeRequest).subscribe({
+          next: (response: IDeleteHomeResponse) => {
+            // Emit home deletion response to the home-page component to
+            // update the entity displays.
+            this.homeDeleted.emit(response);
+            this.modalService.showModalElement(DELETE_HOME_SUCCESS_MESSAGE);
+          },
+          error: () => {
+            this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);
+          },
+        }),
+      );
     } else {
       this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);
     }
