@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatCard, MatCardTitle, MatCardContent } from '@angular/material/card';
 import { MatFormField } from '@angular/material/form-field';
@@ -27,12 +27,22 @@ import { ILoginRequest, IUser } from '../model/login.interface';
   templateUrl: './login-component.html',
   styleUrl: './login-component.scss',
 })
-export class LoginComponent implements OnDestroy {
+export class LoginComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   error!: string;
 
-  private readonly loginService = inject(LoginService);
   private readonly router = inject(Router);
+  private readonly loginService = inject(LoginService);
+
+  ngOnInit(): void {
+    const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
+
+    // If the user is logged in (the user value is set in the login service),
+    // route the user to the home page component.
+    if (user()) {
+      this.routeToHomePage();
+    }
+  }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
@@ -56,6 +66,10 @@ export class LoginComponent implements OnDestroy {
     }
   }
 
+  routeToHomePage(): void {
+    this.router.navigate([HOME_PAGE_ROUTE]);
+  }
+
   register() {
     // Route the user to the user registration component.
     this.router.navigateByUrl(REGISTER_USER_ROUTE);
@@ -72,7 +86,7 @@ export class LoginComponent implements OnDestroy {
         this.loginService.login(loginRequest).subscribe({
           next: (response: IUser) => {
             if (response) {
-              this.router.navigateByUrl(HOME_PAGE_ROUTE);
+              this.routeToHomePage();
             }
           },
           error: () => {
