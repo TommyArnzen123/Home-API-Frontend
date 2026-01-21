@@ -2,9 +2,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { EnvironmentService } from './environment.service';
 import { LoginService } from './login.service';
-import { IHomeScreenInfoRequest, IHomeScreenInfoResponse } from '../model/home-screen.interface';
 import {
   IDeviceInformationCurrentDay,
+  IHomeScreenInfoRequest,
+  IHomeScreenInfoResponse,
   ILocation,
   IViewHomeInfoRequest,
   IViewHomeInfoResponse,

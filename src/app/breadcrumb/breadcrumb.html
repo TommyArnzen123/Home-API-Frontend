@@ -1,27 +1,29 @@
-<div class="breadcrumb-display">
-  @if (homeId()) {
-    <div class="clickable" (click)="viewHomePage()">Home Page</div>
+@if (isIUser(user())) {
+  <div class="breadcrumb-display">
+    @if (homeId()) {
+      <div class="clickable" (click)="viewHomePage()">Home Page</div>
 
-    @if (!locationId()) {
-      <div>></div>
-      <div class="non-clickable">View Home</div>
+      @if (!locationId()) {
+        <div>></div>
+        <div class="non-clickable">View Home</div>
+      }
     }
-  }
 
-  @if (locationId()) {
-    <div>></div>
-    <div class="clickable" (click)="viewHomeById()">View Home</div>
-
-    @if (!deviceId()) {
+    @if (locationId()) {
       <div>></div>
-      <div class="non-clickable">View Location</div>
-    }
-  }
+      <div class="clickable" (click)="viewHomeById()">View Home</div>
 
-  @if (deviceId()) {
-    <div>></div>
-    <div class="clickable" (click)="viewLocationById()">View Location</div>
-    <div>></div>
-    <div class="non-clickable">View Device</div>
-  }
-</div>
+      @if (!deviceId()) {
+        <div>></div>
+        <div class="non-clickable">View Location</div>
+      }
+    }
+
+    @if (deviceId()) {
+      <div>></div>
+      <div class="clickable" (click)="viewLocationById()">View Location</div>
+      <div>></div>
+      <div class="non-clickable">View Device</div>
+    }
+  </div>
+}

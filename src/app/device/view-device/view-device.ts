@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButton } from '@angular/material/button';
@@ -9,6 +9,7 @@ import { GetInfoService } from '../../services/get-info.service';
 import { ModalService } from '../../services/modal.service';
 import { DeleteService } from '../../services/delete.service';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
+import { LoginService } from '../../services/login.service';
 import { DisplayTempByHour } from './display-temp-by-hour/display-temp-by-hour';
 import { DELETE_DEVICE_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../constants/delete-constants';
@@ -19,6 +20,7 @@ import {
 } from '../../model/get-info.interface';
 import { IModal, IModalActions } from '../../model/modal.interface';
 import { IDeleteDeviceRequest, IDeleteDeviceResponse } from '../../model/delete-actions.interface';
+import { IUser } from '../../model/login.interface';
 
 const averageTempInfo: IAverageTemperatureByHour[] = [
   { hour: 0, averageTemperature: 0, temperatureAvailable: false },
@@ -95,32 +97,49 @@ export class ViewDevice implements OnInit, OnDestroy {
   private readonly deleteService = inject(DeleteService);
   private readonly modalService = inject(ModalService);
   private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly loginService = inject(LoginService);
 
   constructor() {
     this.deviceId = Number(this.route.snapshot.paramMap.get('deviceId'));
     this.breadcrumbService.updateDeviceId(this.deviceId);
   }
 
+  private isIUser(value: IUser | null): value is IUser {
+    return (
+      value !== null &&
+      typeof value.firstName === 'string' &&
+      typeof value.username === 'string' &&
+      typeof value.username === 'string' &&
+      typeof value.jwtToken === 'string'
+    );
+  }
+
   ngOnInit(): void {
-    if (this.deviceId) {
-      this.subscriptions.push(
-        this.getInfoService.getViewDeviceInformation(this.deviceId).subscribe({
-          next: (response: IDeviceInformationCurrentDay) => {
-            this.locationId = response.locationId;
-            this.deviceInformation = response;
-            this.mostRecentTemperatureDate = new Date(
-              response.mostRecentTemperatureAvailableDateTime,
-            );
-            this.insertAverageTemperatureByHourInformation(
-              this.deviceInformation.averageTemperaturesByHourCurrentDay,
-              // averageTempInfoMock, // Comment this line out for live data.
-            );
-          },
-          error: () => {
-            console.log('Get view device information error.');
-          },
-        }),
-      );
+    const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
+
+    if (this.isIUser(user())) {
+      if (this.deviceId) {
+        this.subscriptions.push(
+          this.getInfoService.getViewDeviceInformation(this.deviceId).subscribe({
+            next: (response: IDeviceInformationCurrentDay) => {
+              this.locationId = response.locationId;
+              this.deviceInformation = response;
+              this.mostRecentTemperatureDate = new Date(
+                response.mostRecentTemperatureAvailableDateTime,
+              );
+              this.insertAverageTemperatureByHourInformation(
+                this.deviceInformation.averageTemperaturesByHourCurrentDay,
+                // averageTempInfoMock, // Comment this line out for live data.
+              );
+            },
+            error: () => {
+              console.log('Get view device information error.');
+            },
+          }),
+        );
+      }
+    } else {
+      this.loginService.logout();
     }
   }
 

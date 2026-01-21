@@ -32,6 +32,18 @@ export interface ITemperature {
   dateRecorded: Date;
 }
 
+export interface IHomeScreenInfoRequest {
+  userId: string;
+  jwtToken: string;
+}
+
+export interface IHomeScreenInfoResponse {
+  userId: string;
+  homes: IHome[];
+  numLocations: number;
+  numDevices: number;
+}
+
 export interface IAverageTemperatureByHour {
   hour: number;
   averageTemperature: number;

@@ -9,8 +9,11 @@ import { HomeCard } from './home-card/home-card';
 import { ItemTotals } from '../item-totals/item-totals';
 import { REGISTER_HOME_ROUTE } from '../constants/navigation-constants';
 import { IUser } from '../model/login.interface';
-import { IHomeScreenInfoRequest, IHomeScreenInfoResponse } from '../model/home-screen.interface';
-import { IHome } from '../model/get-info.interface';
+import {
+  IHome,
+  IHomeScreenInfoRequest,
+  IHomeScreenInfoResponse,
+} from '../model/get-info.interface';
 import { IDeleteHomeResponse } from '../model/delete-actions.interface';
 
 export interface Tile {
