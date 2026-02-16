@@ -1,41 +1,31 @@
 <h1>{{ greetingMessage }}</h1>
 
-<mat-grid-list cols="4" rowHeight="100px">
-  <mat-grid-tile
-    [colspan]="tiles[0].cols"
-    [rowspan]="tiles[0].rows"
-    [style.background]="tiles[0].color"
-    ><home-item-totals
-      [displayTotalHomes]="true"
-      [totalHomes]="totalHomes"
-      [displayTotalLocations]="true"
-      [totalLocations]="totalLocations"
-      [displayTotalDevices]="true"
-      [totalDevices]="totalDevices"
-  /></mat-grid-tile>
-  <mat-grid-tile
-    [colspan]="tiles[1].cols"
-    [rowspan]="10"
-    [style.background]="tiles[1].color"
-    style="display: flex; flex-direction: column"
-  >
-    <div style="height: 98%; width: 95%; overflow: scroll">
-      <h1>Your Homes</h1>
+<div style="display: flex; flex-direction: row; max-height: 80%">
+  <div style="width: 100%">
+    <h1>Your Homes</h1>
+    <div style="display: flex; flex-wrap: wrap; gap: 35px; max-height: 100%; overflow: scroll">
       @if (homeInfo.length > 0) {
         @for (home of homeInfo; track home.homeId) {
           <div style="margin-bottom: 10px">
-            <home-card [homeId]="home.homeId" [homeName]="home.homeName" (homeDeleted)="homeDeletedAction($event)" />
+            <home-card [homeInfo]="home" (homeDeleted)="homeDeletedAction($event)" />
           </div>
         }
       }
     </div>
-  </mat-grid-tile>
-  <mat-grid-tile
-    [colspan]="tiles[2].cols"
-    [rowspan]="tiles[2].rows"
-    [style.background]="tiles[2].color"
-  >
-    <div>Register Buttons Go Here.</div>
-    <div><button (click)="registerHome()">Register New Home</button></div></mat-grid-tile
-  >
-</mat-grid-list>
+  </div>
+  <div style="width: 200px; padding: 10px">
+    <div>
+      <div><button matButton="filled" (click)="registerHome()">Register New Home</button></div>
+    </div>
+    <div>
+      <home-item-totals
+        [displayTotalHomes]="true"
+        [totalHomes]="totalHomes"
+        [displayTotalLocations]="true"
+        [totalLocations]="totalLocations"
+        [displayTotalDevices]="true"
+        [totalDevices]="totalDevices"
+      />
+    </div>
+  </div>
+</div>

@@ -1,13 +1,13 @@
 import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { Router } from '@angular/router';
+import { MatButton } from '@angular/material/button';
 import { Subscription } from 'rxjs';
 import { LoginService } from '../services/login.service';
 import { GetInfoService } from '../services/get-info.service';
 import { BreadcrumbService } from '../services/breadcrumb.service';
 import { HomeCard } from './home-card/home-card';
 import { ItemTotals } from '../item-totals/item-totals';
-import { REGISTER_HOME_ROUTE } from '../constants/navigation-constants';
+import { CAPTIVE_ERROR_ROUTE, REGISTER_HOME_ROUTE } from '../constants/navigation-constants';
 import { IUser } from '../model/login.interface';
 import {
   IHome,
@@ -25,7 +25,7 @@ export interface Tile {
 
 @Component({
   selector: 'home-page',
-  imports: [ItemTotals, MatGridListModule, HomeCard],
+  imports: [ItemTotals, HomeCard, MatButton],
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss',
 })
@@ -39,12 +39,6 @@ export class HomePage implements OnInit, OnDestroy {
   totalHomes = 0;
   totalLocations = 0;
   totalDevices = 0;
-
-  tiles: Tile[] = [
-    { text: 'One', cols: 3, rows: 2, color: 'lightblue' },
-    { text: 'Two', cols: 1, rows: 4, color: 'lightgreen' },
-    { text: 'Three', cols: 3, rows: 8, color: 'lightpink' },
-  ];
 
   private readonly loginService = inject(LoginService);
   private readonly getInfoService = inject(GetInfoService);
@@ -85,22 +79,31 @@ export class HomePage implements OnInit, OnDestroy {
       this.subscriptions.push(
         this.getInfoService.getHomeScreenInfo(getHomeScreenInfoRequest).subscribe({
           next: (response: IHomeScreenInfoResponse) => {
-            this.totalHomes = response.homes.length;
-            this.totalLocations = response.numLocations;
-            this.totalDevices = response.numDevices;
             this.homeInfo = response.homes;
+            this.setHomeInfo(response);
           },
           error: () => {
-            // If there is an error getting the information on the home screen, log the user out.
-            // They will not be able to use the application without the information returned from the
-            // get home screen info endpoint.
-            this.loginService.logout();
+            // If there is an error getting the home screen info, route the user
+            // to the captive error screen.
+            this.router.navigate([CAPTIVE_ERROR_ROUTE], {
+              queryParams: {
+                homeScreenInfoError: true,
+              },
+            });
           },
         }),
       );
     } else {
       this.loginService.logout();
     }
+  }
+
+  setHomeInfo(homeInfo: IHomeScreenInfoResponse): void {
+    this.totalHomes = homeInfo.homes.length;
+    homeInfo.homes.forEach((home) => {
+      this.totalLocations += home.totalLocations;
+      this.totalDevices += home.totalDevices;
+    });
   }
 
   ngOnDestroy(): void {

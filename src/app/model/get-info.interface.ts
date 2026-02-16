@@ -10,6 +10,8 @@ export interface IHome {
   homeId: number;
   userId: number;
   homeName: string;
+  totalLocations: number;
+  totalDevices: number;
 }
 
 export interface ILocation {
@@ -40,8 +42,6 @@ export interface IHomeScreenInfoRequest {
 export interface IHomeScreenInfoResponse {
   userId: string;
   homes: IHome[];
-  numLocations: number;
-  numDevices: number;
 }
 
 export interface IAverageTemperatureByHour {

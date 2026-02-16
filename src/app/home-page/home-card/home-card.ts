@@ -11,6 +11,7 @@ import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 import { IDeleteHomeRequest, IDeleteHomeResponse } from '../../model/delete-actions.interface';
 import { IModal, IModalActions } from '../../model/modal.interface';
+import { IHome } from '../../model/get-info.interface';
 
 @Component({
   selector: 'home-card',
@@ -21,8 +22,7 @@ import { IModal, IModalActions } from '../../model/modal.interface';
 export class HomeCard implements OnDestroy {
   subscriptions: Subscription[] = [];
 
-  @Input({ required: true }) homeId!: number;
-  @Input({ required: true }) homeName!: string;
+  @Input({ required: true }) homeInfo!: IHome;
 
   @Output() homeDeleted = new EventEmitter<IDeleteHomeResponse>();
 
@@ -35,7 +35,7 @@ export class HomeCard implements OnDestroy {
   }
 
   viewHome(): void {
-    this.router.navigate([VIEW_HOME, this.homeId]);
+    this.router.navigate([VIEW_HOME, this.homeInfo.homeId]);
   }
 
   deleteHomeVerification(): void {
@@ -55,9 +55,9 @@ export class HomeCard implements OnDestroy {
   }
 
   deleteHome(): void {
-    if (this.homeId) {
+    if (this.homeInfo && this.homeInfo.homeId) {
       const deleteHomeRequest: IDeleteHomeRequest = {
-        homeId: this.homeId,
+        homeId: this.homeInfo.homeId,
       };
 
       this.subscriptions.push(

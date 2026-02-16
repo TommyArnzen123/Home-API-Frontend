@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'display-temp-by-hour',
-  imports: [],
+  imports: [DecimalPipe],
   templateUrl: './display-temp-by-hour.html',
   styleUrl: './display-temp-by-hour.scss',
 })

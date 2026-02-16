@@ -1,10 +1,12 @@
 <mat-card class="home-card" appearance="outlined">
   <mat-card-header>
-    <mat-card-title>{{ homeName }}</mat-card-title>
+    <mat-card-title>{{ homeInfo.homeName }}</mat-card-title>
   </mat-card-header>
   <img class="default-home-icon" mat-card-image src="home-icon.png" alt="Photo of a Shiba Inu" />
   <mat-card-actions class="flexDisplay">
     <button matButton="outlined" (click)="viewHome()">View</button>
-    <button matButton="outlined" (click)="deleteHomeVerification()"><mat-icon>delete</mat-icon>Delete</button>
+    <button matButton="filled" (click)="deleteHomeVerification()">
+      <mat-icon>delete</mat-icon>Delete
+    </button>
   </mat-card-actions>
 </mat-card>

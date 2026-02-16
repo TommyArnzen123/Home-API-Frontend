@@ -7,3 +7,4 @@ export const REGISTER_DEVICE_ROUTE = 'register-device';
 export const VIEW_HOME = 'view-home';
 export const VIEW_LOCATION = 'view-location';
 export const VIEW_DEVICE = 'view-device';
+export const CAPTIVE_ERROR_ROUTE = 'captive-error';

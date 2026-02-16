@@ -11,6 +11,7 @@ import { RegisterLocation } from './registration/location/register-location/regi
 import { RegisterDevice } from './registration/device/register-device/register-device';
 import { isUserAuthenticated } from './guards/auth.guard';
 import {
+  CAPTIVE_ERROR_ROUTE,
   HOME_PAGE_ROUTE,
   LOGIN_ROUTE,
   REGISTER_DEVICE_ROUTE,
@@ -21,6 +22,7 @@ import {
   VIEW_HOME,
   VIEW_LOCATION,
 } from './constants/navigation-constants';
+import { CaptiveError } from './captive-error/captive-error';
 
 export const routes: Routes = [
   {
@@ -60,8 +62,5 @@ export const routes: Routes = [
     path: VIEW_DEVICE + '/:deviceId',
     component: ViewDevice,
   },
-  {
-    path: 'loadingMessage',
-    component: LoadingComponent,
-  },
+  { path: CAPTIVE_ERROR_ROUTE, component: CaptiveError },
 ];
