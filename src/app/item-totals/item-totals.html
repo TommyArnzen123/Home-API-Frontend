@@ -2,7 +2,9 @@
 <div class="items-display">
   @if (displayTotalHomes) {
     <div class="item-display">
-      <div><mat-icon aria-hidden="false" aria-label="Home icon" fontIcon="home" /></div>
+      <div>
+        <img src="home-icon-summary.svg" style="width: 100px" alt="Home icon." />
+      </div>
       <div>Total Homes</div>
       <div>{{ totalHomes }}</div>
     </div>
@@ -10,7 +12,9 @@
 
   @if (displayTotalLocations) {
     <div class="item-display">
-      <div><mat-icon aria-hidden="false" aria-label="Location icon" fontIcon="location_on" /></div>
+      <div>
+        <img src="location-icon.svg" style="width: 100px" alt="Location icon." />
+      </div>
       <div>Total Locations</div>
       <div>{{ totalLocations }}</div>
     </div>
@@ -19,7 +23,7 @@
   @if (displayTotalDevices) {
     <div class="item-display">
       <div>
-        <mat-icon aria-hidden="false" aria-label="Device icon" fontIcon="add_to_home_screen" />
+        <img src="device-icon.svg" style="width: 100px" alt="Device icon." />
       </div>
       <div>Total Devices</div>
       <div>{{ totalDevices }}</div>

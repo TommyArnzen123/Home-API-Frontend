@@ -8,10 +8,10 @@ import { MatIcon } from '@angular/material/icon';
   styleUrl: './item-totals.scss',
 })
 export class ItemTotals {
-  @Input({required: true}) displayTotalHomes!: boolean;
+  @Input({ required: true }) displayTotalHomes!: boolean;
   @Input({ required: false }) totalHomes!: number;
-  @Input({required: true}) displayTotalLocations!: boolean;
+  @Input({ required: true }) displayTotalLocations!: boolean;
   @Input({ required: false }) totalLocations!: number;
-  @Input({required: true}) displayTotalDevices!: boolean;
+  @Input({ required: true }) displayTotalDevices!: boolean;
   @Input({ required: false }) totalDevices!: number;
 }

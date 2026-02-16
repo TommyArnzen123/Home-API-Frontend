@@ -2,7 +2,23 @@
   <mat-card-header>
     <mat-card-title>{{ homeInfo.homeName }}</mat-card-title>
   </mat-card-header>
-  <img class="default-home-icon" mat-card-image src="home-icon.png" alt="Photo of a Shiba Inu" />
+  <div style="display: flex; flex-direction: row; align-items: center; padding-right: 15px">
+    <div>
+      <img class="default-home-icon" mat-card-image src="home-icon-main.svg" alt="Home icon." />
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; flex-direction: row; align-items: center">
+        <img src="location-icon.svg" style="width: 50px" alt="Location icon." />{{
+          homeInfo.totalLocations
+        }}
+      </div>
+      <div style="display: flex; flex-direction: row; align-items: center">
+        <img src="device-icon.svg" style="width: 50px" alt="Device icon." />{{
+          homeInfo.totalDevices
+        }}
+      </div>
+    </div>
+  </div>
   <mat-card-actions class="flexDisplay">
     <button matButton="outlined" (click)="viewHome()">View</button>
     <button matButton="filled" (click)="deleteHomeVerification()">
