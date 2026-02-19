@@ -1,10 +1,34 @@
 <mat-card class="location-card" appearance="outlined">
   <mat-card-header>
-    <mat-card-title>{{ locationName }}</mat-card-title>
+    <mat-card-title>{{ locationInfo.locationName }}</mat-card-title>
   </mat-card-header>
-  <img class="default-location-icon" mat-card-image src="location-icon.jpg" alt="Photo of a Shiba Inu" />
+  <div
+    style="
+      display: flex;
+      flex-direction: row;
+      padding-right: 15px;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    "
+  >
+    @if (averageTemperature) {
+      <div class="average-temperature">{{ averageTemperature | number: '1.2-2' }}°F</div>
+    } @else {
+      <div class="average-temperature">-°F</div>
+    }
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; flex-direction: row; align-items: center">
+        <img src="device-icon.svg" style="width: 75px" alt="Device icon." />
+        <div class="total-items">{{ locationInfo.devices.length }}</div>
+      </div>
+    </div>
+  </div>
   <mat-card-actions class="flexDisplay">
     <button matButton="outlined" (click)="viewLocation()">View</button>
-    <button matButton="outlined" (click)="deleteLocationVerification()"><mat-icon>delete</mat-icon>Delete</button>
+    <button matButton="filled" (click)="deleteLocationVerification()">
+      <mat-icon>delete</mat-icon>Delete
+    </button>
   </mat-card-actions>
 </mat-card>

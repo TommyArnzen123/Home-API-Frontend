@@ -1,5 +1,10 @@
 .home-card {
   width: 100%;
+  min-width: 350px;
+
+  .total-items {
+    font-size: 30px;
+  }
 
   .flexDisplay {
     display: flex;
@@ -15,7 +20,7 @@
   }
 
   .default-home-icon {
-    height: 150px;
+    height: 200px;
     object-fit: contain;
   }
 }

@@ -2,20 +2,20 @@
   <mat-card-header>
     <mat-card-title>{{ homeInfo.homeName }}</mat-card-title>
   </mat-card-header>
-  <div style="display: flex; flex-direction: row; align-items: center; padding-right: 15px">
+  <div
+    style="display: flex; flex-direction: row; padding-right: 15px; align-items: center; gap: 10px"
+  >
     <div>
       <img class="default-home-icon" mat-card-image src="home-icon-main.svg" alt="Home icon." />
     </div>
     <div style="display: flex; flex-direction: column; gap: 10px">
       <div style="display: flex; flex-direction: row; align-items: center">
-        <img src="location-icon.svg" style="width: 50px" alt="Location icon." />{{
-          homeInfo.totalLocations
-        }}
+        <img src="location-icon.svg" style="width: 75px" alt="Location icon." />
+        <div class="total-items">{{ homeInfo.totalLocations }}</div>
       </div>
       <div style="display: flex; flex-direction: row; align-items: center">
-        <img src="device-icon.svg" style="width: 50px" alt="Device icon." />{{
-          homeInfo.totalDevices
-        }}
+        <img src="device-icon.svg" style="width: 75px" alt="Device icon." />
+        <div class="total-items">{{ homeInfo.totalDevices }}</div>
       </div>
     </div>
   </div>

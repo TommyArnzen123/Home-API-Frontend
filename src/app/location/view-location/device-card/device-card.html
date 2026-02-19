@@ -1,10 +1,18 @@
 <mat-card class="device-card" appearance="outlined">
   <mat-card-header>
-    <mat-card-title>{{ deviceName }}</mat-card-title>
+    <mat-card-title>{{ deviceInfo.deviceName }}</mat-card-title>
   </mat-card-header>
-  <img class="default-device-icon" mat-card-image src="device-icon.png" alt="Device icon image." />
+  <div style="text-align: center; margin-top: 30px; margin-bottom: 30px; font-size: 40px">
+    @if (deviceInfo.temperature) {
+      <div>{{ deviceInfo.temperature.temperature | number: '1.2-2' }}°F</div>
+    } @else {
+      <div>-°F</div>
+    }
+  </div>
   <mat-card-actions class="flexDisplay">
     <button matButton="outlined" (click)="viewDevice()">View</button>
-    <button matButton="outlined" (click)="deleteDeviceVerification()"><mat-icon>delete</mat-icon>Delete</button>
+    <button matButton="filled" (click)="deleteDeviceVerification()">
+      <mat-icon>delete</mat-icon>Delete
+    </button>
   </mat-card-actions>
 </mat-card>

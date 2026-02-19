@@ -3,19 +3,40 @@
 <div style="display: flex; flex-direction: row; max-height: 80%">
   <div style="width: 100%">
     <h1>Your Homes</h1>
-    <div style="display: flex; flex-wrap: wrap; gap: 35px; max-height: 100%; overflow: scroll">
+    <div style="display: flex; flex-wrap: wrap; gap: 30px; max-height: 100%; overflow: auto">
       @if (homeInfo.length > 0) {
         @for (home of homeInfo; track home.homeId) {
           <div style="margin-bottom: 10px">
             <home-card [homeInfo]="home" (homeDeleted)="homeDeletedAction($event)" />
           </div>
         }
+      } @else {
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-top: 50px;
+            height: 300px;
+          "
+        >
+          <img style="width: 150px" src="home-icon-main.svg" alt="Home icon." />
+          <div style="font-size: 20px; text-align: center">
+            You currently do not have any homes registered. Click the 'Register New Home' button to
+            register a home.
+          </div>
+        </div>
       }
     </div>
   </div>
   <div style="width: 200px; padding: 10px">
     <div>
-      <div><button matButton="filled" (click)="registerHome()">Register New Home</button></div>
+      <div>
+        <button class="button-display" matButton="filled" (click)="registerHome()">
+          Register New Home
+        </button>
+      </div>
     </div>
     <div>
       <home-item-totals

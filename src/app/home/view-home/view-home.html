@@ -1,49 +1,67 @@
 <div class="titleElements">
   <h1>{{ homeName }}</h1>
-  <button matButton="outlined" (click)="deleteHomeVerification()">
+  <button
+    class="button-display"
+    style="margin-right: 10px"
+    matButton="outlined"
+    (click)="deleteHomeVerification()"
+  >
     <mat-icon>delete</mat-icon>Delete Home
   </button>
 </div>
 
-<mat-grid-list cols="4" rowHeight="100px">
-  <mat-grid-tile
-    [colspan]="tiles[0].cols"
-    [rowspan]="tiles[0].rows"
-    [style.background]="tiles[0].color"
-    ><home-item-totals
-      [displayTotalHomes]="false"
-      [displayTotalLocations]="true"
-      [totalLocations]="locations.length"
-      [displayTotalDevices]="true"
-      [totalDevices]="totalDevices"
-  /></mat-grid-tile>
-  <mat-grid-tile
-    [colspan]="tiles[1].cols"
-    [rowspan]="10"
-    [style.background]="tiles[1].color"
-    style="display: flex; flex-direction: column"
-  >
-    <div style="height: 98%; width: 95%; overflow: scroll">
-      <h1>Locations</h1>
+<div style="display: flex; flex-direction: row; max-height: 80%">
+  <div style="width: 100%">
+    <h1>Locations</h1>
+    <div style="display: flex; flex-wrap: wrap; gap: 30px; max-height: 100%; overflow: auto">
       @if (locations.length > 0) {
         @for (location of locations; track location.locationId) {
           <div style="margin-bottom: 10px">
             <location-card
-              [locationId]="location.locationId"
-              [locationName]="location.locationName"
+              [locationInfo]="location"
               (locationDeleted)="locationDeletedAction($event)"
             />
           </div>
         }
+      } @else {
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-top: 50px;
+            min-height: 250px;
+          "
+        >
+          <img
+            class="default-location-icon"
+            style="width: 125px; margin-bottom: 20px"
+            src="location-icon.svg"
+            alt="Location icon."
+          />
+          <div style="font-size: 20px; text-align: center">
+            You currently do not have any locations registered. Click the 'Register New Location'
+            button to register a location.
+          </div>
+        </div>
       }
     </div>
-  </mat-grid-tile>
-  <mat-grid-tile
-    [colspan]="tiles[2].cols"
-    [rowspan]="tiles[2].rows"
-    [style.background]="tiles[2].color"
-  >
-    <div>Register New Location Button Goes Here.</div>
-    <div><button (click)="registerLocation()">Register New Location</button></div>
-  </mat-grid-tile>
-</mat-grid-list>
+  </div>
+  <div style="width: 220px; padding: 10px">
+    <div>
+      <button class="button-display" matButton="filled" (click)="registerLocation()">
+        Register New Location
+      </button>
+    </div>
+    <div>
+      <home-item-totals
+        [displayTotalHomes]="false"
+        [displayTotalLocations]="true"
+        [totalLocations]="locations.length"
+        [displayTotalDevices]="true"
+        [totalDevices]="totalDevices"
+      />
+    </div>
+  </div>
+</div>

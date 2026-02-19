@@ -1,9 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'home-item-totals',
-  imports: [MatIcon],
+  imports: [],
   templateUrl: './item-totals.html',
   styleUrl: './item-totals.scss',
 })

@@ -9,9 +9,7 @@ import { DeleteService } from '../../services/delete.service';
 import { ModalService } from '../../services/modal.service';
 import { LoginService } from '../../services/login.service';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
-import { Tile } from '../../home-page/home-page';
 import { DeviceCard } from './device-card/device-card';
-import { ItemTotals } from '../../item-totals/item-totals';
 import { IModal, IModalActions } from '../../model/modal.interface';
 import { IDevice, ILocation, IViewLocationInfoRequest } from '../../model/get-info.interface';
 import { IUser } from '../../model/login.interface';
@@ -23,10 +21,11 @@ import {
 import { REGISTER_DEVICE_ROUTE, VIEW_HOME } from '../../constants/navigation-constants';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../constants/delete-constants';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'view-location',
-  imports: [MatGridListModule, MatButton, MatIcon, ItemTotals, DeviceCard],
+  imports: [MatGridListModule, MatButton, MatIcon, DeviceCard, DecimalPipe],
   templateUrl: './view-location.html',
   styleUrl: './view-location.scss',
 })
@@ -38,12 +37,7 @@ export class ViewLocation implements OnDestroy {
   homeId: number | null = null;
   devices: IDevice[] = [];
   totalDevices: number = 0;
-
-  tiles: Tile[] = [
-    { text: 'One', cols: 3, rows: 2, color: 'lightblue' },
-    { text: 'Two', cols: 1, rows: 4, color: 'lightgreen' },
-    { text: 'Three', cols: 3, rows: 8, color: 'lightpink' },
-  ];
+  averageTemperature: number | null = null;
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -80,6 +74,7 @@ export class ViewLocation implements OnDestroy {
               this.locationName = response.locationName;
               this.devices = response.devices;
               this.totalDevices = response.devices.length;
+              this.setAverageTemperature(response.devices);
             },
             error: () => {
               // If there is an error getting the information on the home screen, log the user out.
@@ -93,6 +88,21 @@ export class ViewLocation implements OnDestroy {
     } else {
       this.loginService.logout();
     }
+  }
+
+  private setAverageTemperature(devices: IDevice[]): void {
+    let counter = 0;
+    let averageTemp: number | null = null;
+    devices.forEach((device) => {
+      if (device.temperature) {
+        averageTemp = averageTemp
+          ? averageTemp + device.temperature.temperature
+          : device.temperature.temperature;
+        counter++;
+      }
+    });
+
+    this.averageTemperature = averageTemp ? averageTemp / counter : null;
   }
 
   private isIUser(value: IUser | null): value is IUser {

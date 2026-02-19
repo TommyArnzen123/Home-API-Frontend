@@ -1,4 +1,4 @@
-.flexDisplay {
+.titleElements {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -6,19 +6,6 @@
   justify-content: space-between;
 }
 
-.location-name-and-delete-button-container {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 5px;
-
-  .location-name {
-    float: left;
-  }
-
-  .delete-button {
-    float: right;
-  }
+.button-display {
+  width: 200px;
 }

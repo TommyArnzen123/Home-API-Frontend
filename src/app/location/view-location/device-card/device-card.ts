@@ -14,18 +14,21 @@ import {
   IDeleteDeviceResponse,
 } from '../../../model/delete-actions.interface';
 import { IModal, IModalActions } from '../../../model/modal.interface';
+import { IDevice } from '../../../model/get-info.interface';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'device-card',
-  imports: [MatCard, MatButton, MatIcon, MatCardHeader, MatCardTitle, MatCardActions],
+  imports: [MatCard, MatButton, MatIcon, MatCardHeader, MatCardTitle, MatCardActions, DecimalPipe],
   templateUrl: './device-card.html',
   styleUrl: './device-card.scss',
 })
 export class DeviceCard implements OnDestroy {
   subscriptions: Subscription[] = [];
 
-  @Input({ required: true }) deviceId!: number;
-  @Input({ required: true }) deviceName!: string;
+  @Input({ required: true }) deviceInfo!: IDevice;
+  // @Input({ required: true }) deviceId!: number;
+  // @Input({ required: true }) deviceName!: string;
 
   @Output() deviceDeleted = new EventEmitter<IDeleteDeviceResponse>();
 
@@ -38,7 +41,7 @@ export class DeviceCard implements OnDestroy {
   }
 
   viewDevice(): void {
-    this.router.navigate([VIEW_DEVICE, this.deviceId]);
+    this.router.navigate([VIEW_DEVICE, this.deviceInfo.deviceId]);
   }
 
   deleteDeviceVerification(): void {
@@ -58,9 +61,9 @@ export class DeviceCard implements OnDestroy {
   }
 
   deleteDevice() {
-    if (this.deviceId) {
+    if (this.deviceInfo && this.deviceInfo.deviceId) {
       const deleteDeviceRequest: IDeleteDeviceRequest = {
-        deviceId: this.deviceId,
+        deviceId: this.deviceInfo.deviceId,
       };
 
       this.subscriptions.push(

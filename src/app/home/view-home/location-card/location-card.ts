@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatCard, MatCardActions, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
@@ -14,18 +14,19 @@ import {
   IDeleteLocationResponse,
 } from '../../../model/delete-actions.interface';
 import { IModal, IModalActions } from '../../../model/modal.interface';
+import { ILocation } from '../../../model/get-info.interface';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'location-card',
-  imports: [MatCard, MatButton, MatIcon, MatCardHeader, MatCardTitle, MatCardActions],
+  imports: [MatCard, MatButton, MatIcon, MatCardHeader, MatCardTitle, MatCardActions, DecimalPipe],
   templateUrl: './location-card.html',
   styleUrl: './location-card.scss',
 })
-export class LocationCard implements OnDestroy {
+export class LocationCard implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
 
-  @Input({ required: true }) locationId!: number;
-  @Input({ required: true }) locationName!: string;
+  @Input({ required: true }) locationInfo!: ILocation;
 
   @Output() locationDeleted = new EventEmitter<IDeleteLocationResponse>();
 
@@ -33,12 +34,32 @@ export class LocationCard implements OnDestroy {
   private readonly deleteService = inject(DeleteService);
   private readonly modalService = inject(ModalService);
 
+  protected averageTemperature: number | null = null;
+
+  ngOnInit() {
+    let counter = 0;
+    let temperature: number | null = 0;
+
+    this.locationInfo.devices.forEach((device) => {
+      if (device.temperature) {
+        counter++;
+        temperature = temperature
+          ? temperature + device.temperature.temperature
+          : device.temperature.temperature;
+      }
+    });
+
+    if (counter > 0) {
+      this.averageTemperature = temperature / counter;
+    }
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   viewLocation(): void {
-    this.router.navigate([VIEW_LOCATION, this.locationId]);
+    this.router.navigate([VIEW_LOCATION, this.locationInfo.locationId]);
   }
 
   deleteLocationVerification(): void {
@@ -58,9 +79,9 @@ export class LocationCard implements OnDestroy {
   }
 
   deleteLocation() {
-    if (this.locationId) {
+    if (this.locationInfo && this.locationInfo.locationId) {
       const deleteLocationRequest: IDeleteLocationRequest = {
-        locationId: this.locationId,
+        locationId: this.locationInfo.locationId,
       };
 
       this.subscriptions.push(

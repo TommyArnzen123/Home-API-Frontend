@@ -1,5 +1,19 @@
 .location-card {
   width: 100%;
+  min-width: 350px;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .average-temperature {
+    padding-left: 15px;
+    font-size: 100px;
+  }
+
+  .total-items {
+    font-size: 30px;
+  }
 
   .flexDisplay {
     display: flex;
@@ -15,7 +29,7 @@
   }
 
   .default-location-icon {
-    height: 200px;
+    height: 150px;
     object-fit: contain;
   }
 }

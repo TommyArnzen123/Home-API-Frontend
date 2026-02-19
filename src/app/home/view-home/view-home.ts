@@ -1,6 +1,5 @@
 import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
@@ -30,7 +29,7 @@ import { IModal, IModalActions } from '../../model/modal.interface';
 
 @Component({
   selector: 'view-home',
-  imports: [MatGridListModule, MatButton, MatIcon, ItemTotals, LocationCard],
+  imports: [MatButton, MatIcon, ItemTotals, LocationCard],
   templateUrl: './view-home.html',
   styleUrl: './view-home.scss',
 })
@@ -41,12 +40,6 @@ export class ViewHome implements OnInit, OnDestroy {
   homeName: string | null = null;
   locations: ILocation[] = [];
   totalDevices: number = 0;
-
-  tiles: Tile[] = [
-    { text: 'One', cols: 3, rows: 2, color: 'lightblue' },
-    { text: 'Two', cols: 1, rows: 4, color: 'lightgreen' },
-    { text: 'Three', cols: 3, rows: 8, color: 'lightpink' },
-  ];
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -77,7 +70,10 @@ export class ViewHome implements OnInit, OnDestroy {
             next: (response: IViewHomeInfoResponse) => {
               this.homeName = response.homeName;
               this.locations = response.locations;
-              this.totalDevices = response.numDevices;
+
+              response.locations.forEach((location) => {
+                this.totalDevices += location.devices.length;
+              });
             },
             error: () => {
               // If there is an error getting the information on the home screen, log the user out.
