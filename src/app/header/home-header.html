@@ -2,7 +2,10 @@
   <div class="application-title">Home API</div>
 
   @if (isLoggedIn()) {
-    <div class="button">
+    <div class="button-container">
+      <button matButton class="button-color" (click)="viewHomePage()">Home Page</button>
+      <button matButton class="button-color" (click)="viewSettingsPage()">Settings</button>
+      <button matButton class="button-color" (click)="viewAboutPage()">About</button>
       <button matButton class="button-color" (click)="logout()">Logout</button>
     </div>
   }

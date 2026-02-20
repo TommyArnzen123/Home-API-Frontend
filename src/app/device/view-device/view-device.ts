@@ -12,7 +12,7 @@ import { LoginService } from '../../services/login.service';
 import { DisplayTempByHour } from './display-temp-by-hour/display-temp-by-hour';
 import { DELETE_DEVICE_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../constants/delete-constants';
-import { VIEW_LOCATION } from '../../constants/navigation-constants';
+import { VIEW_LOCATION_ROUTE } from '../../constants/navigation-constants';
 import {
   IAverageTemperatureByHour,
   IDeviceInformationCurrentDay,
@@ -137,7 +137,7 @@ export class ViewDevice implements OnInit, OnDestroy {
 
   returnToViewLocation() {
     // Route to the view location page.
-    this.router.navigate([VIEW_LOCATION, this.locationId]);
+    this.router.navigate([VIEW_LOCATION_ROUTE, this.locationId]);
   }
 
   deleteDeviceAction() {

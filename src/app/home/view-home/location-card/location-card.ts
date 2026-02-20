@@ -6,7 +6,7 @@ import { MatIcon } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
 import { DeleteService } from '../../../services/delete.service';
 import { ModalService } from '../../../services/modal.service';
-import { VIEW_LOCATION } from '../../../constants/navigation-constants';
+import { VIEW_LOCATION_ROUTE } from '../../../constants/navigation-constants';
 import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../../constants/delete-constants';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
 import {
@@ -59,7 +59,7 @@ export class LocationCard implements OnInit, OnDestroy {
   }
 
   viewLocation(): void {
-    this.router.navigate([VIEW_LOCATION, this.locationInfo.locationId]);
+    this.router.navigate([VIEW_LOCATION_ROUTE, this.locationInfo.locationId]);
   }
 
   deleteLocationVerification(): void {

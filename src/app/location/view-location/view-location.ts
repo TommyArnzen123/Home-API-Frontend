@@ -18,7 +18,7 @@ import {
   IDeleteLocationRequest,
   IDeleteLocationResponse,
 } from '../../model/delete-actions.interface';
-import { REGISTER_DEVICE_ROUTE, VIEW_HOME } from '../../constants/navigation-constants';
+import { REGISTER_DEVICE_ROUTE, VIEW_HOME_ROUTE } from '../../constants/navigation-constants';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 import { DecimalPipe } from '@angular/common';
@@ -121,7 +121,7 @@ export class ViewLocation implements OnDestroy {
 
   returnToViewHome() {
     // Route to the view home page.
-    this.router.navigate([VIEW_HOME, this.homeId]);
+    this.router.navigate([VIEW_HOME_ROUTE, this.homeId]);
   }
 
   deleteLocationVerification(): void {

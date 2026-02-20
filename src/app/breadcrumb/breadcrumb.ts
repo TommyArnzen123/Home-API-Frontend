@@ -1,9 +1,16 @@
-import { Component, inject, Signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject, OnInit, Signal } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { BreadcrumbService } from '../services/breadcrumb.service';
-import { HOME_PAGE_ROUTE, VIEW_HOME, VIEW_LOCATION } from '../constants/navigation-constants';
+import {
+  ABOUT_ROUTE,
+  HOME_PAGE_ROUTE,
+  SETTINGS_ROUTE,
+  VIEW_HOME_ROUTE,
+  VIEW_LOCATION_ROUTE,
+} from '../constants/navigation-constants';
 import { IUser } from '../model/login.interface';
 import { LoginService } from '../services/login.service';
+import { filter, Subscription } from 'rxjs';
 
 @Component({
   selector: 'breadcrumb',
@@ -11,11 +18,27 @@ import { LoginService } from '../services/login.service';
   templateUrl: './breadcrumb.html',
   styleUrl: './breadcrumb.scss',
 })
-export class Breadcrumb {
+export class Breadcrumb implements OnInit {
+  private subscriptions: Subscription[] = [];
+
   private readonly router = inject(Router);
   private readonly breadcrumbService = inject(BreadcrumbService);
   private readonly loginService = inject(LoginService);
   user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
+
+  protected showBreadcrumbComponent = true;
+
+  ngOnInit(): void {
+    this.router.events.subscribe((route) => {
+      if (route instanceof NavigationEnd) {
+        if (route.url === '/' + SETTINGS_ROUTE || route.url === '/' + ABOUT_ROUTE) {
+          this.showBreadcrumbComponent = false;
+        } else {
+          this.showBreadcrumbComponent = true;
+        }
+      }
+    });
+  }
 
   protected isIUser(value: IUser | null): value is IUser {
     return (
@@ -36,10 +59,10 @@ export class Breadcrumb {
   }
 
   viewHomeById(): void {
-    this.router.navigate([VIEW_HOME, this.homeId()]);
+    this.router.navigate([VIEW_HOME_ROUTE, this.homeId()]);
   }
 
   viewLocationById(): void {
-    this.router.navigate([VIEW_LOCATION, this.locationId()]);
+    this.router.navigate([VIEW_LOCATION_ROUTE, this.locationId()]);
   }
 }

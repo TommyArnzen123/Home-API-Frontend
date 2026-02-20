@@ -6,7 +6,7 @@ import { MatIcon } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
 import { DeleteService } from '../../services/delete.service';
 import { ModalService } from '../../services/modal.service';
-import { VIEW_HOME } from '../../constants/navigation-constants';
+import { VIEW_HOME_ROUTE } from '../../constants/navigation-constants';
 import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 import { IDeleteHomeRequest, IDeleteHomeResponse } from '../../model/delete-actions.interface';
@@ -35,7 +35,7 @@ export class HomeCard implements OnDestroy {
   }
 
   viewHome(): void {
-    this.router.navigate([VIEW_HOME, this.homeInfo.homeId]);
+    this.router.navigate([VIEW_HOME_ROUTE, this.homeInfo.homeId]);
   }
 
   deleteHomeVerification(): void {

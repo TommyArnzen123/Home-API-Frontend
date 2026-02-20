@@ -1,0 +1,22 @@
+<h1>About</h1>
+
+<div class="icon-reference-container">
+  <h2>Icon References</h2>
+  <div class="icon-reference-item-container">
+    <div>Icons sourced from 'svgrepo.com' (https://www.svgrepo.com/vectors/).</div>
+    @for (icon of iconReferences; track icon.url) {
+      <div class="icon-display">
+        <div>
+          <img style="width: 150px" src="{{ icon.iconPath }}" alt="Home icon." />
+        </div>
+        <div>
+          <b>Title:</b> {{ icon.title }}<br />
+          <b>Collection:</b> {{ icon.collection }}<br />
+          <b>License:</b> {{ icon.license }}<br />
+          <b>Author:</b> {{ icon.author }}<br />
+          <b>Url:</b> {{ icon.url }}<br />
+        </div>
+      </div>
+    }
+  </div>
+</div>

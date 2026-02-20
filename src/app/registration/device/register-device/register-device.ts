@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 import { RegistrationService } from '../../../services/registration.service';
 import { LoginService } from '../../../services/login.service';
 import { ModalService } from '../../../services/modal.service';
-import { VIEW_LOCATION } from '../../../constants/navigation-constants';
+import { VIEW_LOCATION_ROUTE } from '../../../constants/navigation-constants';
 import { REGISTER_DEVICE_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 import { REGISTER_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
 import { IUser } from '../../../model/login.interface';
@@ -77,7 +77,7 @@ export class RegisterDevice implements OnDestroy {
 
   returnToViewLocationInformationScreen() {
     // Return to the view location screen.
-    this.router.navigate([VIEW_LOCATION, this.locationId]);
+    this.router.navigate([VIEW_LOCATION_ROUTE, this.locationId]);
   }
 
   registerDeviceAction(deviceName: string, jwtToken: string) {

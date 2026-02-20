@@ -11,7 +11,7 @@ import { LoginService } from '../../../services/login.service';
 import { ModalService } from '../../../services/modal.service';
 import { REGISTER_LOCATION_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 import { REGISTER_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
-import { VIEW_HOME } from '../../../constants/navigation-constants';
+import { VIEW_HOME_ROUTE } from '../../../constants/navigation-constants';
 import { IUser } from '../../../model/login.interface';
 import {
   IRegisterGenericEntityRequest,
@@ -77,7 +77,7 @@ export class RegisterLocation implements OnDestroy {
 
   returnToViewHomeInformationScreen() {
     // Return to the view home screen.
-    this.router.navigate([VIEW_HOME, this.homeId]);
+    this.router.navigate([VIEW_HOME_ROUTE, this.homeId]);
   }
 
   registerLocationAction(locationName: string, jwtToken: string) {

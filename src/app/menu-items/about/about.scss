@@ -1,0 +1,17 @@
+.icon-reference-container {
+  margin-top: 50px;
+  margin-bottom: 30px;
+
+  .icon-reference-item-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .icon-display {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      align-items: center;
+    }
+  }
+}

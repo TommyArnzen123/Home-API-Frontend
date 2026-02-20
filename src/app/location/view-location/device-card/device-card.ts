@@ -6,7 +6,7 @@ import { MatIcon } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
 import { DeleteService } from '../../../services/delete.service';
 import { ModalService } from '../../../services/modal.service';
-import { VIEW_DEVICE } from '../../../constants/navigation-constants';
+import { VIEW_DEVICE_ROUTE } from '../../../constants/navigation-constants';
 import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../../constants/delete-constants';
 import { DELETE_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
 import {
@@ -41,7 +41,7 @@ export class DeviceCard implements OnDestroy {
   }
 
   viewDevice(): void {
-    this.router.navigate([VIEW_DEVICE, this.deviceInfo.deviceId]);
+    this.router.navigate([VIEW_DEVICE_ROUTE, this.deviceInfo.deviceId]);
   }
 
   deleteDeviceVerification(): void {
