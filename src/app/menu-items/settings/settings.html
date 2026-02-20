@@ -2,6 +2,30 @@
 
 <div class="settings-options-container">
   <div>Temperature Display (Fahrenheit or Celsius)</div>
+  <section>
+    <mat-button-toggle-group
+      [(ngModel)]="temperatureSetting"
+      aria-label="Temperature Display Setting"
+    >
+      <mat-button-toggle value="fahrenheit">Fahrenheit</mat-button-toggle>
+      <mat-button-toggle value="celsius">Celsius</mat-button-toggle>
+    </mat-button-toggle-group>
+  </section>
+  Temperature Setting: {{ temperatureSetting }}
   <div>Time Display (12 Hour or 24 Hour)</div>
+  <section>
+    <mat-button-toggle-group [(ngModel)]="timeSetting" aria-label="Time Display Setting">
+      <mat-button-toggle value="12">12 Hour</mat-button-toggle>
+      <mat-button-toggle value="24">24 Hour</mat-button-toggle>
+    </mat-button-toggle-group>
+  </section>
+  Time Setting: {{ timeSetting }}
   <div>Theme (Light Mode or Dark Mode)</div>
+  <section>
+    <mat-button-toggle-group [(ngModel)]="colorModeSetting" aria-label="Color Mode Setting">
+      <mat-button-toggle value="light">Light Mode</mat-button-toggle>
+      <mat-button-toggle value="dark">Dark Mode</mat-button-toggle>
+    </mat-button-toggle-group>
+  </section>
+  Color Mode Setting: {{ colorModeSetting }}
 </div>
