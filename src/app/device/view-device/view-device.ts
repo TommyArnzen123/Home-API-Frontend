@@ -1,8 +1,7 @@
 import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButton } from '@angular/material/button';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
 import { GetInfoService } from '../../services/get-info.service';
@@ -49,36 +48,9 @@ const averageTempInfo: IAverageTemperatureByHour[] = [
   { hour: 23, averageTemperature: 0, temperatureAvailable: false },
 ];
 
-// const averageTempInfoMock: IAverageTemperatureByHour[] = [
-//   // { hour: 0, averageTemperature: 0, temperatureAvailable: true },
-//   { hour: 1, averageTemperature: 1, temperatureAvailable: true },
-//   // { hour: 2, averageTemperature: 0, temperatureAvailable: false },
-//   { hour: 3, averageTemperature: 3, temperatureAvailable: true },
-//   // { hour: 4, averageTemperature: 4, temperatureAvailable: true },
-//   { hour: 5, averageTemperature: 5, temperatureAvailable: true },
-//   // { hour: 6, averageTemperature: 6, temperatureAvailable: true },
-//   { hour: 7, averageTemperature: 7, temperatureAvailable: true },
-//   // { hour: 8, averageTemperature: 8, temperatureAvailable: true },
-//   { hour: 9, averageTemperature: 9, temperatureAvailable: true },
-//   // { hour: 10, averageTemperature: 10, temperatureAvailable: true },
-//   { hour: 11, averageTemperature: 11, temperatureAvailable: true },
-//   // { hour: 12, averageTemperature: 12, temperatureAvailable: true },
-//   { hour: 13, averageTemperature: 13, temperatureAvailable: true },
-//   // { hour: 14, averageTemperature: 14, temperatureAvailable: true },
-//   { hour: 15, averageTemperature: 15, temperatureAvailable: true },
-//   // { hour: 16, averageTemperature: 16, temperatureAvailable: true },
-//   { hour: 17, averageTemperature: 17, temperatureAvailable: true },
-//   // { hour: 18, averageTemperature: 0, temperatureAvailable: false },
-//   { hour: 19, averageTemperature: 19, temperatureAvailable: true },
-//   // { hour: 20, averageTemperature: 20, temperatureAvailable: true },
-//   { hour: 21, averageTemperature: 21, temperatureAvailable: true },
-//   // { hour: 22, averageTemperature: 22, temperatureAvailable: true },
-//   { hour: 23, averageTemperature: 23, temperatureAvailable: true },
-// ];
-
 @Component({
   selector: 'view-device',
-  imports: [MatGridListModule, MatButton, MatIcon, DisplayTempByHour, DatePipe],
+  imports: [MatButton, MatIcon, DisplayTempByHour, DatePipe, DecimalPipe],
   templateUrl: './view-device.html',
   styleUrl: './view-device.scss',
 })

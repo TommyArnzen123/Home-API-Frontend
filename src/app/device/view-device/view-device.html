@@ -14,37 +14,35 @@
   </div>
 </div>
 
-<mat-grid-list cols="4" rowHeight="100px">
-  <mat-grid-tile [colspan]="4" [rowspan]="2" [style.background]="'lightblue'">
-    <div class="most-recent-temperature-container">
-      <h1>Most Recent Temperature Recorded</h1>
-      @if (deviceInformation && deviceInformation.mostRecentTemperatureAvailable) {
-        <div class="temperature-display">{{ deviceInformation.mostRecentTemperature }}</div>
-        @if (mostRecentTemperatureDate) {
-          <div class="date-recorded-display">
-            {{ mostRecentTemperatureDate | date: 'MM/dd/yyyy h:mm a' }}
-          </div>
-        }
-      } @else {
-        <div>Most Recent Temperature Information Not Available</div>
+<div style="display: flex; flex-direction: column; gap: 50px">
+  <div class="most-recent-temperature-container">
+    <h1>Most Recent Temperature Recorded</h1>
+    @if (deviceInformation && deviceInformation.mostRecentTemperatureAvailable) {
+      <div class="temperature-display">
+        {{ deviceInformation.mostRecentTemperature | number: '1.2-2' }}°F
+      </div>
+      @if (mostRecentTemperatureDate) {
+        <div class="date-recorded-display">
+          {{ mostRecentTemperatureDate | date: 'MM/dd/yyyy h:mm a' }}
+        </div>
+      }
+    } @else {
+      <div>There have been no temperature readings in the past 10 minutes.</div>
+    }
+  </div>
+
+  <div class="temperature-by-hour-container">
+    <h1 class="title">Average Temperatures by Hour (Past 24 hours)</h1>
+    <div class="hourly-display">
+      @for (tempByHour of generateHourlyTemperatureReading(); track tempByHour.hour) {
+        <div class="individual-temperature-item">
+          <display-temp-by-hour
+            [hour]="tempByHour.hour"
+            [temperature]="tempByHour.averageTemperature"
+            [temperatureAvailable]="tempByHour.temperatureAvailable || false"
+          />
+        </div>
       }
     </div>
-  </mat-grid-tile>
-
-  <mat-grid-tile [colspan]="4" [rowspan]="2" [style.background]="'lightgreen'">
-    <div class="temperature-by-hour-container">
-      <h1 class="title">Temperatures by Hour (Past 24 hours)</h1>
-      <div class="hourly-display">
-        @for (tempByHour of generateHourlyTemperatureReading(); track tempByHour.hour) {
-          <div class="individual-temperature-item">
-            <display-temp-by-hour
-              [hour]="tempByHour.hour"
-              [temperature]="tempByHour.averageTemperature"
-              [temperatureAvailable]="tempByHour.temperatureAvailable || false"
-            />
-          </div>
-        }
-      </div>
-    </div>
-  </mat-grid-tile>
-</mat-grid-list>
+  </div>
+</div>
