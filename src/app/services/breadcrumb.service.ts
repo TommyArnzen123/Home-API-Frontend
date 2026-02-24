@@ -1,5 +1,7 @@
 import { Injectable, Signal, signal } from '@angular/core';
 
+export type PageInFocus = 'home-page' | 'view-home' | 'view-location' | 'view-device';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -13,14 +15,15 @@ export class BreadcrumbService {
   #deviceId$ = signal<number | null>(null);
   private deviceIdReadonly = this.#deviceId$.asReadonly();
 
+  #pageInFocus$ = signal<PageInFocus>('home-page');
+  private pageInFocusReadonly = this.#pageInFocus$.asReadonly();
+
   getHomeId(): Signal<number | null> {
     return this.homeIdReadonly;
   }
 
   updateHomeId(homeId: number | null): void {
     this.#homeId$.set(homeId);
-    this.#locationId$.set(null);
-    this.#deviceId$.set(null);
   }
 
   getLocationId(): Signal<number | null> {
@@ -29,7 +32,6 @@ export class BreadcrumbService {
 
   updateLocationId(locationId: number | null): void {
     this.#locationId$.set(locationId);
-    this.#deviceId$.set(null);
   }
 
   getDeviceId(): Signal<number | null> {
@@ -38,6 +40,14 @@ export class BreadcrumbService {
 
   updateDeviceId(deviceId: number | null): void {
     this.#deviceId$.set(deviceId);
+  }
+
+  getPageInFocus(): Signal<PageInFocus> {
+    return this.pageInFocusReadonly;
+  }
+
+  updatePageInFocus(page: PageInFocus): void {
+    this.#pageInFocus$.set(page);
   }
 
   clearService(): void {

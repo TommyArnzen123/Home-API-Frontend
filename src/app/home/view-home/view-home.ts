@@ -52,6 +52,7 @@ export class ViewHome implements OnInit, OnDestroy {
   constructor() {
     this.homeId = Number(this.route.snapshot.paramMap.get('homeId'));
     this.breadcrumbService.updateHomeId(this.homeId);
+    this.breadcrumbService.updatePageInFocus('view-home');
   }
 
   ngOnInit(): void {

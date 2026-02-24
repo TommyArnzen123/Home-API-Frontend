@@ -53,6 +53,7 @@ export interface IAverageTemperatureByHour {
 export interface IDeviceInformationCurrentDay {
   deviceId: number;
   locationId: number;
+  homeId: number;
   deviceName: string;
   mostRecentTemperature: number;
   mostRecentTemperatureAvailable: boolean;
