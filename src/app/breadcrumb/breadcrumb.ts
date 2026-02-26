@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, Signal } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { BreadcrumbService } from '../services/breadcrumb.service';
+import { BreadcrumbService, PageInFocus } from '../services/breadcrumb.service';
 import {
   ABOUT_ROUTE,
   HOME_PAGE_ROUTE,
@@ -53,6 +53,7 @@ export class Breadcrumb implements OnInit {
   homeId: Signal<number | null> = this.breadcrumbService.getHomeId();
   locationId: Signal<number | null> = this.breadcrumbService.getLocationId();
   deviceId: Signal<number | null> = this.breadcrumbService.getDeviceId();
+  pageInFocus: Signal<PageInFocus> = this.breadcrumbService.getPageInFocus();
 
   viewHomePage(): void {
     this.router.navigate([HOME_PAGE_ROUTE]);

@@ -46,7 +46,7 @@ export class HomePage implements OnInit, OnDestroy {
   private readonly breadcrumbService = inject(BreadcrumbService);
 
   constructor() {
-    this.breadcrumbService.clearService();
+    this.breadcrumbService.updatePageInFocus('home-page');
   }
 
   private isIUser(value: IUser | null): value is IUser {

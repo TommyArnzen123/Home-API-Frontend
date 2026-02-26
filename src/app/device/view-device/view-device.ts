@@ -74,6 +74,7 @@ export class ViewDevice implements OnInit, OnDestroy {
   constructor() {
     this.deviceId = Number(this.route.snapshot.paramMap.get('deviceId'));
     this.breadcrumbService.updateDeviceId(this.deviceId);
+    this.breadcrumbService.updatePageInFocus('view-device');
   }
 
   private isIUser(value: IUser | null): value is IUser {
@@ -96,6 +97,8 @@ export class ViewDevice implements OnInit, OnDestroy {
             next: (response: IDeviceInformationCurrentDay) => {
               this.locationId = response.locationId;
               this.deviceInformation = response;
+              this.breadcrumbService.updateLocationId(response.locationId);
+              this.breadcrumbService.updateHomeId(response.homeId);
               this.mostRecentTemperatureDate = new Date(
                 response.mostRecentTemperatureAvailableDateTime,
               );

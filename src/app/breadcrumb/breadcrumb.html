@@ -1,28 +1,33 @@
 @if (showBreadcrumbComponent) {
   @if (isIUser(user())) {
     <div class="breadcrumb-display">
-      @if (homeId()) {
+      @if (
+        pageInFocus() === 'view-home' ||
+        pageInFocus() === 'view-location' ||
+        pageInFocus() === 'view-device'
+      ) {
         <div class="clickable" (click)="viewHomePage()">Home Page</div>
-
-        @if (!locationId()) {
-          <div>></div>
-          <div class="non-clickable">View Home</div>
-        }
       }
 
-      @if (locationId()) {
+      @if (pageInFocus() === 'view-home') {
+        <div>></div>
+        <div>View Home</div>
+      } @else if (
+        (homeId() && pageInFocus() === 'view-location') || pageInFocus() === 'view-device'
+      ) {
         <div>></div>
         <div class="clickable" (click)="viewHomeById()">View Home</div>
-
-        @if (!deviceId()) {
-          <div>></div>
-          <div class="non-clickable">View Location</div>
-        }
       }
 
-      @if (deviceId()) {
+      @if (pageInFocus() === 'view-location') {
+        <div>></div>
+        <div>View Location</div>
+      } @else if (locationId() && pageInFocus() === 'view-device') {
         <div>></div>
         <div class="clickable" (click)="viewLocationById()">View Location</div>
+      }
+
+      @if (pageInFocus() === 'view-device') {
         <div>></div>
         <div class="non-clickable">View Device</div>
       }

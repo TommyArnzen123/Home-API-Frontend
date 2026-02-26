@@ -50,6 +50,7 @@ export class ViewLocation implements OnDestroy {
   constructor() {
     this.locationId = Number(this.route.snapshot.paramMap.get('locationId'));
     this.breadcrumbService.updateLocationId(this.locationId);
+    this.breadcrumbService.updatePageInFocus('view-location');
   }
 
   ngOnDestroy(): void {
@@ -75,6 +76,7 @@ export class ViewLocation implements OnDestroy {
               this.devices = response.devices;
               this.totalDevices = response.devices.length;
               this.setAverageTemperature(response.devices);
+              this.breadcrumbService.updateHomeId(response.homeId);
             },
             error: () => {
               // If there is an error getting the information on the home screen, log the user out.
