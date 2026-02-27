@@ -1,3 +1,22 @@
-@if (homeScreenInfoError) {
-  There was an error getting the home screen information.
-}
+<div class="captive-error-container">
+  <img style="width: 150px" src="captive-error-icon.svg" alt="Blue X with black outline icon." />
+  <div>The application has experienced an error.</div>
+  @if (homeScreenInfoError) {
+    <mat-card appearance="outlined" class="error-card"
+      ><img src="data-unavailable-error-icon.svg" alt="Blue circle with blue line through it." />
+      <div>
+        There was an error getting the home screen information. Please log back into the
+        application.
+      </div></mat-card
+    >
+  }
+  @if (sessionTimeoutError) {
+    <mat-card appearance="outlined" class="error-card"
+      ><img
+        src="session-timeout-error-icon.svg"
+        alt="Clock icon with white hands, blue background, and black outline."
+      />
+      <div>The session has timed out. Please log back into the application.</div></mat-card
+    >
+  }
+</div>

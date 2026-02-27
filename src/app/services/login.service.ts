@@ -65,4 +65,9 @@ export class LoginService {
     this.updateUserLoginInfo(null); // Remove the user login info from memory.
     this.router.navigateByUrl(LOGIN_ROUTE); // Route to the login screen.
   }
+
+  logoutWithoutRoute(): void {
+    this.sessionStorageService.removeItem(USER_LOGIN_INFO_KEY); // Remove the user login info from session storage.
+    this.updateUserLoginInfo(null); // Remove the user login info from memory.
+  }
 }
