@@ -14,7 +14,9 @@
     "
   >
     @if (averageTemperature) {
-      <div class="average-temperature">{{ averageTemperature | number: '1.2-2' }}°F</div>
+      <div class="average-temperature temperature-format">
+        {{ averageTemperature | number: '1.2-2' }}°F
+      </div>
     } @else {
       <div class="average-temperature">-°F</div>
     }
