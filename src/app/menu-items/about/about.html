@@ -39,6 +39,9 @@
           <b>Collection:</b> {{ icon.collection }}<br />
           <b>License:</b> {{ icon.license }}<br />
           <b>Author:</b> {{ icon.author }}<br />
+          @if (icon.notes) {
+            <b>Notes:</b> {{ icon.notes }}<br />
+          }
           <b>Url:</b> {{ icon.url }}<br />
         </div>
       </div>

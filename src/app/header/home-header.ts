@@ -3,7 +3,12 @@ import { MatButton } from '@angular/material/button';
 import { LoginService } from '../services/login.service';
 import { BreadcrumbService } from '../services/breadcrumb.service';
 import { Router } from '@angular/router';
-import { ABOUT_ROUTE, HOME_PAGE_ROUTE, SETTINGS_ROUTE } from '../constants/navigation-constants';
+import {
+  ABOUT_ROUTE,
+  HOME_PAGE_ROUTE,
+  LOGIN_ROUTE,
+  SETTINGS_ROUTE,
+} from '../constants/navigation-constants';
 
 @Component({
   selector: 'home-header',
@@ -31,6 +36,11 @@ export class HomeHeader {
   viewAboutPage() {
     // Route to the about page.
     this.router.navigateByUrl(ABOUT_ROUTE);
+  }
+
+  viewLoginScreen() {
+    // Route to the login page.
+    this.router.navigateByUrl(LOGIN_ROUTE);
   }
 
   logout() {

@@ -4,5 +4,6 @@ export interface IconReference {
   license: string;
   author: string;
   url: string;
+  notes?: string;
   iconPath: string;
 }

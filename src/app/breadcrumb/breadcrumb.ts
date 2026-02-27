@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, Signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, Signal } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { BreadcrumbService, PageInFocus } from '../services/breadcrumb.service';
 import {
@@ -18,7 +18,7 @@ import { filter, Subscription } from 'rxjs';
   templateUrl: './breadcrumb.html',
   styleUrl: './breadcrumb.scss',
 })
-export class Breadcrumb implements OnInit {
+export class Breadcrumb implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   private readonly router = inject(Router);
@@ -29,15 +29,21 @@ export class Breadcrumb implements OnInit {
   protected showBreadcrumbComponent = true;
 
   ngOnInit(): void {
-    this.router.events.subscribe((route) => {
-      if (route instanceof NavigationEnd) {
-        if (route.url === '/' + SETTINGS_ROUTE || route.url === '/' + ABOUT_ROUTE) {
-          this.showBreadcrumbComponent = false;
-        } else {
-          this.showBreadcrumbComponent = true;
+    this.subscriptions.push(
+      this.router.events.subscribe((route) => {
+        if (route instanceof NavigationEnd) {
+          if (route.url === '/' + SETTINGS_ROUTE || route.url === '/' + ABOUT_ROUTE) {
+            this.showBreadcrumbComponent = false;
+          } else {
+            this.showBreadcrumbComponent = true;
+          }
         }
-      }
-    });
+      }),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   protected isIUser(value: IUser | null): value is IUser {
