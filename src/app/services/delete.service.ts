@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { EnvironmentService } from './environment.service';
 import {
@@ -9,6 +9,7 @@ import {
   IDeleteLocationRequest,
   IDeleteLocationResponse,
 } from '../model/delete-actions.interface';
+import { LoadingContextToken } from '../interceptor/http-context-tokens';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +30,7 @@ export class DeleteService {
         this.deleteHomePath +
         '/' +
         request.homeId,
+      { context: new HttpContext().set(LoadingContextToken, 'Deleting home') },
     );
   }
 
@@ -39,6 +41,7 @@ export class DeleteService {
         this.deleteLocationPath +
         '/' +
         request.locationId,
+      { context: new HttpContext().set(LoadingContextToken, 'Deleting location') },
     );
   }
 
@@ -49,6 +52,7 @@ export class DeleteService {
         this.deleteDevicePath +
         '/' +
         request.deviceId,
+      { context: new HttpContext().set(LoadingContextToken, 'Deleting device') },
     );
   }
 }

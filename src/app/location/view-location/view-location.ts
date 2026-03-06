@@ -18,7 +18,11 @@ import {
   IDeleteLocationRequest,
   IDeleteLocationResponse,
 } from '../../model/delete-actions.interface';
-import { REGISTER_DEVICE_ROUTE, VIEW_HOME_ROUTE } from '../../constants/navigation-constants';
+import {
+  HOME_PAGE_ROUTE,
+  REGISTER_DEVICE_ROUTE,
+  VIEW_HOME_ROUTE,
+} from '../../constants/navigation-constants';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 import { DecimalPipe } from '@angular/common';
@@ -59,6 +63,8 @@ export class ViewLocation implements OnDestroy {
 
   ngOnInit(): void {
     const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
+    const homeIdSignal: Signal<number | null> = this.breadcrumbService.getHomeId();
+    this.homeId = homeIdSignal();
 
     if (this.isIUser(user())) {
       if (this.locationId) {
@@ -79,10 +85,20 @@ export class ViewLocation implements OnDestroy {
               this.breadcrumbService.updateHomeId(response.homeId);
             },
             error: () => {
-              // If there is an error getting the information on the home screen, log the user out.
-              // They will not be able to use the application without the information returned from the
-              // get home screen info endpoint.
-              this.loginService.logout();
+              // If there is an error getting information for the view location page, display an error
+              // message modal and route the user back to the view home route.
+              const viewLocationGetInfoErrorModal: IModal = {
+                title: 'Something Went Wrong...',
+                content: 'There was an error viewing the selected location.',
+                disableClose: true,
+              };
+              const viewLocationGetInfoErrorActions: IModalActions = {
+                primaryAction: () => this.returnToViewHome(),
+              };
+              this.modalService.showModalElement(
+                viewLocationGetInfoErrorModal,
+                viewLocationGetInfoErrorActions,
+              );
             },
           }),
         );
@@ -122,8 +138,18 @@ export class ViewLocation implements OnDestroy {
   }
 
   returnToViewHome() {
-    // Route to the view home page.
-    this.router.navigate([VIEW_HOME_ROUTE, this.homeId]);
+    if (this.homeId) {
+      // Route to the view home page.
+      this.router.navigate([VIEW_HOME_ROUTE, this.homeId]);
+    } else {
+      // The home ID value is not set, route to the home screen.
+      this.returnToHomeScreen();
+    }
+  }
+
+  returnToHomeScreen() {
+    // Route to the home screen.
+    this.router.navigate([HOME_PAGE_ROUTE]);
   }
 
   deleteLocationVerification(): void {

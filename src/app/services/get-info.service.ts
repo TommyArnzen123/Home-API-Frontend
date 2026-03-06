@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { EnvironmentService } from './environment.service';
 import { LoginService } from './login.service';
@@ -11,6 +11,7 @@ import {
   IViewHomeInfoResponse,
   IViewLocationInfoRequest,
 } from '../model/get-info.interface';
+import { LoadingContextToken } from '../interceptor/http-context-tokens';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +34,10 @@ export class GetInfoService {
         this.getHomeScreenInfoPath +
         '/' +
         request.userId,
-      { headers: this.generateHeaderWithBearerToken(request.jwtToken) },
+      {
+        headers: this.generateHeaderWithBearerToken(request.jwtToken),
+        context: new HttpContext().set(LoadingContextToken, 'Getting home screen info'),
+      },
     );
   }
 
@@ -44,7 +48,10 @@ export class GetInfoService {
         this.getViewHomeInfoPath +
         '/' +
         request.homeId,
-      { headers: this.generateHeaderWithBearerToken(request.jwtToken) },
+      {
+        headers: this.generateHeaderWithBearerToken(request.jwtToken),
+        context: new HttpContext().set(LoadingContextToken, 'Getting home info'),
+      },
     );
   }
 
@@ -55,7 +62,10 @@ export class GetInfoService {
         this.getViewLocationInfoPath +
         '/' +
         request.locationId,
-      { headers: this.generateHeaderWithBearerToken(request.jwtToken) },
+      {
+        headers: this.generateHeaderWithBearerToken(request.jwtToken),
+        context: new HttpContext().set(LoadingContextToken, 'Getting location info'),
+      },
     );
   }
 
@@ -66,6 +76,7 @@ export class GetInfoService {
         this.getInformationByDeviceCurrentDay +
         '/' +
         deviceId,
+      { context: new HttpContext().set(LoadingContextToken, 'Getting device info') },
     );
   }
 

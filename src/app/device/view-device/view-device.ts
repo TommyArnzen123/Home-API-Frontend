@@ -12,7 +12,7 @@ import { LoginService } from '../../services/login.service';
 import { DisplayTempByHour } from './display-temp-by-hour/display-temp-by-hour';
 import { DELETE_DEVICE_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../constants/delete-constants';
-import { VIEW_LOCATION_ROUTE } from '../../constants/navigation-constants';
+import { HOME_PAGE_ROUTE, VIEW_LOCATION_ROUTE } from '../../constants/navigation-constants';
 import {
   IAverageTemperatureByHour,
   IDeviceInformationCurrentDay,
@@ -89,6 +89,8 @@ export class ViewDevice implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
+    const locationIdSignal: Signal<number | null> = this.breadcrumbService.getLocationId();
+    this.locationId = locationIdSignal();
 
     if (this.isIUser(user())) {
       if (this.deviceId) {
@@ -108,7 +110,20 @@ export class ViewDevice implements OnInit, OnDestroy {
               );
             },
             error: () => {
-              console.log('Get view device information error.');
+              // If there is an error getting information for the view device page, display an error
+              // message modal and route the user back to the view location route.
+              const viewDeviceGetInfoErrorModal: IModal = {
+                title: 'Something Went Wrong...',
+                content: 'There was an error viewing the selected device.',
+                disableClose: true,
+              };
+              const viewDeviceGetInfoErrorActions: IModalActions = {
+                primaryAction: () => this.returnToViewLocation(),
+              };
+              this.modalService.showModalElement(
+                viewDeviceGetInfoErrorModal,
+                viewDeviceGetInfoErrorActions,
+              );
             },
           }),
         );
@@ -139,8 +154,18 @@ export class ViewDevice implements OnInit, OnDestroy {
   }
 
   returnToViewLocation() {
-    // Route to the view location page.
-    this.router.navigate([VIEW_LOCATION_ROUTE, this.locationId]);
+    if (this.locationId) {
+      // Route to the view location page.
+      this.router.navigate([VIEW_LOCATION_ROUTE, this.locationId]);
+    } else {
+      // The location ID value is not set, route to the home screen.
+      this.returnToHomeScreen();
+    }
+  }
+
+  returnToHomeScreen() {
+    // Route to the home screen.
+    this.router.navigate([HOME_PAGE_ROUTE]);
   }
 
   deleteDeviceAction() {

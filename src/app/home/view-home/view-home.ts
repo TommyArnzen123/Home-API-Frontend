@@ -10,7 +10,6 @@ import { ModalService } from '../../services/modal.service';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { ItemTotals } from '../../item-totals/item-totals';
 import { LocationCard } from './location-card/location-card';
-import { Tile } from '../../home-page/home-page';
 import { HOME_PAGE_ROUTE, REGISTER_LOCATION_ROUTE } from '../../constants/navigation-constants';
 import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
@@ -77,10 +76,20 @@ export class ViewHome implements OnInit, OnDestroy {
               });
             },
             error: () => {
-              // If there is an error getting the information on the home screen, log the user out.
-              // They will not be able to use the application without the information returned from the
-              // get home screen info endpoint.
-              this.loginService.logout();
+              // If there is an error getting information for the view home page, display an error
+              // message modal and route the user back to the home screen route.
+              const viewHomeGetInfoErrorModal: IModal = {
+                title: 'Something Went Wrong...',
+                content: 'There was an error viewing the selected home.',
+                disableClose: true,
+              };
+              const viewHomeGetInfoErrorActions: IModalActions = {
+                primaryAction: () => this.returnToHomeScreen(),
+              };
+              this.modalService.showModalElement(
+                viewHomeGetInfoErrorModal,
+                viewHomeGetInfoErrorActions,
+              );
             },
           }),
         );
