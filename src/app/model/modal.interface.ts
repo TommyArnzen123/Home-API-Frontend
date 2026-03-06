@@ -4,6 +4,7 @@ export interface IModal {
   footer?: string;
   primaryText?: string;
   secondaryText?: string;
+  disableClose?: boolean;
 }
 
 export interface IModalActions {

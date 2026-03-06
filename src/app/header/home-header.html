@@ -8,7 +8,7 @@
       <button matButton class="button-color" (click)="viewAboutPage()">About</button>
       <button matButton class="button-color" (click)="logout()">Logout</button>
     </div>
-  } @else {
+  } @else if (!isLoggedIn() && showLoginOption) {
     <div class="button-container">
       <button matButton class="button-color" (click)="viewLoginScreen()">Login</button>
     </div>

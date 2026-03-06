@@ -19,6 +19,7 @@ export class ModalService {
         modalContent,
         actions,
       },
+      disableClose: modalContent.disableClose ?? false,
     });
   }
 
