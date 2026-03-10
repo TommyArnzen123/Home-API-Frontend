@@ -72,9 +72,26 @@ export class ViewDevice implements OnInit, OnDestroy {
   private readonly loginService = inject(LoginService);
 
   constructor() {
-    this.deviceId = Number(this.route.snapshot.paramMap.get('deviceId'));
-    this.breadcrumbService.updateDeviceId(this.deviceId);
-    this.breadcrumbService.updatePageInFocus('view-device');
+    const deviceId = Number(this.route.snapshot.paramMap.get('deviceId'));
+    if (isNaN(deviceId)) {
+      // If the value provided for the deviceId is not a number, route the user away
+      // from the view device page.
+      const viewDeviceInvalidDeviceIDErrorModal: IModal = {
+        title: 'Something Went Wrong...',
+        content: 'The device ID provided was invalid.',
+        disableClose: true,
+      };
+      const viewDeviceInvalidDeviceIDErrorActions: IModalActions = {
+        primaryAction: () => this.returnToViewLocation(),
+      };
+      this.modalService.showModalElement(
+        viewDeviceInvalidDeviceIDErrorModal,
+        viewDeviceInvalidDeviceIDErrorActions,
+      );
+    } else {
+      this.deviceId = deviceId;
+      this.breadcrumbService.updatePageInFocus('view-device');
+    }
   }
 
   private isIUser(value: IUser | null): value is IUser {

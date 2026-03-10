@@ -52,9 +52,28 @@ export class ViewLocation implements OnDestroy {
   private readonly breadcrumbService = inject(BreadcrumbService);
 
   constructor() {
-    this.locationId = Number(this.route.snapshot.paramMap.get('locationId'));
-    this.breadcrumbService.updateLocationId(this.locationId);
-    this.breadcrumbService.updatePageInFocus('view-location');
+    const locationId = Number(this.route.snapshot.paramMap.get('locationId'));
+    console.log(locationId);
+    if (isNaN(locationId)) {
+      // If the value provided for the locationId is not a number, route the user away
+      // from the view location page.
+      const viewLocationInvalidLocationIDErrorModal: IModal = {
+        title: 'Something Went Wrong...',
+        content: 'The location ID provided was invalid.',
+        disableClose: true,
+      };
+      const viewLocationInvalidLocationIDErrorActions: IModalActions = {
+        primaryAction: () => this.returnToViewHome(),
+      };
+      this.modalService.showModalElement(
+        viewLocationInvalidLocationIDErrorModal,
+        viewLocationInvalidLocationIDErrorActions,
+      );
+    } else {
+      this.locationId = locationId;
+      this.breadcrumbService.updateLocationId(this.locationId);
+      this.breadcrumbService.updatePageInFocus('view-location');
+    }
   }
 
   ngOnDestroy(): void {
@@ -68,6 +87,7 @@ export class ViewLocation implements OnDestroy {
 
     if (this.isIUser(user())) {
       if (this.locationId) {
+        console.log(this.locationId);
         const getViewLocationInfoRequest: IViewLocationInfoRequest = {
           locationId: this.locationId,
           jwtToken: user()!.jwtToken,

@@ -49,9 +49,27 @@ export class ViewHome implements OnInit, OnDestroy {
   private readonly breadcrumbService = inject(BreadcrumbService);
 
   constructor() {
-    this.homeId = Number(this.route.snapshot.paramMap.get('homeId'));
-    this.breadcrumbService.updateHomeId(this.homeId);
-    this.breadcrumbService.updatePageInFocus('view-home');
+    const homeId = Number(this.route.snapshot.paramMap.get('homeId'));
+    if (isNaN(homeId)) {
+      // If the value provided for the homeId is not a number, route the user to the
+      // home screen. No home data can be received if an ID is not provided.
+      const viewHomeInvalidHomeIDErrorModal: IModal = {
+        title: 'Something Went Wrong...',
+        content: 'The home ID provided was invalid.',
+        disableClose: true,
+      };
+      const viewHomeInvalidHomeIDErrorActions: IModalActions = {
+        primaryAction: () => this.returnToHomeScreen(),
+      };
+      this.modalService.showModalElement(
+        viewHomeInvalidHomeIDErrorModal,
+        viewHomeInvalidHomeIDErrorActions,
+      );
+    } else {
+      this.homeId = homeId;
+      this.breadcrumbService.updateHomeId(this.homeId);
+      this.breadcrumbService.updatePageInFocus('view-home');
+    }
   }
 
   ngOnInit(): void {

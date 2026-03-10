@@ -33,6 +33,7 @@ export const routes: Routes = [
     path: ROOT_ROUTE,
     canActivate: [isUserAuthenticated],
     children: [
+      { path: ROOT_ROUTE, redirectTo: HOME_PAGE_ROUTE, pathMatch: 'full' },
       { path: HOME_PAGE_ROUTE, component: HomePage },
       {
         path: REGISTER_HOME_ROUTE,
@@ -77,4 +78,5 @@ export const routes: Routes = [
     component: RegisterUser,
   },
   { path: CAPTIVE_ERROR_ROUTE, component: CaptiveError },
+  { path: '**', redirectTo: HOME_PAGE_ROUTE },
 ];
