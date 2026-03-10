@@ -1,16 +1,16 @@
-import { Component, inject, OnDestroy, OnInit, Signal } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { BreadcrumbService, PageInFocus } from '../services/breadcrumb.service';
+import { LoginService } from '../services/login.service';
+import { IUser } from '../model/login.interface';
 import {
   ABOUT_ROUTE,
-  HOME_PAGE_ROUTE,
   SETTINGS_ROUTE,
+  HOME_PAGE_ROUTE,
   VIEW_HOME_ROUTE,
   VIEW_LOCATION_ROUTE,
 } from '../constants/navigation-constants';
-import { IUser } from '../model/login.interface';
-import { LoginService } from '../services/login.service';
-import { filter, Subscription } from 'rxjs';
 
 @Component({
   selector: 'breadcrumb',
@@ -24,10 +24,16 @@ export class Breadcrumb implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly breadcrumbService = inject(BreadcrumbService);
   private readonly loginService = inject(LoginService);
-  user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
+
+  protected user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
+  protected homeId: Signal<number | null> = this.breadcrumbService.getHomeId();
+  protected locationId: Signal<number | null> = this.breadcrumbService.getLocationId();
+  protected deviceId: Signal<number | null> = this.breadcrumbService.getDeviceId();
+  protected pageInFocus: Signal<PageInFocus> = this.breadcrumbService.getPageInFocus();
 
   protected showBreadcrumbComponent = true;
 
+  // Show or hide the breadcrumb component.
   ngOnInit(): void {
     this.subscriptions.push(
       this.router.events.subscribe((route) => {
@@ -49,17 +55,12 @@ export class Breadcrumb implements OnInit, OnDestroy {
   protected isIUser(value: IUser | null): value is IUser {
     return (
       value !== null &&
+      typeof value.userId === 'string' &&
       typeof value.firstName === 'string' &&
-      typeof value.username === 'string' &&
       typeof value.username === 'string' &&
       typeof value.jwtToken === 'string'
     );
   }
-
-  homeId: Signal<number | null> = this.breadcrumbService.getHomeId();
-  locationId: Signal<number | null> = this.breadcrumbService.getLocationId();
-  deviceId: Signal<number | null> = this.breadcrumbService.getDeviceId();
-  pageInFocus: Signal<PageInFocus> = this.breadcrumbService.getPageInFocus();
 
   viewHomePage(): void {
     this.router.navigate([HOME_PAGE_ROUTE]);

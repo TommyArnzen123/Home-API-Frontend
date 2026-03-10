@@ -1,6 +1,7 @@
 @if (showBreadcrumbComponent) {
   @if (isIUser(user())) {
     <div class="breadcrumb-display">
+      <!-- Display the home page option. -->
       @if (
         pageInFocus() === 'view-home' ||
         pageInFocus() === 'view-location' ||
@@ -9,9 +10,10 @@
         <div class="clickable" (click)="viewHomePage()">Home Page</div>
       }
 
+      <!-- Display the view home option. -->
       @if (pageInFocus() === 'view-home') {
         <div>></div>
-        <div>View Home</div>
+        <div class="non-clickable">View Home</div>
       } @else if (
         (homeId() && pageInFocus() === 'view-location') || pageInFocus() === 'view-device'
       ) {
@@ -19,14 +21,16 @@
         <div class="clickable" (click)="viewHomeById()">View Home</div>
       }
 
+      <!-- Display the view location option. -->
       @if (pageInFocus() === 'view-location') {
         <div>></div>
-        <div>View Location</div>
+        <div class="non-clickable">View Location</div>
       } @else if (locationId() && pageInFocus() === 'view-device') {
         <div>></div>
         <div class="clickable" (click)="viewLocationById()">View Location</div>
       }
 
+      <!-- Display the view device option. -->
       @if (pageInFocus() === 'view-device') {
         <div>></div>
         <div class="non-clickable">View Device</div>
