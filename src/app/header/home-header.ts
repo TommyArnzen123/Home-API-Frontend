@@ -1,15 +1,15 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { MatButton } from '@angular/material/button';
+import { NavigationEnd, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { LoginService } from '../services/login.service';
 import { BreadcrumbService } from '../services/breadcrumb.service';
-import { NavigationEnd, Router } from '@angular/router';
 import {
   ABOUT_ROUTE,
   HOME_PAGE_ROUTE,
   LOGIN_ROUTE,
   SETTINGS_ROUTE,
 } from '../constants/navigation-constants';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'home-header',
@@ -17,7 +17,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './home-header.html',
   styleUrl: './home-header.scss',
 })
-export class HomeHeader implements OnInit {
+export class HomeHeader implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   private readonly loginService = inject(LoginService);
@@ -25,6 +25,8 @@ export class HomeHeader implements OnInit {
   private readonly router = inject(Router);
 
   protected showLoginOption = false;
+
+  protected isLoggedIn = this.loginService.isLoggedIn;
 
   ngOnInit(): void {
     this.subscriptions.push(
@@ -40,7 +42,9 @@ export class HomeHeader implements OnInit {
     );
   }
 
-  isLoggedIn = this.loginService.isLoggedIn;
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
 
   viewHomePage() {
     // Route to the home page.
@@ -57,7 +61,7 @@ export class HomeHeader implements OnInit {
     this.router.navigateByUrl(ABOUT_ROUTE);
   }
 
-  viewLoginScreen() {
+  viewLoginPage() {
     // Route to the login page.
     this.router.navigateByUrl(LOGIN_ROUTE);
   }

@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HOME_SCREEN_INFO_ERROR, SESSION_TIMEOUT_ERROR } from './captive-error-constants';
 import { MatCardModule } from '@angular/material/card';
 import { LoginService } from '../services/login.service';
+import { HOME_SCREEN_INFO_ERROR, SESSION_TIMEOUT_ERROR } from './captive-error-constants';
 
 @Component({
   selector: 'captive-error',
