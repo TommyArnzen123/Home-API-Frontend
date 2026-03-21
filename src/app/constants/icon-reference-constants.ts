@@ -8,6 +8,7 @@ export const ICON_REFERENCES: IconReference[] = [
     author: 'etn-ccis',
     url: 'https://www.svgrepo.com/svg/503276/device-activating',
     iconPath: 'device-icon.svg',
+    altText: 'Black device with black signal on top.',
   },
   {
     title: 'Frozen House Ice SVG Vector',
@@ -16,6 +17,7 @@ export const ICON_REFERENCES: IconReference[] = [
     author: 'Ruslan Mullakaev',
     url: 'https://www.svgrepo.com/svg/420426/frozen-house-ice',
     iconPath: 'frozen-house-icon.svg',
+    altText: 'Black house with blue ice on top.',
   },
   {
     title: 'Home 2 SVG Vector',
@@ -24,6 +26,7 @@ export const ICON_REFERENCES: IconReference[] = [
     author: 'Dimas nanda',
     url: 'https://www.svgrepo.com/svg/485521/home-2',
     iconPath: 'home-icon-main.svg',
+    altText: 'House with blue roof. The walls and base are black.',
   },
   {
     title: 'Home Alt 3 SVG Vector',
@@ -32,6 +35,7 @@ export const ICON_REFERENCES: IconReference[] = [
     author: 'Mary Akveo',
     url: 'https://www.svgrepo.com/svg/465259/home-alt-3',
     iconPath: 'home-icon-summary.svg',
+    altText: 'Home icon with all black color.',
   },
   {
     title: 'Location Pin SVG Vector',
@@ -40,6 +44,7 @@ export const ICON_REFERENCES: IconReference[] = [
     author: 'Orchid',
     url: 'https://www.svgrepo.com/svg/509148/location-pin',
     iconPath: 'location-icon.svg',
+    altText: 'Black location icon with black circle in the middle.',
   },
   {
     title: 'Thermometer Temperature SVG',
@@ -48,6 +53,7 @@ export const ICON_REFERENCES: IconReference[] = [
     author: 'SVG Repo',
     url: 'https://www.svgrepo.com/svg/222623/thermometer-temperature',
     iconPath: 'temperature-icon.svg',
+    altText: 'Light blue and gray thermometer icon with yellow shapes around the outside.',
   },
   {
     title: 'Error SVG Vector',
@@ -56,6 +62,7 @@ export const ICON_REFERENCES: IconReference[] = [
     author: 'bytedance',
     url: 'https://www.svgrepo.com/svg/387486/error',
     iconPath: 'captive-error-icon.svg',
+    altText: 'Blue X Icon with bold black outline.',
   },
   {
     title: 'Triangle Exclamation SVG Vector',
@@ -65,6 +72,7 @@ export const ICON_REFERENCES: IconReference[] = [
     url: 'https://www.svgrepo.com/svg/533742/triangle-exclamation',
     notes: 'Outline color changed from #000000 to #039ae5.',
     iconPath: 'data-unavailable-error-icon.svg',
+    altText: 'Blue triangle with blue exclamation inside.',
   },
   {
     title: 'Time SVG Vector',
@@ -73,5 +81,6 @@ export const ICON_REFERENCES: IconReference[] = [
     author: 'bytedance',
     url: 'https://www.svgrepo.com/svg/388773/time',
     iconPath: 'session-timeout-error-icon.svg',
+    altText: 'Blue clock with white hands and bold black outline.',
   },
 ];

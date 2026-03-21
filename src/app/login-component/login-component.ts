@@ -70,9 +70,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.router.navigate([HOME_PAGE_ROUTE]);
   }
 
-  register() {
-    // Route the user to the user registration component.
-    this.router.navigateByUrl(REGISTER_USER_ROUTE);
+  routeToRegistrationPage() {
+    // Route the user to the user registration page.
+    this.router.navigate([REGISTER_USER_ROUTE]);
   }
 
   loginAction(username: string, password: string) {

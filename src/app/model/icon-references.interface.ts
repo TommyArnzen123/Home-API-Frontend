@@ -6,4 +6,5 @@ export interface IconReference {
   url: string;
   notes?: string;
   iconPath: string;
+  altText: string;
 }
