@@ -10,7 +10,7 @@ import { VIEW_LOCATION_ROUTE } from '../../../constants/navigation-constants';
 import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../../constants/delete-constants';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
 import {
-  IDeleteLocationRequest,
+  IDeleteEntityRequest,
   IDeleteLocationResponse,
 } from '../../../model/delete-actions.interface';
 import { IModal, IModalActions } from '../../../model/modal.interface';
@@ -80,8 +80,8 @@ export class LocationCard implements OnInit, OnDestroy {
 
   deleteLocation() {
     if (this.locationInfo && this.locationInfo.locationId) {
-      const deleteLocationRequest: IDeleteLocationRequest = {
-        locationId: this.locationInfo.locationId,
+      const deleteLocationRequest: IDeleteEntityRequest = {
+        id: this.locationInfo.locationId,
       };
 
       this.subscriptions.push(

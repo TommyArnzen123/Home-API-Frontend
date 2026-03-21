@@ -9,7 +9,7 @@ import { ModalService } from '../../services/modal.service';
 import { VIEW_HOME_ROUTE } from '../../constants/navigation-constants';
 import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
-import { IDeleteHomeRequest, IDeleteHomeResponse } from '../../model/delete-actions.interface';
+import { IDeleteEntityRequest, IDeleteHomeResponse } from '../../model/delete-actions.interface';
 import { IModal, IModalActions } from '../../model/modal.interface';
 import { IHome } from '../../model/get-info.interface';
 
@@ -56,8 +56,8 @@ export class HomeCard implements OnDestroy {
 
   deleteHome(): void {
     if (this.homeInfo && this.homeInfo.homeId) {
-      const deleteHomeRequest: IDeleteHomeRequest = {
-        homeId: this.homeInfo.homeId,
+      const deleteHomeRequest: IDeleteEntityRequest = {
+        id: this.homeInfo.homeId,
       };
 
       this.subscriptions.push(

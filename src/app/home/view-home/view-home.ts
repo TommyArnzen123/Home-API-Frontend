@@ -20,7 +20,7 @@ import {
 } from '../../model/get-info.interface';
 import { IUser } from '../../model/login.interface';
 import {
-  IDeleteHomeRequest,
+  IDeleteEntityRequest,
   IDeleteHomeResponse,
   IDeleteLocationResponse,
 } from '../../model/delete-actions.interface';
@@ -158,8 +158,8 @@ export class ViewHome implements OnInit, OnDestroy {
 
   deleteHome() {
     if (this.homeId) {
-      const deleteHomeRequest: IDeleteHomeRequest = {
-        homeId: this.homeId,
+      const deleteHomeRequest: IDeleteEntityRequest = {
+        id: this.homeId,
       };
 
       this.subscriptions.push(

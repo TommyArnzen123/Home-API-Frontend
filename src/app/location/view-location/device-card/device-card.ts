@@ -10,7 +10,7 @@ import { VIEW_DEVICE_ROUTE } from '../../../constants/navigation-constants';
 import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../../constants/delete-constants';
 import { DELETE_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
 import {
-  IDeleteDeviceRequest,
+  IDeleteEntityRequest,
   IDeleteDeviceResponse,
 } from '../../../model/delete-actions.interface';
 import { IModal, IModalActions } from '../../../model/modal.interface';
@@ -62,8 +62,8 @@ export class DeviceCard implements OnDestroy {
 
   deleteDevice() {
     if (this.deviceInfo && this.deviceInfo.deviceId) {
-      const deleteDeviceRequest: IDeleteDeviceRequest = {
-        deviceId: this.deviceInfo.deviceId,
+      const deleteDeviceRequest: IDeleteEntityRequest = {
+        id: this.deviceInfo.deviceId,
       };
 
       this.subscriptions.push(

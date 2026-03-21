@@ -2,11 +2,9 @@ import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { EnvironmentService } from './environment.service';
 import {
-  IDeleteDeviceRequest,
+  IDeleteEntityRequest,
   IDeleteDeviceResponse,
-  IDeleteHomeRequest,
   IDeleteHomeResponse,
-  IDeleteLocationRequest,
   IDeleteLocationResponse,
 } from '../model/delete-actions.interface';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';
@@ -23,35 +21,35 @@ export class DeleteService {
   private readonly httpClient = inject(HttpClient);
   private readonly environmentService = inject(EnvironmentService);
 
-  deleteHomeById(request: IDeleteHomeRequest) {
+  deleteHomeById(request: IDeleteEntityRequest) {
     return this.httpClient.delete<IDeleteHomeResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.deleteRoot +
         this.deleteHomePath +
         '/' +
-        request.homeId,
+        request.id,
       { context: new HttpContext().set(LoadingContextToken, 'Deleting home') },
     );
   }
 
-  deleteLocationById(request: IDeleteLocationRequest) {
+  deleteLocationById(request: IDeleteEntityRequest) {
     return this.httpClient.delete<IDeleteLocationResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.deleteRoot +
         this.deleteLocationPath +
         '/' +
-        request.locationId,
+        request.id,
       { context: new HttpContext().set(LoadingContextToken, 'Deleting location') },
     );
   }
 
-  deleteDeviceById(request: IDeleteDeviceRequest) {
+  deleteDeviceById(request: IDeleteEntityRequest) {
     return this.httpClient.delete<IDeleteDeviceResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.deleteRoot +
         this.deleteDevicePath +
         '/' +
-        request.deviceId,
+        request.id,
       { context: new HttpContext().set(LoadingContextToken, 'Deleting device') },
     );
   }

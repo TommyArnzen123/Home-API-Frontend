@@ -18,7 +18,7 @@ import {
   IDeviceInformationCurrentDay,
 } from '../../model/get-info.interface';
 import { IModal, IModalActions } from '../../model/modal.interface';
-import { IDeleteDeviceRequest, IDeleteDeviceResponse } from '../../model/delete-actions.interface';
+import { IDeleteEntityRequest, IDeleteDeviceResponse } from '../../model/delete-actions.interface';
 import { IUser } from '../../model/login.interface';
 
 const averageTempInfo: IAverageTemperatureByHour[] = [
@@ -187,8 +187,8 @@ export class ViewDevice implements OnInit, OnDestroy {
 
   deleteDeviceAction() {
     if (this.deviceId) {
-      const deleteDeviceRequest: IDeleteDeviceRequest = {
-        deviceId: this.deviceId,
+      const deleteDeviceRequest: IDeleteEntityRequest = {
+        id: this.deviceId,
       };
 
       this.subscriptions.push(

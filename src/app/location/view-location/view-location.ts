@@ -15,7 +15,7 @@ import { IDevice, ILocation, IViewLocationInfoRequest } from '../../model/get-in
 import { IUser } from '../../model/login.interface';
 import {
   IDeleteDeviceResponse,
-  IDeleteLocationRequest,
+  IDeleteEntityRequest,
   IDeleteLocationResponse,
 } from '../../model/delete-actions.interface';
 import {
@@ -190,8 +190,8 @@ export class ViewLocation implements OnDestroy {
 
   deleteLocation() {
     if (this.locationId) {
-      const deleteLocationRequest: IDeleteLocationRequest = {
-        locationId: this.locationId,
+      const deleteLocationRequest: IDeleteEntityRequest = {
+        id: this.locationId,
       };
 
       this.subscriptions.push(
