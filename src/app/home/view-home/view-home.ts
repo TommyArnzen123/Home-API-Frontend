@@ -15,7 +15,7 @@ import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 import {
   ILocation,
-  IViewHomeInfoRequest,
+  IEntityInfoRequest,
   IViewHomeInfoResponse,
 } from '../../model/get-info.interface';
 import { IUser } from '../../model/login.interface';
@@ -77,8 +77,8 @@ export class ViewHome implements OnInit, OnDestroy {
 
     if (this.isIUser(user())) {
       if (this.homeId) {
-        const getViewHomeInfoRequest: IViewHomeInfoRequest = {
-          homeId: this.homeId,
+        const getViewHomeInfoRequest: IEntityInfoRequest = {
+          id: this.homeId,
           jwtToken: user()!.jwtToken,
         };
 

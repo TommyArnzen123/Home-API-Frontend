@@ -11,7 +11,7 @@ import { LoginService } from '../../services/login.service';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { DeviceCard } from './device-card/device-card';
 import { IModal, IModalActions } from '../../model/modal.interface';
-import { IDevice, ILocation, IViewLocationInfoRequest } from '../../model/get-info.interface';
+import { IDevice, ILocation, IEntityInfoRequest } from '../../model/get-info.interface';
 import { IUser } from '../../model/login.interface';
 import {
   IDeleteDeviceResponse,
@@ -88,8 +88,8 @@ export class ViewLocation implements OnDestroy {
     if (this.isIUser(user())) {
       if (this.locationId) {
         console.log(this.locationId);
-        const getViewLocationInfoRequest: IViewLocationInfoRequest = {
-          locationId: this.locationId,
+        const getViewLocationInfoRequest: IEntityInfoRequest = {
+          id: this.locationId,
           jwtToken: user()!.jwtToken,
         };
 

@@ -7,23 +7,23 @@ export interface IUser {
 }
 
 export interface IHome {
-  homeId: number;
   userId: number;
+  homeId: number;
   homeName: string;
   totalLocations: number;
   totalDevices: number;
 }
 
 export interface ILocation {
-  locationId: number;
   homeId: number;
+  locationId: number;
   locationName: string;
   devices: IDevice[];
 }
 
 export interface IDevice {
-  deviceId: number;
   locationId: number;
+  deviceId: number;
   deviceName: string;
   temperature: ITemperature;
 }
@@ -32,16 +32,6 @@ export interface ITemperature {
   temperatureId: number;
   temperature: number;
   dateRecorded: Date;
-}
-
-export interface IHomeScreenInfoRequest {
-  userId: string;
-  jwtToken: string;
-}
-
-export interface IHomeScreenInfoResponse {
-  userId: string;
-  homes: IHome[];
 }
 
 export interface IAverageTemperatureByHour {
@@ -61,18 +51,18 @@ export interface IDeviceInformationCurrentDay {
   averageTemperaturesByHourCurrentDay: IAverageTemperatureByHour[];
 }
 
-export interface IViewHomeInfoRequest {
-  homeId: number;
+export interface IEntityInfoRequest {
+  id: number;
   jwtToken: string;
+}
+
+export interface IHomeScreenInfoResponse {
+  userId: number;
+  homes: IHome[];
 }
 
 export interface IViewHomeInfoResponse {
   homeId: number;
   homeName: string;
   locations: ILocation[];
-}
-
-export interface IViewLocationInfoRequest {
-  locationId: number;
-  jwtToken: string;
 }

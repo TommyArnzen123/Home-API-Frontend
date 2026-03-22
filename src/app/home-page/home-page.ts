@@ -9,11 +9,7 @@ import { HomeCard } from './home-card/home-card';
 import { ItemTotals } from '../item-totals/item-totals';
 import { CAPTIVE_ERROR_ROUTE, REGISTER_HOME_ROUTE } from '../constants/navigation-constants';
 import { IUser } from '../model/login.interface';
-import {
-  IHome,
-  IHomeScreenInfoRequest,
-  IHomeScreenInfoResponse,
-} from '../model/get-info.interface';
+import { IHome, IEntityInfoRequest, IHomeScreenInfoResponse } from '../model/get-info.interface';
 import { IDeleteHomeResponse } from '../model/delete-actions.interface';
 
 export interface Tile {
@@ -70,8 +66,8 @@ export class HomePage implements OnInit, OnDestroy {
       const currentHour = currentDate.getHours();
       this.greetingMessage = this.setGreetingMessage(currentHour);
 
-      const getHomeScreenInfoRequest: IHomeScreenInfoRequest = {
-        userId: user()!.userId,
+      const getHomeScreenInfoRequest: IEntityInfoRequest = {
+        id: user()!.userId,
         jwtToken: user()!.jwtToken,
       };
 

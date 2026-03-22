@@ -14,8 +14,3 @@ export interface IRegisterGenericEntityRequest {
 export interface IRegisterGenericEntityResponse {
   message: String;
 }
-
-
-// TO BE IMPLEMENTED.
-export interface IRegisterDeviceRequest {}
-export interface IRegisterDeviceResponse {}

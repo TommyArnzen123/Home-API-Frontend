@@ -3,13 +3,11 @@ import { inject, Injectable } from '@angular/core';
 import { EnvironmentService } from './environment.service';
 import { LoginService } from './login.service';
 import {
+  IEntityInfoRequest,
   IDeviceInformationCurrentDay,
-  IHomeScreenInfoRequest,
   IHomeScreenInfoResponse,
   ILocation,
-  IViewHomeInfoRequest,
   IViewHomeInfoResponse,
-  IViewLocationInfoRequest,
 } from '../model/get-info.interface';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';
 
@@ -27,13 +25,13 @@ export class GetInfoService {
   private readonly environmentService = inject(EnvironmentService);
   private readonly loginService = inject(LoginService);
 
-  getHomeScreenInfo(request: IHomeScreenInfoRequest) {
+  getHomeScreenInfo(request: IEntityInfoRequest) {
     return this.httpClient.get<IHomeScreenInfoResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.getInfoRoot +
         this.getHomeScreenInfoPath +
         '/' +
-        request.userId,
+        request.id,
       {
         headers: this.generateHeaderWithBearerToken(request.jwtToken),
         context: new HttpContext().set(LoadingContextToken, 'Getting home screen info'),
@@ -41,13 +39,13 @@ export class GetInfoService {
     );
   }
 
-  getViewHomeInfo(request: IViewHomeInfoRequest) {
+  getViewHomeInfo(request: IEntityInfoRequest) {
     return this.httpClient.get<IViewHomeInfoResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.getInfoRoot +
         this.getViewHomeInfoPath +
         '/' +
-        request.homeId,
+        request.id,
       {
         headers: this.generateHeaderWithBearerToken(request.jwtToken),
         context: new HttpContext().set(LoadingContextToken, 'Getting home info'),
@@ -55,13 +53,13 @@ export class GetInfoService {
     );
   }
 
-  getViewLocationInfo(request: IViewLocationInfoRequest) {
+  getViewLocationInfo(request: IEntityInfoRequest) {
     return this.httpClient.get<ILocation>(
       this.environmentService.getEnvironment().backendUrl +
         this.getInfoRoot +
         this.getViewLocationInfoPath +
         '/' +
-        request.locationId,
+        request.id,
       {
         headers: this.generateHeaderWithBearerToken(request.jwtToken),
         context: new HttpContext().set(LoadingContextToken, 'Getting location info'),
