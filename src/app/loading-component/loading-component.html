@@ -3,9 +3,7 @@
     <div class="modal-container">
       <mat-spinner />
       @if (loading().message) {
-        <div>{{ loading().message }}</div>
-      } @else {
-        <div>Default Message</div>
+        <div data-testid="loading-message">{{ loading().message }}</div>
       }
     </div>
   </div>

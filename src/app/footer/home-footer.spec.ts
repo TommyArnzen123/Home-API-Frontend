@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HomeFooter } from './home-footer';
+import { By } from '@angular/platform-browser';
 
 describe('HomeFooter', () => {
   let component: HomeFooter;
@@ -18,5 +19,13 @@ describe('HomeFooter', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should display the copyright text with the right text content', () => {
+    const verifyText = '© ' + component['currentYear'] + ' | All rights reserved.';
+    let copyrightText: HTMLElement = fixture.debugElement.query(
+      By.css('[data-testid="copyright"]'),
+    ).nativeElement;
+    expect(copyrightText.textContent.trim()).toEqual(verifyText);
   });
 });

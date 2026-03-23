@@ -10,7 +10,7 @@ import { LoadingInterface } from '../model/loading.interface';
   styleUrl: './loading-component.scss',
 })
 export class LoadingComponent {
-  loadingService = inject(LoadingService);
+  private loadingService = inject(LoadingService);
 
-  loading: Signal<LoadingInterface> = this.loadingService.loading;
+  protected loading: Signal<LoadingInterface> = this.loadingService.loading;
 }

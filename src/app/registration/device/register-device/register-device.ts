@@ -1,4 +1,4 @@
-import { Component, inject, Signal, OnDestroy } from '@angular/core';
+import { Component, inject, Signal, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
@@ -33,7 +33,7 @@ import {
   templateUrl: './register-device.html',
   styleUrl: './register-device.scss',
 })
-export class RegisterDevice implements OnDestroy {
+export class RegisterDevice implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   form!: FormGroup;
 
