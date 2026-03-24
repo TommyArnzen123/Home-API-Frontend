@@ -9,14 +9,14 @@ import { Subscription } from 'rxjs';
 import { RegistrationService } from '../../../services/registration.service';
 import { LoginService } from '../../../services/login.service';
 import { ModalService } from '../../../services/modal.service';
-import { VIEW_LOCATION_ROUTE } from '../../../constants/navigation-constants';
-import { REGISTER_DEVICE_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
-import { REGISTER_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
 import { IUser } from '../../../model/login.interface';
 import {
   IRegisterGenericEntityRequest,
   IRegisterGenericEntityResponse,
 } from '../../../model/registration.interface';
+import { VIEW_LOCATION_ROUTE } from '../../../constants/navigation-constants';
+import { REGISTER_DEVICE_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
+import { REGISTER_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
 
 @Component({
   selector: 'register-device',

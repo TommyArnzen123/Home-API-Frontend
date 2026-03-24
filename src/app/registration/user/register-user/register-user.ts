@@ -17,13 +17,13 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { RegistrationService } from '../../../services/registration.service';
 import { ModalService } from '../../../services/modal.service';
-import { REGISTER_USER_ERROR_MODAL } from '../../../constants/error-constants';
-import { REGISTER_USER_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
-import { LOGIN_ROUTE } from '../../../constants/navigation-constants';
 import {
   IRegisterGenericEntityResponse,
   IRegisterUserRequest,
 } from '../../../model/registration.interface';
+import { REGISTER_USER_ERROR_MODAL } from '../../../constants/error-constants';
+import { REGISTER_USER_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
+import { LOGIN_ROUTE } from '../../../constants/navigation-constants';
 
 @Component({
   selector: 'home-register-user',

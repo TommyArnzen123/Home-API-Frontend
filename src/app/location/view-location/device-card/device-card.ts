@@ -3,19 +3,19 @@ import { Router } from '@angular/router';
 import { MatCard, MatCardActions, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { DecimalPipe } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { DeleteService } from '../../../services/delete.service';
 import { ModalService } from '../../../services/modal.service';
-import { VIEW_DEVICE_ROUTE } from '../../../constants/navigation-constants';
-import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../../constants/delete-constants';
-import { DELETE_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
 import {
   IDeleteEntityRequest,
   IDeleteDeviceResponse,
 } from '../../../model/delete-actions.interface';
 import { IModal, IModalActions } from '../../../model/modal.interface';
 import { IDevice } from '../../../model/get-info.interface';
-import { DecimalPipe } from '@angular/common';
+import { VIEW_DEVICE_ROUTE } from '../../../constants/navigation-constants';
+import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../../constants/delete-constants';
+import { DELETE_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
 
 @Component({
   selector: 'device-card',

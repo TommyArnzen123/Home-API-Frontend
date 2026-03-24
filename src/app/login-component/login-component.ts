@@ -9,8 +9,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LoginService } from '../services/login.service';
-import { HOME_PAGE_ROUTE, REGISTER_USER_ROUTE } from '../constants/navigation-constants';
 import { ILoginRequest, IUser } from '../model/login.interface';
+import { HOME_PAGE_ROUTE, REGISTER_USER_ROUTE } from '../constants/navigation-constants';
 
 @Component({
   selector: 'home-login-component',

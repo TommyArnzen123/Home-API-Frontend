@@ -9,14 +9,14 @@ import { Subscription } from 'rxjs';
 import { RegistrationService } from '../../../services/registration.service';
 import { LoginService } from '../../../services/login.service';
 import { ModalService } from '../../../services/modal.service';
-import { REGISTER_LOCATION_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
-import { REGISTER_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
-import { VIEW_HOME_ROUTE } from '../../../constants/navigation-constants';
 import { IUser } from '../../../model/login.interface';
 import {
   IRegisterGenericEntityRequest,
   IRegisterGenericEntityResponse,
 } from '../../../model/registration.interface';
+import { REGISTER_LOCATION_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
+import { REGISTER_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
+import { VIEW_HOME_ROUTE } from '../../../constants/navigation-constants';
 
 @Component({
   selector: 'register-location',

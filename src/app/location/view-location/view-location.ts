@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIcon } from '@angular/material/icon';
+import { DecimalPipe } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { GetInfoService } from '../../services/get-info.service';
 import { DeleteService } from '../../services/delete.service';
@@ -25,7 +26,6 @@ import {
 } from '../../constants/navigation-constants';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../constants/delete-constants';
-import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'view-location',

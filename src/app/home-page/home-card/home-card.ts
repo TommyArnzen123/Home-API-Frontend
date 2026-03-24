@@ -6,12 +6,12 @@ import { MatIcon } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
 import { DeleteService } from '../../services/delete.service';
 import { ModalService } from '../../services/modal.service';
-import { VIEW_HOME_ROUTE } from '../../constants/navigation-constants';
-import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
-import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 import { IDeleteEntityRequest, IDeleteHomeResponse } from '../../model/delete-actions.interface';
 import { IModal, IModalActions } from '../../model/modal.interface';
 import { IHome } from '../../model/get-info.interface';
+import { VIEW_HOME_ROUTE } from '../../constants/navigation-constants';
+import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
+import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 
 @Component({
   selector: 'home-card',

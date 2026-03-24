@@ -7,10 +7,10 @@ import { GetInfoService } from '../services/get-info.service';
 import { BreadcrumbService } from '../services/breadcrumb.service';
 import { HomeCard } from './home-card/home-card';
 import { ItemTotals } from '../item-totals/item-totals';
-import { CAPTIVE_ERROR_ROUTE, REGISTER_HOME_ROUTE } from '../constants/navigation-constants';
 import { IUser } from '../model/login.interface';
 import { IHome, IEntityInfoRequest, IHomeScreenInfoResponse } from '../model/get-info.interface';
 import { IDeleteHomeResponse } from '../model/delete-actions.interface';
+import { CAPTIVE_ERROR_ROUTE, REGISTER_HOME_ROUTE } from '../constants/navigation-constants';
 
 export interface Tile {
   color: string;

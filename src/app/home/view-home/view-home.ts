@@ -10,9 +10,6 @@ import { ModalService } from '../../services/modal.service';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { ItemTotals } from '../../item-totals/item-totals';
 import { LocationCard } from './location-card/location-card';
-import { HOME_PAGE_ROUTE, REGISTER_LOCATION_ROUTE } from '../../constants/navigation-constants';
-import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
-import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 import {
   ILocation,
   IEntityInfoRequest,
@@ -25,6 +22,9 @@ import {
   IDeleteLocationResponse,
 } from '../../model/delete-actions.interface';
 import { IModal, IModalActions } from '../../model/modal.interface';
+import { HOME_PAGE_ROUTE, REGISTER_LOCATION_ROUTE } from '../../constants/navigation-constants';
+import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
+import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 
 @Component({
   selector: 'view-home',

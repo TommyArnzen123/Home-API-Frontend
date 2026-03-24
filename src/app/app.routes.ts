@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { isUserAuthenticated } from './guards/auth.guard';
 import { LoginComponent } from './login-component/login-component';
 import { HomePage } from './home-page/home-page';
 import { RegisterUser } from './registration/user/register-user/register-user';
@@ -8,7 +9,9 @@ import { ViewLocation } from './location/view-location/view-location';
 import { RegisterHome } from './registration/home/register-home/register-home';
 import { RegisterLocation } from './registration/location/register-location/register-location';
 import { RegisterDevice } from './registration/device/register-device/register-device';
-import { isUserAuthenticated } from './guards/auth.guard';
+import { CaptiveError } from './captive-error/captive-error';
+import { Settings } from './menu-items/settings/settings';
+import { About } from './menu-items/about/about';
 import {
   CAPTIVE_ERROR_ROUTE,
   HOME_PAGE_ROUTE,
@@ -24,9 +27,6 @@ import {
   ABOUT_ROUTE,
   ROOT_ROUTE,
 } from './constants/navigation-constants';
-import { CaptiveError } from './captive-error/captive-error';
-import { Settings } from './menu-items/settings/settings';
-import { About } from './menu-items/about/about';
 
 export const routes: Routes = [
   {

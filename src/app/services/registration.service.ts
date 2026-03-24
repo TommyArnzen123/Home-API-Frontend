@@ -2,12 +2,12 @@ import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { EnvironmentService } from './environment.service';
-import { LoadingContextToken } from '../interceptor/http-context-tokens';
 import {
   IRegisterGenericEntityRequest,
   IRegisterGenericEntityResponse,
   IRegisterUserRequest,
 } from '../model/registration.interface';
+import { LoadingContextToken } from '../interceptor/http-context-tokens';
 
 @Injectable({
   providedIn: 'root',
