@@ -1,5 +1,5 @@
 import { Component, inject, Signal, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
 import { MatError, MatFormField } from '@angular/material/form-field';
@@ -14,7 +14,6 @@ import {
   IRegisterGenericEntityRequest,
   IRegisterGenericEntityResponse,
 } from '../../../model/registration.interface';
-import { VIEW_LOCATION_ROUTE } from '../../../constants/navigation-constants';
 import { REGISTER_DEVICE_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 import { REGISTER_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
 import { RouterService } from '../../../services/router.service';
