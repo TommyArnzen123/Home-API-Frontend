@@ -13,7 +13,6 @@ import { MatInput } from '@angular/material/input';
 import { MatError } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { RegistrationService } from '../../../services/registration.service';
 import { ModalService } from '../../../services/modal.service';
