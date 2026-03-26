@@ -17,6 +17,7 @@ import {
 import { REGISTER_LOCATION_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 import { REGISTER_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
 import { VIEW_HOME_ROUTE } from '../../../constants/navigation-constants';
+import { RouterService } from '../../../services/router.service';
 
 @Component({
   selector: 'register-location',
@@ -38,16 +39,16 @@ export class RegisterLocation implements OnDestroy {
   form!: FormGroup;
 
   user: Signal<IUser | null>;
-  homeId!: string | null;
+  homeId!: number | null;
 
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  private readonly routerService = inject(RouterService);
   private readonly registrationService = inject(RegistrationService);
   private readonly loginService = inject(LoginService);
   private readonly modalService = inject(ModalService);
 
   constructor() {
-    this.homeId = this.route.snapshot.paramMap.get('homeId');
+    this.homeId = Number(this.route.snapshot.paramMap.get('homeId'));
     this.user = this.loginService.getUserLoginInfo();
   }
 
@@ -75,9 +76,12 @@ export class RegisterLocation implements OnDestroy {
     }
   }
 
-  returnToViewHomeInformationScreen() {
-    // Return to the view home screen.
-    this.router.navigate([VIEW_HOME_ROUTE, this.homeId]);
+  viewHomeById() {
+    const id = this.homeId;
+
+    if (id !== null) {
+      this.routerService.viewHomeById(id);
+    }
   }
 
   registerLocationAction(locationName: string, jwtToken: string) {
@@ -94,7 +98,7 @@ export class RegisterLocation implements OnDestroy {
               // The location has been added to the application.
               // Display a modal message and route the user to the view home component.
               this.modalService.showModalElement(REGISTER_LOCATION_SUCCESS_MESSAGE);
-              this.returnToViewHomeInformationScreen();
+              this.viewHomeById();
             }
           },
           error: () => {

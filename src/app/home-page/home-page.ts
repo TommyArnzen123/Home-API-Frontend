@@ -10,14 +10,8 @@ import { ItemTotals } from '../item-totals/item-totals';
 import { IUser } from '../model/login.interface';
 import { IHome, IEntityInfoRequest, IHomeScreenInfoResponse } from '../model/get-info.interface';
 import { IDeleteHomeResponse } from '../model/delete-actions.interface';
-import { CAPTIVE_ERROR_ROUTE, REGISTER_HOME_ROUTE } from '../constants/navigation-constants';
-
-export interface Tile {
-  color: string;
-  cols: number;
-  rows: number;
-  text: string;
-}
+import { REGISTER_HOME_ROUTE } from '../constants/navigation-constants';
+import { RouterService } from '../services/router.service';
 
 @Component({
   selector: 'home-page',
@@ -38,8 +32,8 @@ export class HomePage implements OnInit, OnDestroy {
 
   private readonly loginService = inject(LoginService);
   private readonly getInfoService = inject(GetInfoService);
-  private readonly router = inject(Router);
   private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly routerService = inject(RouterService);
 
   constructor() {
     this.breadcrumbService.updatePageInFocus('home-page');
@@ -81,11 +75,7 @@ export class HomePage implements OnInit, OnDestroy {
           error: () => {
             // If there is an error getting the home screen info, route the user
             // to the captive error screen.
-            this.router.navigate([CAPTIVE_ERROR_ROUTE], {
-              queryParams: {
-                homeScreenInfoError: true,
-              },
-            });
+            this.routerService.viewCaptiveErrorScreen({ homeScreenInfoError: true });
           },
         }),
       );
@@ -106,8 +96,8 @@ export class HomePage implements OnInit, OnDestroy {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  registerHome() {
-    this.router.navigateByUrl(REGISTER_HOME_ROUTE);
+  viewRegisterHomePage() {
+    this.routerService.viewRegisterHomePage();
   }
 
   formatName(name: string): string {

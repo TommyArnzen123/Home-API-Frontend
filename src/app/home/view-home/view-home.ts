@@ -25,6 +25,7 @@ import { IModal, IModalActions } from '../../model/modal.interface';
 import { HOME_PAGE_ROUTE, REGISTER_LOCATION_ROUTE } from '../../constants/navigation-constants';
 import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
+import { RouterService } from '../../services/router.service';
 
 @Component({
   selector: 'view-home',
@@ -41,7 +42,7 @@ export class ViewHome implements OnInit, OnDestroy {
   totalDevices: number = 0;
 
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  private readonly routerService = inject(RouterService);
   private readonly loginService = inject(LoginService);
   private readonly getInfoService = inject(GetInfoService);
   private readonly deleteService = inject(DeleteService);
@@ -59,7 +60,7 @@ export class ViewHome implements OnInit, OnDestroy {
         disableClose: true,
       };
       const viewHomeInvalidHomeIDErrorActions: IModalActions = {
-        primaryAction: () => this.returnToHomeScreen(),
+        primaryAction: () => this.viewHomePage(),
       };
       this.modalService.showModalElement(
         viewHomeInvalidHomeIDErrorModal,
@@ -102,7 +103,7 @@ export class ViewHome implements OnInit, OnDestroy {
                 disableClose: true,
               };
               const viewHomeGetInfoErrorActions: IModalActions = {
-                primaryAction: () => this.returnToHomeScreen(),
+                primaryAction: () => this.viewHomePage(),
               };
               this.modalService.showModalElement(
                 viewHomeGetInfoErrorModal,
@@ -131,13 +132,15 @@ export class ViewHome implements OnInit, OnDestroy {
     );
   }
 
-  registerLocation() {
-    this.router.navigate([REGISTER_LOCATION_ROUTE, this.homeId]);
+  viewRegisterLocationPage() {
+    const id = this.homeId;
+    if (id !== null) {
+      this.routerService.viewRegisterLocationPage(id);
+    }
   }
 
-  returnToHomeScreen() {
-    // Route to the home screen page.
-    this.router.navigate([HOME_PAGE_ROUTE]);
+  viewHomePage() {
+    this.routerService.viewHomePage();
   }
 
   deleteHomeVerification(): void {
@@ -167,7 +170,7 @@ export class ViewHome implements OnInit, OnDestroy {
           next: (response: IDeleteHomeResponse) => {
             this.modalService.showModalElement(DELETE_HOME_SUCCESS_MESSAGE);
 
-            this.returnToHomeScreen();
+            this.viewHomePage();
           },
           error: () => {
             this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);

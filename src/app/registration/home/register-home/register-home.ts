@@ -17,6 +17,7 @@ import { IUser } from '../../../model/login.interface';
 import { HOME_PAGE_ROUTE } from '../../../constants/navigation-constants';
 import { REGISTER_HOME_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 import { REGISTER_HOME_ERROR_MODAL } from '../../../constants/error-constants';
+import { RouterService } from '../../../services/router.service';
 
 @Component({
   selector: 'register-home',
@@ -39,7 +40,7 @@ export class RegisterHome implements OnDestroy {
 
   user: Signal<IUser | null>;
 
-  private readonly router = inject(Router);
+  private readonly routerService = inject(RouterService);
   private readonly registrationService = inject(RegistrationService);
   private readonly loginService = inject(LoginService);
   private readonly modalService = inject(ModalService);
@@ -72,9 +73,8 @@ export class RegisterHome implements OnDestroy {
     }
   }
 
-  returnToHomePage() {
-    // Return to the home page component.
-    this.router.navigateByUrl(HOME_PAGE_ROUTE);
+  viewHomePage() {
+    this.routerService.viewHomePage();
   }
 
   registerHomeAction(userId: number, homeName: string, jwtToken: string) {
@@ -90,7 +90,7 @@ export class RegisterHome implements OnDestroy {
             // The home has been added to the application.
             // Display a success modal and route the user to the home page component.
             this.modalService.showModalElement(REGISTER_HOME_SUCCESS_MESSAGE);
-            this.router.navigateByUrl(HOME_PAGE_ROUTE);
+            this.viewHomePage();
           }
         },
         error: () => {

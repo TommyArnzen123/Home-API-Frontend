@@ -10,6 +10,7 @@ import {
   LOGIN_ROUTE,
   SETTINGS_ROUTE,
 } from '../constants/navigation-constants';
+import { RouterService } from '../services/router.service';
 
 @Component({
   selector: 'home-header',
@@ -23,6 +24,7 @@ export class HomeHeader implements OnInit, OnDestroy {
   private readonly loginService = inject(LoginService);
   private readonly breadcrumbService = inject(BreadcrumbService);
   private readonly router = inject(Router);
+  private readonly routerService = inject(RouterService);
 
   protected showLoginOption = false;
 
@@ -47,23 +49,19 @@ export class HomeHeader implements OnInit, OnDestroy {
   }
 
   viewHomePage() {
-    // Route to the home page.
-    this.router.navigateByUrl(HOME_PAGE_ROUTE);
+    this.routerService.viewHomePage();
   }
 
   viewSettingsPage() {
-    // Route to the settings page.
-    this.router.navigateByUrl(SETTINGS_ROUTE);
+    this.routerService.viewSettingsPage();
   }
 
   viewAboutPage() {
-    // Route to the about page.
-    this.router.navigateByUrl(ABOUT_ROUTE);
+    this.routerService.viewAboutPage();
   }
 
   viewLoginPage() {
-    // Route to the login page.
-    this.router.navigateByUrl(LOGIN_ROUTE);
+    this.routerService.viewLoginPage();
   }
 
   logout() {

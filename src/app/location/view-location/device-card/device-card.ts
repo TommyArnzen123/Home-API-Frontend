@@ -16,6 +16,7 @@ import { IDevice } from '../../../model/get-info.interface';
 import { VIEW_DEVICE_ROUTE } from '../../../constants/navigation-constants';
 import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../../constants/delete-constants';
 import { DELETE_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
+import { RouterService } from '../../../services/router.service';
 
 @Component({
   selector: 'device-card',
@@ -32,7 +33,7 @@ export class DeviceCard implements OnDestroy {
 
   @Output() deviceDeleted = new EventEmitter<IDeleteDeviceResponse>();
 
-  private readonly router = inject(Router);
+  private readonly routerService = inject(RouterService);
   private readonly deleteService = inject(DeleteService);
   private readonly modalService = inject(ModalService);
 
@@ -40,8 +41,8 @@ export class DeviceCard implements OnDestroy {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  viewDevice(): void {
-    this.router.navigate([VIEW_DEVICE_ROUTE, this.deviceInfo.deviceId]);
+  viewDeviceById(): void {
+    this.routerService.viewDeviceById(this.deviceInfo.deviceId);
   }
 
   deleteDeviceVerification(): void {

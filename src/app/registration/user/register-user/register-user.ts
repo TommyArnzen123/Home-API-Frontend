@@ -24,6 +24,7 @@ import {
 import { REGISTER_USER_ERROR_MODAL } from '../../../constants/error-constants';
 import { REGISTER_USER_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 import { LOGIN_ROUTE } from '../../../constants/navigation-constants';
+import { RouterService } from '../../../services/router.service';
 
 @Component({
   selector: 'home-register-user',
@@ -45,7 +46,7 @@ export class RegisterUser implements OnInit, OnDestroy {
   form!: FormGroup;
   error!: string;
 
-  private readonly router = inject(Router);
+  private readonly routerService = inject(RouterService);
   private readonly registrationService = inject(RegistrationService);
   private readonly modalService = inject(ModalService);
 
@@ -83,9 +84,8 @@ export class RegisterUser implements OnInit, OnDestroy {
     }
   }
 
-  returnToLogin() {
-    // Return to the login component.
-    this.router.navigateByUrl(LOGIN_ROUTE);
+  viewLoginPage() {
+    this.routerService.viewLoginPage();
   }
 
   registerUserAction(
@@ -110,7 +110,7 @@ export class RegisterUser implements OnInit, OnDestroy {
             // The user has been added to the application.
             // Display a modal message and route the user to the login component.
             this.modalService.showModalElement(REGISTER_USER_SUCCESS_MESSAGE);
-            this.router.navigateByUrl(LOGIN_ROUTE);
+            this.viewLoginPage();
           }
         },
         error: () => {

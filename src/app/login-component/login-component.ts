@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { LoginService } from '../services/login.service';
 import { ILoginRequest, IUser } from '../model/login.interface';
 import { HOME_PAGE_ROUTE, REGISTER_USER_ROUTE } from '../constants/navigation-constants';
+import { RouterService } from '../services/router.service';
 
 @Component({
   selector: 'home-login-component',
@@ -31,7 +32,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   error!: string;
 
-  private readonly router = inject(Router);
+  private readonly routerService = inject(RouterService);
   private readonly loginService = inject(LoginService);
 
   ngOnInit(): void {
@@ -40,7 +41,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     // If the user is logged in (the user value is set in the login service),
     // route the user to the home page component.
     if (user()) {
-      this.routeToHomePage();
+      this.viewHomePage();
     }
   }
 
@@ -66,13 +67,12 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
 
-  routeToHomePage(): void {
-    this.router.navigate([HOME_PAGE_ROUTE]);
+  viewHomePage(): void {
+    this.routerService.viewHomePage();
   }
 
-  routeToRegistrationPage() {
-    // Route the user to the user registration page.
-    this.router.navigate([REGISTER_USER_ROUTE]);
+  viewRegisterUserPage() {
+    this.routerService.viewRegisterUserPage();
   }
 
   loginAction(username: string, password: string) {
@@ -86,7 +86,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.loginService.login(loginRequest).subscribe({
           next: (response: IUser) => {
             if (response) {
-              this.routeToHomePage();
+              this.viewHomePage();
             }
           },
           error: () => {

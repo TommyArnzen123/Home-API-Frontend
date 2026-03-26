@@ -17,6 +17,7 @@ import {
 import { VIEW_LOCATION_ROUTE } from '../../../constants/navigation-constants';
 import { REGISTER_DEVICE_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 import { REGISTER_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
+import { RouterService } from '../../../services/router.service';
 
 @Component({
   selector: 'register-device',
@@ -38,16 +39,16 @@ export class RegisterDevice implements OnInit, OnDestroy {
   form!: FormGroup;
 
   user: Signal<IUser | null>;
-  locationId!: string | null;
+  locationId!: number | null;
 
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  private readonly routerService = inject(RouterService);
   private readonly registrationService = inject(RegistrationService);
   private readonly loginService = inject(LoginService);
   private readonly modalService = inject(ModalService);
 
   constructor() {
-    this.locationId = this.route.snapshot.paramMap.get('locationId');
+    this.locationId = Number(this.route.snapshot.paramMap.get('locationId'));
     this.user = this.loginService.getUserLoginInfo();
   }
 
@@ -75,9 +76,12 @@ export class RegisterDevice implements OnInit, OnDestroy {
     }
   }
 
-  returnToViewLocationInformationScreen() {
-    // Return to the view location screen.
-    this.router.navigate([VIEW_LOCATION_ROUTE, this.locationId]);
+  viewLocationById() {
+    const id = this.locationId;
+
+    if (id !== null) {
+      this.routerService.viewLocationById(id);
+    }
   }
 
   registerDeviceAction(deviceName: string, jwtToken: string) {
@@ -94,7 +98,7 @@ export class RegisterDevice implements OnInit, OnDestroy {
               // The device has been added to the application.
               // Display a modal message and route the user to the view location component.
               this.modalService.showModalElement(REGISTER_DEVICE_SUCCESS_MESSAGE);
-              this.returnToViewLocationInformationScreen();
+              this.viewLocationById();
             }
           },
           error: () => {

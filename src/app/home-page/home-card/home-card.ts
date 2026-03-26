@@ -12,6 +12,7 @@ import { IHome } from '../../model/get-info.interface';
 import { VIEW_HOME_ROUTE } from '../../constants/navigation-constants';
 import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
+import { RouterService } from '../../services/router.service';
 
 @Component({
   selector: 'home-card',
@@ -26,7 +27,7 @@ export class HomeCard implements OnDestroy {
 
   @Output() homeDeleted = new EventEmitter<IDeleteHomeResponse>();
 
-  private readonly router = inject(Router);
+  private readonly routerService = inject(RouterService);
   private readonly deleteService = inject(DeleteService);
   private readonly modalService = inject(ModalService);
 
@@ -34,8 +35,8 @@ export class HomeCard implements OnDestroy {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  viewHome(): void {
-    this.router.navigate([VIEW_HOME_ROUTE, this.homeInfo.homeId]);
+  viewHomeById(): void {
+    this.routerService.viewHomeById(this.homeInfo.homeId);
   }
 
   deleteHomeVerification(): void {

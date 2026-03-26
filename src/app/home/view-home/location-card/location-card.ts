@@ -16,6 +16,7 @@ import { ILocation } from '../../../model/get-info.interface';
 import { VIEW_LOCATION_ROUTE } from '../../../constants/navigation-constants';
 import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../../constants/delete-constants';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
+import { RouterService } from '../../../services/router.service';
 
 @Component({
   selector: 'location-card',
@@ -30,7 +31,7 @@ export class LocationCard implements OnInit, OnDestroy {
 
   @Output() locationDeleted = new EventEmitter<IDeleteLocationResponse>();
 
-  private readonly router = inject(Router);
+  private readonly routerService = inject(RouterService);
   private readonly deleteService = inject(DeleteService);
   private readonly modalService = inject(ModalService);
 
@@ -58,8 +59,8 @@ export class LocationCard implements OnInit, OnDestroy {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  viewLocation(): void {
-    this.router.navigate([VIEW_LOCATION_ROUTE, this.locationInfo.locationId]);
+  viewLocationById(): void {
+    this.routerService.viewLocationById(this.locationInfo.locationId);
   }
 
   deleteLocationVerification(): void {

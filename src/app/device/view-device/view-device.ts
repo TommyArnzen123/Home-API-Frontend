@@ -20,6 +20,7 @@ import { IUser } from '../../model/login.interface';
 import { DELETE_DEVICE_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 import { HOME_PAGE_ROUTE, VIEW_LOCATION_ROUTE } from '../../constants/navigation-constants';
+import { RouterService } from '../../services/router.service';
 
 const averageTempInfo: IAverageTemperatureByHour[] = [
   { hour: 0, averageTemperature: 0, temperatureAvailable: false },
@@ -64,12 +65,12 @@ export class ViewDevice implements OnInit, OnDestroy {
   averageTemperatureByHour: IAverageTemperatureByHour[] = [];
 
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly getInfoService = inject(GetInfoService);
   private readonly deleteService = inject(DeleteService);
   private readonly modalService = inject(ModalService);
   private readonly breadcrumbService = inject(BreadcrumbService);
   private readonly loginService = inject(LoginService);
+  private readonly routerService = inject(RouterService);
 
   constructor() {
     const deviceId = Number(this.route.snapshot.paramMap.get('deviceId'));
@@ -82,7 +83,7 @@ export class ViewDevice implements OnInit, OnDestroy {
         disableClose: true,
       };
       const viewDeviceInvalidDeviceIDErrorActions: IModalActions = {
-        primaryAction: () => this.returnToViewLocation(),
+        primaryAction: () => this.viewLocationById(),
       };
       this.modalService.showModalElement(
         viewDeviceInvalidDeviceIDErrorModal,
@@ -135,7 +136,7 @@ export class ViewDevice implements OnInit, OnDestroy {
                 disableClose: true,
               };
               const viewDeviceGetInfoErrorActions: IModalActions = {
-                primaryAction: () => this.returnToViewLocation(),
+                primaryAction: () => this.viewLocationById(),
               };
               this.modalService.showModalElement(
                 viewDeviceGetInfoErrorModal,
@@ -170,19 +171,16 @@ export class ViewDevice implements OnInit, OnDestroy {
     this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
   }
 
-  returnToViewLocation() {
+  viewLocationById() {
     if (this.locationId) {
-      // Route to the view location page.
-      this.router.navigate([VIEW_LOCATION_ROUTE, this.locationId]);
+      this.routerService.viewLocationById(this.locationId);
     } else {
-      // The location ID value is not set, route to the home screen.
-      this.returnToHomeScreen();
+      this.viewHomepage();
     }
   }
 
-  returnToHomeScreen() {
-    // Route to the home screen.
-    this.router.navigate([HOME_PAGE_ROUTE]);
+  viewHomepage() {
+    this.routerService.viewHomePage();
   }
 
   deleteDeviceAction() {
@@ -197,7 +195,7 @@ export class ViewDevice implements OnInit, OnDestroy {
             this.modalService.showModalElement(DELETE_DEVICE_SUCCESS_MESSAGE);
 
             // Route to the view location page.
-            this.returnToViewLocation();
+            this.viewLocationById();
           },
           error: () => {
             this.modalService.showModalElement(DELETE_DEVICE_ERROR_MODAL);

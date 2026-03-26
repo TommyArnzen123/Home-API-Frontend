@@ -26,6 +26,7 @@ import {
 } from '../../constants/navigation-constants';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../constants/delete-constants';
+import { RouterService } from '../../services/router.service';
 
 @Component({
   selector: 'view-location',
@@ -44,7 +45,7 @@ export class ViewLocation implements OnDestroy {
   averageTemperature: number | null = null;
 
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  private readonly routerService = inject(RouterService);
   private readonly loginService = inject(LoginService);
   private readonly getInfoService = inject(GetInfoService);
   private readonly deleteService = inject(DeleteService);
@@ -63,7 +64,7 @@ export class ViewLocation implements OnDestroy {
         disableClose: true,
       };
       const viewLocationInvalidLocationIDErrorActions: IModalActions = {
-        primaryAction: () => this.returnToViewHome(),
+        primaryAction: () => this.viewHomeById(),
       };
       this.modalService.showModalElement(
         viewLocationInvalidLocationIDErrorModal,
@@ -113,7 +114,7 @@ export class ViewLocation implements OnDestroy {
                 disableClose: true,
               };
               const viewLocationGetInfoErrorActions: IModalActions = {
-                primaryAction: () => this.returnToViewHome(),
+                primaryAction: () => this.viewHomeById(),
               };
               this.modalService.showModalElement(
                 viewLocationGetInfoErrorModal,
@@ -153,23 +154,24 @@ export class ViewLocation implements OnDestroy {
     );
   }
 
-  registerDevice() {
-    this.router.navigate([REGISTER_DEVICE_ROUTE, this.locationId]);
-  }
-
-  returnToViewHome() {
-    if (this.homeId) {
-      // Route to the view home page.
-      this.router.navigate([VIEW_HOME_ROUTE, this.homeId]);
-    } else {
-      // The home ID value is not set, route to the home screen.
-      this.returnToHomeScreen();
+  viewRegisterDevicePage() {
+    const id = this.locationId;
+    if (id !== null) {
+      this.routerService.viewRegisterDevicePage(id);
     }
   }
 
-  returnToHomeScreen() {
-    // Route to the home screen.
-    this.router.navigate([HOME_PAGE_ROUTE]);
+  viewHomeById() {
+    if (this.homeId !== null) {
+      this.routerService.viewHomeById(this.homeId);
+    } else {
+      // The home ID value is not set, route to the home screen.
+      this.viewHomePage();
+    }
+  }
+
+  viewHomePage() {
+    this.routerService.viewHomePage();
   }
 
   deleteLocationVerification(): void {
@@ -199,7 +201,7 @@ export class ViewLocation implements OnDestroy {
           next: (response: IDeleteLocationResponse) => {
             this.modalService.showModalElement(DELETE_LOCATION_SUCCESS_MESSAGE);
 
-            this.returnToViewHome();
+            this.viewHomeById();
           },
           error: () => {
             this.modalService.showModalElement(DELETE_LOCATION_ERROR_MODAL);

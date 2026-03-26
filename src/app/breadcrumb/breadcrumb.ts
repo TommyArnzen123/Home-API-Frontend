@@ -11,6 +11,7 @@ import {
   VIEW_HOME_ROUTE,
   VIEW_LOCATION_ROUTE,
 } from '../constants/navigation-constants';
+import { RouterService } from '../services/router.service';
 
 @Component({
   selector: 'breadcrumb',
@@ -24,6 +25,7 @@ export class Breadcrumb implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly breadcrumbService = inject(BreadcrumbService);
   private readonly loginService = inject(LoginService);
+  private readonly routerService = inject(RouterService);
 
   protected user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
   protected homeId: Signal<number | null> = this.breadcrumbService.getHomeId();
@@ -63,14 +65,20 @@ export class Breadcrumb implements OnInit, OnDestroy {
   }
 
   viewHomePage(): void {
-    this.router.navigate([HOME_PAGE_ROUTE]);
+    this.routerService.viewHomePage();
   }
 
   viewHomeById(): void {
-    this.router.navigate([VIEW_HOME_ROUTE, this.homeId()]);
+    const id = this.homeId();
+    if (id !== null) {
+      this.routerService.viewHomeById(id);
+    }
   }
 
   viewLocationById(): void {
-    this.router.navigate([VIEW_LOCATION_ROUTE, this.locationId()]);
+    const id = this.locationId();
+    if (id !== null) {
+      this.routerService.viewLocationById(id);
+    }
   }
 }
