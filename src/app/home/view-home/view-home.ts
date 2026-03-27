@@ -11,18 +11,14 @@ import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { RouterService } from '../../services/router.service';
 import { ItemTotals } from '../../item-totals/item-totals';
 import { LocationCard } from './location-card/location-card';
-import {
-  ILocation,
-  IEntityInfoRequest,
-  IViewHomeInfoResponse,
-} from '../../model/get-info.interface';
-import { IUser } from '../../model/login.interface';
+import { ILocation, IEntityInfoRequest, IViewHomeInfoResponse } from '../../model/get-info';
+import { IUser } from '../../model/login';
 import {
   IDeleteEntityRequest,
   IDeleteHomeResponse,
   IDeleteLocationResponse,
-} from '../../model/delete-actions.interface';
-import { IModal, IModalActions } from '../../model/modal.interface';
+} from '../../model/delete-actions';
+import { IModal, IModalActions } from '../../model/modal';
 import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 

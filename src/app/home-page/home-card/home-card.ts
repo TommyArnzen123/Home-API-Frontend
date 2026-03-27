@@ -6,9 +6,9 @@ import { Subscription } from 'rxjs';
 import { DeleteService } from '../../services/delete.service';
 import { ModalService } from '../../services/modal.service';
 import { RouterService } from '../../services/router.service';
-import { IDeleteEntityRequest, IDeleteHomeResponse } from '../../model/delete-actions.interface';
-import { IModal, IModalActions } from '../../model/modal.interface';
-import { IHome } from '../../model/get-info.interface';
+import { IDeleteEntityRequest, IDeleteHomeResponse } from '../../model/delete-actions';
+import { IModal, IModalActions } from '../../model/modal';
+import { IHome } from '../../model/get-info';
 import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 

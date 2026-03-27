@@ -12,14 +12,14 @@ import { LoginService } from '../../services/login.service';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { RouterService } from '../../services/router.service';
 import { DeviceCard } from './device-card/device-card';
-import { IModal, IModalActions } from '../../model/modal.interface';
-import { IDevice, ILocation, IEntityInfoRequest } from '../../model/get-info.interface';
-import { IUser } from '../../model/login.interface';
+import { IModal, IModalActions } from '../../model/modal';
+import { IDevice, ILocation, IEntityInfoRequest } from '../../model/get-info';
+import { IUser } from '../../model/login';
 import {
   IDeleteDeviceResponse,
   IDeleteEntityRequest,
   IDeleteLocationResponse,
-} from '../../model/delete-actions.interface';
+} from '../../model/delete-actions';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 

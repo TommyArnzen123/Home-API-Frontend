@@ -8,7 +8,7 @@ import {
   IHomeScreenInfoResponse,
   ILocation,
   IViewHomeInfoResponse,
-} from '../model/get-info.interface';
+} from '../model/get-info';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';
 
 @Injectable({

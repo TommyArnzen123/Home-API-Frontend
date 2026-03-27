@@ -9,7 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { LoginService } from '../services/login.service';
 import { RouterService } from '../services/router.service';
-import { ILoginRequest, IUser } from '../model/login.interface';
+import { ILoginRequest, IUser } from '../model/login';
 
 @Component({
   selector: 'home-login-component',
@@ -23,8 +23,8 @@ import { ILoginRequest, IUser } from '../model/login.interface';
     MatButtonModule,
     ReactiveFormsModule,
   ],
-  templateUrl: './login-component.html',
-  styleUrl: './login-component.scss',
+  templateUrl: './login.html',
+  styleUrl: './login.scss',
 })
 export class LoginComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];

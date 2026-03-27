@@ -12,8 +12,8 @@ import { RouterService } from '../../../services/router.service';
 import {
   IRegisterGenericEntityRequest,
   IRegisterGenericEntityResponse,
-} from '../../../model/registration.interface';
-import { IUser } from '../../../model/login.interface';
+} from '../../../model/registration';
+import { IUser } from '../../../model/login';
 import { REGISTER_HOME_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 import { REGISTER_HOME_ERROR_MODAL } from '../../../constants/error-constants';
 

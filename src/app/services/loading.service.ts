@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { LoadingInterface } from '../model/loading.interface';
+import { LoadingInterface } from '../model/loading';
 
 @Injectable({
   providedIn: 'root',

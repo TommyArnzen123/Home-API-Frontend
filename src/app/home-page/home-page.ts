@@ -7,9 +7,9 @@ import { BreadcrumbService } from '../services/breadcrumb.service';
 import { RouterService } from '../services/router.service';
 import { HomeCard } from './home-card/home-card';
 import { ItemTotals } from '../item-totals/item-totals';
-import { IUser } from '../model/login.interface';
-import { IHome, IEntityInfoRequest, IHomeScreenInfoResponse } from '../model/get-info.interface';
-import { IDeleteHomeResponse } from '../model/delete-actions.interface';
+import { IUser } from '../model/login';
+import { IHome, IEntityInfoRequest, IHomeScreenInfoResponse } from '../model/get-info';
+import { IDeleteHomeResponse } from '../model/delete-actions';
 
 @Component({
   selector: 'home-page',

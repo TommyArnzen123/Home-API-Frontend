@@ -1,4 +1,4 @@
-import { IconReference } from '../model/icon-references.interface';
+import { IconReference } from '../model/icon-references';
 
 export const ICON_REFERENCES: IconReference[] = [
   {

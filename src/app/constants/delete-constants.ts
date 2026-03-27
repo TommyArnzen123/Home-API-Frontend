@@ -1,4 +1,4 @@
-import { IModal } from '../model/modal.interface';
+import { IModal } from '../model/modal';
 
 export const DELETE_HOME_SUCCESS_MESSAGE: IModal = {
   title: 'Deletion Successful',

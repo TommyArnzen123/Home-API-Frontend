@@ -1,5 +1,5 @@
-import { IError } from '../model/error.interface';
-import { IModal } from '../model/modal.interface';
+import { IError } from '../model/error';
+import { IModal } from '../model/modal';
 
 // Error Objects.
 const REGISTER_USER_ERROR: IError = {

@@ -14,7 +14,7 @@ import {
   VIEW_HOME_ROUTE,
   VIEW_LOCATION_ROUTE,
 } from '../constants/navigation-constants';
-import { ICaptiveError } from '../model/captive-error.interface';
+import { ICaptiveError } from '../model/captive-error';
 
 @Injectable({
   providedIn: 'root',

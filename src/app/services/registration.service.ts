@@ -6,7 +6,7 @@ import {
   IRegisterGenericEntityRequest,
   IRegisterGenericEntityResponse,
   IRegisterUserRequest,
-} from '../model/registration.interface';
+} from '../model/registration';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';
 
 @Injectable({

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { EnvironmentService } from './environment.service';
 import { SessionStorageService } from './session-storage.service';
-import { ILoginRequest, IUser } from '../model/login.interface';
+import { ILoginRequest, IUser } from '../model/login';
 import { USER_LOGIN_INFO_KEY } from '../constants/session-storage-constants';
 import { LOGIN_ROUTE } from '../constants/navigation-constants';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';

@@ -6,7 +6,7 @@ import {
   IDeleteDeviceResponse,
   IDeleteHomeResponse,
   IDeleteLocationResponse,
-} from '../model/delete-actions.interface';
+} from '../model/delete-actions';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';
 
 @Injectable({

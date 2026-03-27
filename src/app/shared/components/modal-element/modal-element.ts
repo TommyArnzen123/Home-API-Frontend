@@ -7,7 +7,7 @@ import {
   MatDialogTitle,
 } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
-import { IModal, IModalActions } from '../../../model/modal.interface';
+import { IModal, IModalActions } from '../../../model/modal';
 
 @Component({
   selector: 'modal-element',

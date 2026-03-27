@@ -10,11 +10,11 @@ import { RegistrationService } from '../../../services/registration.service';
 import { LoginService } from '../../../services/login.service';
 import { ModalService } from '../../../services/modal.service';
 import { RouterService } from '../../../services/router.service';
-import { IUser } from '../../../model/login.interface';
+import { IUser } from '../../../model/login';
 import {
   IRegisterGenericEntityRequest,
   IRegisterGenericEntityResponse,
-} from '../../../model/registration.interface';
+} from '../../../model/registration';
 import { REGISTER_LOCATION_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 import { REGISTER_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
 

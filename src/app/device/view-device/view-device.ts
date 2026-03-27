@@ -11,13 +11,10 @@ import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { LoginService } from '../../services/login.service';
 import { RouterService } from '../../services/router.service';
 import { DisplayTempByHour } from './display-temp-by-hour/display-temp-by-hour';
-import {
-  IAverageTemperatureByHour,
-  IDeviceInformationCurrentDay,
-} from '../../model/get-info.interface';
-import { IModal, IModalActions } from '../../model/modal.interface';
-import { IDeleteEntityRequest, IDeleteDeviceResponse } from '../../model/delete-actions.interface';
-import { IUser } from '../../model/login.interface';
+import { IAverageTemperatureByHour, IDeviceInformationCurrentDay } from '../../model/get-info';
+import { IModal, IModalActions } from '../../model/modal';
+import { IDeleteEntityRequest, IDeleteDeviceResponse } from '../../model/delete-actions';
+import { IUser } from '../../model/login';
 import { DELETE_DEVICE_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 

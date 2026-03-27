@@ -7,12 +7,9 @@ import { Subscription } from 'rxjs';
 import { DeleteService } from '../../../services/delete.service';
 import { ModalService } from '../../../services/modal.service';
 import { RouterService } from '../../../services/router.service';
-import {
-  IDeleteEntityRequest,
-  IDeleteLocationResponse,
-} from '../../../model/delete-actions.interface';
-import { IModal, IModalActions } from '../../../model/modal.interface';
-import { ILocation } from '../../../model/get-info.interface';
+import { IDeleteEntityRequest, IDeleteLocationResponse } from '../../../model/delete-actions';
+import { IModal, IModalActions } from '../../../model/modal';
+import { ILocation } from '../../../model/get-info';
 import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../../constants/delete-constants';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
 

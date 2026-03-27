@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LoadingComponent } from './loading-component';
+import { LoadingComponent } from './loading-indicator';
 import { LoadingService } from '../services/loading.service';
 import { signal, WritableSignal } from '@angular/core';
-import { LoadingInterface } from '../model/loading.interface';
+import { LoadingInterface } from '../model/loading';
 import { By } from '@angular/platform-browser';
 
 const hideLoadingMessage: LoadingInterface = {

@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { BreadcrumbService, PageInFocus } from '../services/breadcrumb.service';
 import { LoginService } from '../services/login.service';
 import { RouterService } from '../services/router.service';
-import { IUser } from '../model/login.interface';
+import { IUser } from '../model/login';
 import { ABOUT_ROUTE, SETTINGS_ROUTE } from '../constants/navigation-constants';
 
 @Component({

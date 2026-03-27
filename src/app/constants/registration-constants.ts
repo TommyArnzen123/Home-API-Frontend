@@ -1,4 +1,4 @@
-import { IModal } from '../model/modal.interface';
+import { IModal } from '../model/modal';
 
 export const REGISTER_USER_SUCCESS_MESSAGE: IModal = {
   title: 'Registration Successful',
