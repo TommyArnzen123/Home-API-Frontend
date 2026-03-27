@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HomeFooter } from './home-footer';
+import { HomeFooter } from './footer';
 import { By } from '@angular/platform-browser';
 
 describe('HomeFooter', () => {

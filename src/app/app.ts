@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HomeHeader } from './header/home-header';
-import { HomeFooter } from './footer/home-footer';
+import { Header } from './header/header';
+import { Footer } from './footer/footer';
 import { LoadingComponent } from './loading-indicator/loading-indicator';
 import { Breadcrumb } from './breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HomeHeader, HomeFooter, LoadingComponent, Breadcrumb],
+  imports: [RouterOutlet, Header, Footer, LoadingComponent, Breadcrumb],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'home-item-totals',
+  selector: 'item-totals',
   imports: [],
   templateUrl: './item-totals.html',
   styleUrl: './item-totals.scss',

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HomeHeader } from './home-header';
+import { HomeHeader } from './header';
 
 describe('HomeHeader', () => {
   let component: HomeHeader;

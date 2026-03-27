@@ -8,12 +8,12 @@ import { RouterService } from '../services/router';
 import { LOGIN_ROUTE } from '../constants/navigation-constants';
 
 @Component({
-  selector: 'home-header',
+  selector: 'header',
   imports: [MatButton],
-  templateUrl: './home-header.html',
-  styleUrl: './home-header.scss',
+  templateUrl: './header.html',
+  styleUrl: './header.scss',
 })
-export class HomeHeader implements OnInit, OnDestroy {
+export class Header implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   private readonly loginService = inject(LoginService);

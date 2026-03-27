@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'home-footer',
+  selector: 'footer',
   imports: [],
-  templateUrl: './home-footer.html',
-  styleUrl: './home-footer.scss',
+  templateUrl: './footer.html',
+  styleUrl: './footer.scss',
 })
-export class HomeFooter {
+export class Footer {
   protected currentYear = new Date().getFullYear();
 }
