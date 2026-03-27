@@ -7,8 +7,8 @@ import { MatError } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { LoginService } from '../services/login.service';
-import { RouterService } from '../services/router.service';
+import { LoginService } from '../services/login';
+import { RouterService } from '../services/router';
 import { ILoginRequest, IUser } from '../model/login';
 
 @Component({

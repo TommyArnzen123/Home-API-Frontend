@@ -1,6 +1,6 @@
 import { Component, inject, Signal } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { LoadingService } from '../services/loading.service';
+import { LoadingService } from '../services/loading';
 import { LoadingInterface } from '../model/loading';
 
 @Component({

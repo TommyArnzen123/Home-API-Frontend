@@ -3,9 +3,9 @@ import { MatCard, MatCardActions, MatCardHeader, MatCardTitle } from '@angular/m
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
-import { DeleteService } from '../../services/delete.service';
-import { ModalService } from '../../services/modal.service';
-import { RouterService } from '../../services/router.service';
+import { DeleteService } from '../../services/delete';
+import { ModalService } from '../../services/modal';
+import { RouterService } from '../../services/router';
 import { IDeleteEntityRequest, IDeleteHomeResponse } from '../../model/delete-actions';
 import { IModal, IModalActions } from '../../model/modal';
 import { IHome } from '../../model/get-info';

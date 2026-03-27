@@ -5,10 +5,10 @@ import { MatInput } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
 import { Subscription } from 'rxjs';
-import { RegistrationService } from '../../../services/registration.service';
-import { LoginService } from '../../../services/login.service';
-import { ModalService } from '../../../services/modal.service';
-import { RouterService } from '../../../services/router.service';
+import { RegistrationService } from '../../../services/registration';
+import { LoginService } from '../../../services/login';
+import { ModalService } from '../../../services/modal';
+import { RouterService } from '../../../services/router';
 import {
   IRegisterGenericEntityRequest,
   IRegisterGenericEntityResponse,

@@ -1,10 +1,10 @@
 import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { Subscription } from 'rxjs';
-import { LoginService } from '../services/login.service';
-import { GetInfoService } from '../services/get-info.service';
-import { BreadcrumbService } from '../services/breadcrumb.service';
-import { RouterService } from '../services/router.service';
+import { LoginService } from '../services/login';
+import { GetInfoService } from '../services/get-info';
+import { BreadcrumbService } from '../services/breadcrumb';
+import { RouterService } from '../services/router';
 import { HomeCard } from './home-card/home-card';
 import { ItemTotals } from '../item-totals/item-totals';
 import { IUser } from '../model/login';

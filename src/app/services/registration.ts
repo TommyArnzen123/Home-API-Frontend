@@ -1,7 +1,7 @@
 import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { EnvironmentService } from './environment.service';
+import { EnvironmentService } from './environment';
 import {
   IRegisterGenericEntityRequest,
   IRegisterGenericEntityResponse,

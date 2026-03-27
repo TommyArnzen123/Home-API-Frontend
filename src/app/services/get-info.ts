@@ -1,7 +1,7 @@
 import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { EnvironmentService } from './environment.service';
-import { LoginService } from './login.service';
+import { EnvironmentService } from './environment';
+import { LoginService } from './login';
 import {
   IEntityInfoRequest,
   IDeviceInformationCurrentDay,

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LoadingComponent } from './loading-indicator';
-import { LoadingService } from '../services/loading.service';
+import { LoadingService } from '../services/loading';
 import { signal, WritableSignal } from '@angular/core';
 import { LoadingInterface } from '../model/loading';
 import { By } from '@angular/platform-browser';

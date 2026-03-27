@@ -1,9 +1,9 @@
 import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { BreadcrumbService, PageInFocus } from '../services/breadcrumb.service';
-import { LoginService } from '../services/login.service';
-import { RouterService } from '../services/router.service';
+import { BreadcrumbService, PageInFocus } from '../services/breadcrumb';
+import { LoginService } from '../services/login';
+import { RouterService } from '../services/router';
 import { IUser } from '../model/login';
 import { ABOUT_ROUTE, SETTINGS_ROUTE } from '../constants/navigation-constants';
 
