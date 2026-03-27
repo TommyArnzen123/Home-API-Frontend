@@ -16,14 +16,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { RegistrationService } from '../../../services/registration.service';
 import { ModalService } from '../../../services/modal.service';
+import { RouterService } from '../../../services/router.service';
 import {
   IRegisterGenericEntityResponse,
   IRegisterUserRequest,
 } from '../../../model/registration.interface';
 import { REGISTER_USER_ERROR_MODAL } from '../../../constants/error-constants';
 import { REGISTER_USER_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
-import { LOGIN_ROUTE } from '../../../constants/navigation-constants';
-import { RouterService } from '../../../services/router.service';
 
 @Component({
   selector: 'home-register-user',

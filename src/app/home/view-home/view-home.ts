@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
@@ -8,6 +8,7 @@ import { LoginService } from '../../services/login.service';
 import { DeleteService } from '../../services/delete.service';
 import { ModalService } from '../../services/modal.service';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
+import { RouterService } from '../../services/router.service';
 import { ItemTotals } from '../../item-totals/item-totals';
 import { LocationCard } from './location-card/location-card';
 import {
@@ -22,10 +23,8 @@ import {
   IDeleteLocationResponse,
 } from '../../model/delete-actions.interface';
 import { IModal, IModalActions } from '../../model/modal.interface';
-import { HOME_PAGE_ROUTE, REGISTER_LOCATION_ROUTE } from '../../constants/navigation-constants';
 import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
 import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
-import { RouterService } from '../../services/router.service';
 
 @Component({
   selector: 'view-home',

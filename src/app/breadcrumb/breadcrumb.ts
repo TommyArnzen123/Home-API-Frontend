@@ -3,15 +3,9 @@ import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BreadcrumbService, PageInFocus } from '../services/breadcrumb.service';
 import { LoginService } from '../services/login.service';
-import { IUser } from '../model/login.interface';
-import {
-  ABOUT_ROUTE,
-  SETTINGS_ROUTE,
-  HOME_PAGE_ROUTE,
-  VIEW_HOME_ROUTE,
-  VIEW_LOCATION_ROUTE,
-} from '../constants/navigation-constants';
 import { RouterService } from '../services/router.service';
+import { IUser } from '../model/login.interface';
+import { ABOUT_ROUTE, SETTINGS_ROUTE } from '../constants/navigation-constants';
 
 @Component({
   selector: 'breadcrumb',

@@ -1,17 +1,15 @@
 import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
-import { Router } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { Subscription } from 'rxjs';
 import { LoginService } from '../services/login.service';
 import { GetInfoService } from '../services/get-info.service';
 import { BreadcrumbService } from '../services/breadcrumb.service';
+import { RouterService } from '../services/router.service';
 import { HomeCard } from './home-card/home-card';
 import { ItemTotals } from '../item-totals/item-totals';
 import { IUser } from '../model/login.interface';
 import { IHome, IEntityInfoRequest, IHomeScreenInfoResponse } from '../model/get-info.interface';
 import { IDeleteHomeResponse } from '../model/delete-actions.interface';
-import { REGISTER_HOME_ROUTE } from '../constants/navigation-constants';
-import { RouterService } from '../services/router.service';
 
 @Component({
   selector: 'home-page',

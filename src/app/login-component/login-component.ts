@@ -6,12 +6,10 @@ import { MatInput } from '@angular/material/input';
 import { MatError } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LoginService } from '../services/login.service';
-import { ILoginRequest, IUser } from '../model/login.interface';
-import { HOME_PAGE_ROUTE, REGISTER_USER_ROUTE } from '../constants/navigation-constants';
 import { RouterService } from '../services/router.service';
+import { ILoginRequest, IUser } from '../model/login.interface';
 
 @Component({
   selector: 'home-login-component',

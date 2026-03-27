@@ -4,13 +4,8 @@ import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LoginService } from '../services/login.service';
 import { BreadcrumbService } from '../services/breadcrumb.service';
-import {
-  ABOUT_ROUTE,
-  HOME_PAGE_ROUTE,
-  LOGIN_ROUTE,
-  SETTINGS_ROUTE,
-} from '../constants/navigation-constants';
 import { RouterService } from '../services/router.service';
+import { LOGIN_ROUTE } from '../constants/navigation-constants';
 
 @Component({
   selector: 'home-header',

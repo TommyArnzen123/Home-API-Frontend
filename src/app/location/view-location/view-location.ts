@@ -1,5 +1,5 @@
 import { Component, inject, Signal, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIcon } from '@angular/material/icon';
@@ -10,6 +10,7 @@ import { DeleteService } from '../../services/delete.service';
 import { ModalService } from '../../services/modal.service';
 import { LoginService } from '../../services/login.service';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
+import { RouterService } from '../../services/router.service';
 import { DeviceCard } from './device-card/device-card';
 import { IModal, IModalActions } from '../../model/modal.interface';
 import { IDevice, ILocation, IEntityInfoRequest } from '../../model/get-info.interface';
@@ -19,14 +20,8 @@ import {
   IDeleteEntityRequest,
   IDeleteLocationResponse,
 } from '../../model/delete-actions.interface';
-import {
-  HOME_PAGE_ROUTE,
-  REGISTER_DEVICE_ROUTE,
-  VIEW_HOME_ROUTE,
-} from '../../constants/navigation-constants';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../constants/delete-constants';
-import { RouterService } from '../../services/router.service';
 
 @Component({
   selector: 'view-location',

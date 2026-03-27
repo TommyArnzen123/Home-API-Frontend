@@ -9,6 +9,7 @@ import { ModalService } from '../../services/modal.service';
 import { DeleteService } from '../../services/delete.service';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { LoginService } from '../../services/login.service';
+import { RouterService } from '../../services/router.service';
 import { DisplayTempByHour } from './display-temp-by-hour/display-temp-by-hour';
 import {
   IAverageTemperatureByHour,
@@ -19,8 +20,6 @@ import { IDeleteEntityRequest, IDeleteDeviceResponse } from '../../model/delete-
 import { IUser } from '../../model/login.interface';
 import { DELETE_DEVICE_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../constants/delete-constants';
-import { HOME_PAGE_ROUTE, VIEW_LOCATION_ROUTE } from '../../constants/navigation-constants';
-import { RouterService } from '../../services/router.service';
 
 const averageTempInfo: IAverageTemperatureByHour[] = [
   { hour: 0, averageTemperature: 0, temperatureAvailable: false },

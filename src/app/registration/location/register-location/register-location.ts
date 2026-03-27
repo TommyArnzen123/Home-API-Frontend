@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { RegistrationService } from '../../../services/registration.service';
 import { LoginService } from '../../../services/login.service';
 import { ModalService } from '../../../services/modal.service';
+import { RouterService } from '../../../services/router.service';
 import { IUser } from '../../../model/login.interface';
 import {
   IRegisterGenericEntityRequest,
@@ -16,8 +17,6 @@ import {
 } from '../../../model/registration.interface';
 import { REGISTER_LOCATION_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 import { REGISTER_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
-import { VIEW_HOME_ROUTE } from '../../../constants/navigation-constants';
-import { RouterService } from '../../../services/router.service';
 
 @Component({
   selector: 'register-location',

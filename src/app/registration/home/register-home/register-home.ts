@@ -8,15 +8,14 @@ import { Subscription } from 'rxjs';
 import { RegistrationService } from '../../../services/registration.service';
 import { LoginService } from '../../../services/login.service';
 import { ModalService } from '../../../services/modal.service';
+import { RouterService } from '../../../services/router.service';
 import {
   IRegisterGenericEntityRequest,
   IRegisterGenericEntityResponse,
 } from '../../../model/registration.interface';
 import { IUser } from '../../../model/login.interface';
-import { HOME_PAGE_ROUTE } from '../../../constants/navigation-constants';
 import { REGISTER_HOME_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 import { REGISTER_HOME_ERROR_MODAL } from '../../../constants/error-constants';
-import { RouterService } from '../../../services/router.service';
 
 @Component({
   selector: 'register-home',
