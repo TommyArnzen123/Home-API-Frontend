@@ -1,7 +1,6 @@
 import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { EnvironmentService } from './environment';
-import { LoginService } from './login';
 import {
   IEntityInfoRequest,
   IDeviceInformationCurrentDay,
@@ -23,7 +22,6 @@ export class GetInfoService {
 
   private readonly httpClient = inject(HttpClient);
   private readonly environmentService = inject(EnvironmentService);
-  private readonly loginService = inject(LoginService);
 
   getHomeScreenInfo(request: IEntityInfoRequest) {
     return this.httpClient.get<IHomeScreenInfoResponse>(

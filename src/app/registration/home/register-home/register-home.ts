@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, Signal } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -32,16 +32,16 @@ import { REGISTER_HOME_ERROR_MODAL } from '../../../constants/error-constants';
   templateUrl: './register-home.html',
   styleUrl: './register-home.scss',
 })
-export class RegisterHome implements OnDestroy {
-  subscriptions: Subscription[] = [];
-  form!: FormGroup;
-
-  user: Signal<IUser | null>;
+export class RegisterHome implements OnInit, OnDestroy {
+  private subscriptions: Subscription[] = [];
 
   private readonly routerService = inject(RouterService);
   private readonly registrationService = inject(RegistrationService);
   private readonly loginService = inject(LoginService);
   private readonly modalService = inject(ModalService);
+
+  protected form!: FormGroup;
+  private user: Signal<IUser | null>;
 
   constructor() {
     this.user = this.loginService.getUserLoginInfo();
@@ -59,7 +59,7 @@ export class RegisterHome implements OnDestroy {
     });
   }
 
-  register() {
+  protected register(): void {
     this.form.markAllAsTouched();
 
     if (this.form.valid) {
@@ -71,11 +71,11 @@ export class RegisterHome implements OnDestroy {
     }
   }
 
-  viewHomePage() {
+  protected viewHomePage(): void {
     this.routerService.viewHomePage();
   }
 
-  registerHomeAction(userId: number, homeName: string, jwtToken: string) {
+  private registerHomeAction(userId: number, homeName: string, jwtToken: string): void {
     const registerHomeRequest: IRegisterGenericEntityRequest = {
       parentEntityId: userId,
       name: homeName,

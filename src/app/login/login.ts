@@ -12,7 +12,7 @@ import { RouterService } from '../services/router';
 import { ILoginRequest, IUser } from '../model/login';
 
 @Component({
-  selector: 'home-login-component',
+  selector: 'login',
   imports: [
     MatCard,
     MatCardTitle,
@@ -26,12 +26,17 @@ import { ILoginRequest, IUser } from '../model/login';
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
-export class LoginComponent implements OnInit, OnDestroy {
-  subscriptions: Subscription[] = [];
-  error!: string;
+export class Login implements OnInit, OnDestroy {
+  private subscriptions: Subscription[] = [];
 
   private readonly routerService = inject(RouterService);
   private readonly loginService = inject(LoginService);
+
+  protected form: FormGroup = new FormGroup({
+    username: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required]),
+  });
+  protected error!: string;
 
   ngOnInit(): void {
     const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
@@ -47,12 +52,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  form: FormGroup = new FormGroup({
-    username: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required]),
-  });
-
-  login() {
+  protected login(): void {
     // Reset the error value when the 'Login' buttton is clicked.
     this.error = '';
 
@@ -65,15 +65,15 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
 
-  viewHomePage(): void {
+  private viewHomePage(): void {
     this.routerService.viewHomePage();
   }
 
-  viewRegisterUserPage() {
+  protected viewRegisterUserPage(): void {
     this.routerService.viewRegisterUserPage();
   }
 
-  loginAction(username: string, password: string) {
+  private loginAction(username: string, password: string): void {
     const loginRequest: ILoginRequest = {
       username,
       password,

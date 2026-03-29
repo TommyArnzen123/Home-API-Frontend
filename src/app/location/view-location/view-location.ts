@@ -1,4 +1,4 @@
-import { Component, inject, Signal, OnDestroy } from '@angular/core';
+import { Component, inject, Signal, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -29,15 +29,8 @@ import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../constants/delete-constant
   templateUrl: './view-location.html',
   styleUrl: './view-location.scss',
 })
-export class ViewLocation implements OnDestroy {
-  subscriptions: Subscription[] = [];
-
-  locationId: number | null = null;
-  locationName: string | null = null;
-  homeId: number | null = null;
-  devices: IDevice[] = [];
-  totalDevices: number = 0;
-  averageTemperature: number | null = null;
+export class ViewLocation implements OnInit, OnDestroy {
+  private subscriptions: Subscription[] = [];
 
   private readonly route = inject(ActivatedRoute);
   private readonly routerService = inject(RouterService);
@@ -46,6 +39,13 @@ export class ViewLocation implements OnDestroy {
   private readonly deleteService = inject(DeleteService);
   private readonly modalService = inject(ModalService);
   private readonly breadcrumbService = inject(BreadcrumbService);
+
+  private locationId: number | null = null;
+  protected locationName: string | null = null;
+  private homeId: number | null = null;
+  protected devices: IDevice[] = [];
+  protected totalDevices: number = 0;
+  protected averageTemperature: number | null = null;
 
   constructor() {
     const locationId = Number(this.route.snapshot.paramMap.get('locationId'));
@@ -70,10 +70,6 @@ export class ViewLocation implements OnDestroy {
       this.breadcrumbService.updateLocationId(this.locationId);
       this.breadcrumbService.updatePageInFocus('view-location');
     }
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   ngOnInit(): void {
@@ -124,6 +120,10 @@ export class ViewLocation implements OnDestroy {
     }
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
+
   private setAverageTemperature(devices: IDevice[]): void {
     let counter = 0;
     let averageTemp: number | null = null;
@@ -139,24 +139,14 @@ export class ViewLocation implements OnDestroy {
     this.averageTemperature = averageTemp ? averageTemp / counter : null;
   }
 
-  private isIUser(value: IUser | null): value is IUser {
-    return (
-      value !== null &&
-      typeof value.firstName === 'string' &&
-      typeof value.username === 'string' &&
-      typeof value.username === 'string' &&
-      typeof value.jwtToken === 'string'
-    );
-  }
-
-  viewRegisterDevicePage() {
+  protected viewRegisterDevicePage(): void {
     const id = this.locationId;
     if (id !== null) {
       this.routerService.viewRegisterDevicePage(id);
     }
   }
 
-  viewHomeById() {
+  private viewHomeById(): void {
     if (this.homeId !== null) {
       this.routerService.viewHomeById(this.homeId);
     } else {
@@ -165,11 +155,11 @@ export class ViewLocation implements OnDestroy {
     }
   }
 
-  viewHomePage() {
+  private viewHomePage(): void {
     this.routerService.viewHomePage();
   }
 
-  deleteLocationVerification(): void {
+  protected deleteLocationVerification(): void {
     const deleteVerificationModal: IModal = {
       title: 'Confirmation',
       content: 'Are you sure you want to delete the location?',
@@ -179,13 +169,12 @@ export class ViewLocation implements OnDestroy {
 
     const deleteVerificationActions: IModalActions = {
       primaryAction: () => this.deleteLocation(),
-      secondaryAction: () => this.modalService.closeModalElement(),
     };
 
     this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
   }
 
-  deleteLocation() {
+  private deleteLocation(): void {
     if (this.locationId) {
       const deleteLocationRequest: IDeleteEntityRequest = {
         id: this.locationId,
@@ -208,12 +197,16 @@ export class ViewLocation implements OnDestroy {
     }
   }
 
-  deviceDeletedAction(deleteDeviceResponse: IDeleteDeviceResponse) {
+  protected deviceDeletedAction(deleteDeviceResponse: IDeleteDeviceResponse): void {
     this.totalDevices = this.totalDevices - 1;
 
     // Remove the deleted device from the registered devices list.
     this.devices = this.devices.filter(
       (device) => device.deviceId !== deleteDeviceResponse.deviceId,
     );
+  }
+
+  private isIUser(value: IUser | null): value is IUser {
+    return this.loginService.isIUser(value);
   }
 }

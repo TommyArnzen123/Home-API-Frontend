@@ -29,12 +29,7 @@ import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
   styleUrl: './view-home.scss',
 })
 export class ViewHome implements OnInit, OnDestroy {
-  subscriptions: Subscription[] = [];
-
-  homeId: number | null = null;
-  homeName: string | null = null;
-  locations: ILocation[] = [];
-  totalDevices: number = 0;
+  private subscriptions: Subscription[] = [];
 
   private readonly route = inject(ActivatedRoute);
   private readonly routerService = inject(RouterService);
@@ -43,6 +38,11 @@ export class ViewHome implements OnInit, OnDestroy {
   private readonly deleteService = inject(DeleteService);
   private readonly modalService = inject(ModalService);
   private readonly breadcrumbService = inject(BreadcrumbService);
+
+  private homeId: number | null = null;
+  protected homeName: string | null = null;
+  protected locations: ILocation[] = [];
+  protected totalDevices: number = 0;
 
   constructor() {
     const homeId = Number(this.route.snapshot.paramMap.get('homeId'));
@@ -117,28 +117,18 @@ export class ViewHome implements OnInit, OnDestroy {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  private isIUser(value: IUser | null): value is IUser {
-    return (
-      value !== null &&
-      typeof value.firstName === 'string' &&
-      typeof value.username === 'string' &&
-      typeof value.username === 'string' &&
-      typeof value.jwtToken === 'string'
-    );
-  }
-
-  viewRegisterLocationPage() {
+  protected viewRegisterLocationPage(): void {
     const id = this.homeId;
     if (id !== null) {
       this.routerService.viewRegisterLocationPage(id);
     }
   }
 
-  viewHomePage() {
+  private viewHomePage(): void {
     this.routerService.viewHomePage();
   }
 
-  deleteHomeVerification(): void {
+  protected deleteHomeVerification(): void {
     const deleteVerificationModal: IModal = {
       title: 'Confirmation',
       content: 'Are you sure you want to delete the home?',
@@ -148,13 +138,12 @@ export class ViewHome implements OnInit, OnDestroy {
 
     const deleteVerificationActions: IModalActions = {
       primaryAction: () => this.deleteHome(),
-      secondaryAction: () => this.modalService.closeModalElement(),
     };
 
     this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
   }
 
-  deleteHome() {
+  private deleteHome(): void {
     if (this.homeId) {
       const deleteHomeRequest: IDeleteEntityRequest = {
         id: this.homeId,
@@ -177,12 +166,16 @@ export class ViewHome implements OnInit, OnDestroy {
     }
   }
 
-  locationDeletedAction(deleteLocationResponse: IDeleteLocationResponse) {
+  protected locationDeletedAction(deleteLocationResponse: IDeleteLocationResponse): void {
     this.totalDevices = this.totalDevices - deleteLocationResponse.numDevices;
 
     // Remove the deleted location from the registered locations list.
     this.locations = this.locations.filter(
       (location) => location.locationId !== deleteLocationResponse.locationId,
     );
+  }
+
+  private isIUser(value: IUser | null): value is IUser {
+    return this.loginService.isIUser(value);
   }
 }

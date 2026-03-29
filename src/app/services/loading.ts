@@ -7,7 +7,7 @@ import { LoadingInterface } from '../model/loading';
 export class LoadingService {
   #loadingSignal = signal<LoadingInterface>({ isLoading: false, message: '' });
 
-  loading = this.#loadingSignal.asReadonly();
+  private loading = this.#loadingSignal.asReadonly();
 
   loadingOn(message: string) {
     this.#loadingSignal.set({ isLoading: true, message });
@@ -15,5 +15,9 @@ export class LoadingService {
 
   loadingOff() {
     this.#loadingSignal.set({ isLoading: false, message: '' });
+  }
+
+  getLoadingStatus() {
+    return this.loading;
   }
 }

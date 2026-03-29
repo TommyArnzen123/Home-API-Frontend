@@ -18,33 +18,23 @@ import { IDeleteHomeResponse } from '../model/delete-actions';
   styleUrl: './home-page.scss',
 })
 export class HomePage implements OnInit, OnDestroy {
-  subscriptions: Subscription[] = [];
-
-  greetingMessage!: string;
-  userFirstName!: string;
-  homeInfo: IHome[] = [];
-
-  totalHomes = 0;
-  totalLocations = 0;
-  totalDevices = 0;
+  private subscriptions: Subscription[] = [];
 
   private readonly loginService = inject(LoginService);
   private readonly getInfoService = inject(GetInfoService);
   private readonly breadcrumbService = inject(BreadcrumbService);
   private readonly routerService = inject(RouterService);
 
+  protected greetingMessage!: string;
+  private userFirstName!: string;
+  protected homeInfo: IHome[] = [];
+
+  protected totalHomes = 0;
+  protected totalLocations = 0;
+  protected totalDevices = 0;
+
   constructor() {
     this.breadcrumbService.updatePageInFocus('home-page');
-  }
-
-  private isIUser(value: IUser | null): value is IUser {
-    return (
-      value !== null &&
-      typeof value.firstName === 'string' &&
-      typeof value.username === 'string' &&
-      typeof value.username === 'string' &&
-      typeof value.jwtToken === 'string'
-    );
   }
 
   ngOnInit(): void {
@@ -82,7 +72,11 @@ export class HomePage implements OnInit, OnDestroy {
     }
   }
 
-  setHomeInfo(homeInfo: IHomeScreenInfoResponse): void {
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
+
+  private setHomeInfo(homeInfo: IHomeScreenInfoResponse): void {
     this.totalHomes = homeInfo.homes.length;
     homeInfo.homes.forEach((home) => {
       this.totalLocations += home.totalLocations;
@@ -90,21 +84,17 @@ export class HomePage implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
-  }
-
-  viewRegisterHomePage() {
+  protected viewRegisterHomePage(): void {
     this.routerService.viewRegisterHomePage();
   }
 
-  formatName(name: string): string {
+  private formatName(name: string): string {
     let formattedName = name.toLowerCase();
     formattedName = name.charAt(0).toUpperCase() + name.substring(1);
     return formattedName;
   }
 
-  setGreetingMessage(currentHour: number): string {
+  private setGreetingMessage(currentHour: number): string {
     if (currentHour >= 0 && currentHour <= 11) {
       return 'Good Morning ' + this.userFirstName + '!';
     } else if (currentHour >= 12 && currentHour <= 16) {
@@ -114,7 +104,7 @@ export class HomePage implements OnInit, OnDestroy {
     }
   }
 
-  homeDeletedAction(deleteHomeResponse: IDeleteHomeResponse) {
+  protected homeDeletedAction(deleteHomeResponse: IDeleteHomeResponse): void {
     // Remove one home from the registered homes count.
     this.totalHomes = this.totalHomes - 1;
 
@@ -126,5 +116,9 @@ export class HomePage implements OnInit, OnDestroy {
 
     // Remove the deleted home from the registered homes list.
     this.homeInfo = this.homeInfo.filter((home) => home.homeId !== deleteHomeResponse.homeId);
+  }
+
+  private isIUser(value: IUser | null): value is IUser {
+    return this.loginService.isIUser(value);
   }
 }

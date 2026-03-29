@@ -4,13 +4,13 @@ import { LoadingService } from '../services/loading';
 import { LoadingInterface } from '../model/loading';
 
 @Component({
-  selector: 'home-loading-component',
+  selector: 'loading-indicator',
   imports: [MatProgressSpinner],
   templateUrl: './loading-indicator.html',
   styleUrl: './loading-indicator.scss',
 })
-export class LoadingComponent {
-  private loadingService = inject(LoadingService);
+export class LoadingIndicator {
+  private readonly loadingService = inject(LoadingService);
 
-  protected loading: Signal<LoadingInterface> = this.loadingService.loading;
+  protected loadingStatus: Signal<LoadingInterface> = this.loadingService.getLoadingStatus();
 }

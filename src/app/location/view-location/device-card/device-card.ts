@@ -20,27 +20,24 @@ import { DELETE_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
   styleUrl: './device-card.scss',
 })
 export class DeviceCard implements OnDestroy {
-  subscriptions: Subscription[] = [];
-
-  @Input({ required: true }) deviceInfo!: IDevice;
-  // @Input({ required: true }) deviceId!: number;
-  // @Input({ required: true }) deviceName!: string;
-
-  @Output() deviceDeleted = new EventEmitter<IDeleteDeviceResponse>();
+  private subscriptions: Subscription[] = [];
 
   private readonly routerService = inject(RouterService);
   private readonly deleteService = inject(DeleteService);
   private readonly modalService = inject(ModalService);
 
+  @Input({ required: true }) deviceInfo!: IDevice;
+  @Output() deviceDeleted = new EventEmitter<IDeleteDeviceResponse>();
+
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  viewDeviceById(): void {
+  protected viewDeviceById(): void {
     this.routerService.viewDeviceById(this.deviceInfo.deviceId);
   }
 
-  deleteDeviceVerification(): void {
+  protected deleteDeviceVerification(): void {
     const deleteVerificationModal: IModal = {
       title: 'Confirmation',
       content: 'Are you sure you want to delete the device?',
@@ -50,13 +47,12 @@ export class DeviceCard implements OnDestroy {
 
     const deleteVerificationActions: IModalActions = {
       primaryAction: () => this.deleteDevice(),
-      secondaryAction: () => this.modalService.closeModalElement(),
     };
 
     this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
   }
 
-  deleteDevice() {
+  private deleteDevice(): void {
     if (this.deviceInfo && this.deviceInfo.deviceId) {
       const deleteDeviceRequest: IDeleteEntityRequest = {
         id: this.deviceInfo.deviceId,

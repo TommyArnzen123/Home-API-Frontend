@@ -3,13 +3,13 @@
   {{ content }}
 
   @if (footer) {
-  <br />
-  <br />
-  {{ footer }}
+    <br />
+    <br />
+    {{ footer }}
   }
 </mat-dialog-content>
 <mat-dialog-actions>
-  @if (data.actions?.secondaryAction) {
+  @if (secondaryText) {
     <button matButton="outlined" (click)="secondaryButtonAction()">{{ secondaryText }}</button>
   }
   <button matButton="filled" (click)="primaryButtonAction()">{{ primaryText }}</button>

@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { isUserAuthenticated } from './guards/auth.guard';
-import { LoginComponent } from './login/login';
+import { Login } from './login/login';
 import { HomePage } from './home-page/home-page';
 import { RegisterUser } from './registration/user/register-user/register-user';
 import { ViewHome } from './home/view-home/view-home';
@@ -71,7 +71,7 @@ export const routes: Routes = [
   },
   {
     path: LOGIN_ROUTE,
-    component: LoginComponent,
+    component: Login,
   },
   {
     path: REGISTER_USER_ROUTE,

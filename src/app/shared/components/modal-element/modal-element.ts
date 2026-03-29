@@ -16,11 +16,11 @@ import { IModal, IModalActions } from '../../../model/modal';
   styleUrl: './modal-element.scss',
 })
 export class ModalElement {
-  title: string;
-  content: string;
-  footer?: string;
-  primaryText: string;
-  secondaryText!: string;
+  protected title: string;
+  protected content: string;
+  protected footer: string;
+  protected primaryText: string;
+  protected secondaryText: string | null;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { modalContent: IModal; actions?: IModalActions },
@@ -34,10 +34,10 @@ export class ModalElement {
       : 'Ok';
     this.secondaryText = this.data.modalContent.secondaryText
       ? this.data.modalContent.secondaryText
-      : 'Cancel';
+      : null;
   }
 
-  primaryButtonAction(): void {
+  protected primaryButtonAction(): void {
     if (this.data.actions?.primaryAction) {
       this.data.actions.primaryAction(); // Execute the primary action if set.
     }
@@ -45,13 +45,15 @@ export class ModalElement {
     this.closeModal();
   }
 
-  secondaryButtonAction(): void {
+  protected secondaryButtonAction(): void {
     if (this.data.actions?.secondaryAction) {
       this.data.actions.secondaryAction(); // Execute the secondary action if set.
     }
+
+    this.closeModal();
   }
 
-  closeModal(): void {
+  private closeModal(): void {
     this.modal.close();
   }
 }

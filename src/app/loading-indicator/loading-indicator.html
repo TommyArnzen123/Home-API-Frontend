@@ -1,9 +1,9 @@
-@if (loading().isLoading) {
+@if (loadingStatus().isLoading) {
   <div class="loading-container">
     <div class="modal-container">
       <mat-spinner />
-      @if (loading().message) {
-        <div data-testid="loading-message">{{ loading().message }}</div>
+      @if (loadingStatus().message) {
+        <div data-testid="loading-message">{{ loadingStatus().message }}</div>
       }
     </div>
   </div>

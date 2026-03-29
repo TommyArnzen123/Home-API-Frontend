@@ -22,27 +22,35 @@ export class LoginService {
   private readonly sessionStorageService = inject(SessionStorageService);
   private readonly router = inject(Router);
 
+  isLoggedIn = computed(() => !!this.userLoginInfo());
+
   constructor() {
     this.loadUserFromSessionStorage();
   }
 
   loadUserFromSessionStorage() {
-    const userInfo = this.sessionStorageService.getItem(USER_LOGIN_INFO_KEY);
+    const userInfo: string | null = this.sessionStorageService.getItem(USER_LOGIN_INFO_KEY);
+    let user: IUser | null = null;
 
     if (userInfo) {
-      const user = JSON.parse(userInfo);
-      this.#loginResponseInfo$.set(user);
+      user = JSON.parse(userInfo);
     }
+    this.updateUserLoginInfo(user);
   }
-
-  isLoggedIn = computed(() => !!this.userLoginInfo());
 
   getUserLoginInfo(): Signal<IUser | null> {
     return this.userLoginInfo;
   }
 
   private updateUserLoginInfo(userInfo: IUser | null): void {
-    this.#loginResponseInfo$.set(userInfo);
+    let tempUserInfo: IUser | null = userInfo;
+    if (userInfo) {
+      tempUserInfo = {
+        ...userInfo,
+        userId: Number(userInfo.userId),
+      };
+    }
+    this.#loginResponseInfo$.set(tempUserInfo);
   }
 
   login(loginRequest: ILoginRequest): Observable<IUser> {
@@ -53,7 +61,7 @@ export class LoginService {
         { context: new HttpContext().set(LoadingContextToken, 'Logging In') },
       )
       .pipe(
-        tap((response) => {
+        tap((response: IUser) => {
           this.sessionStorageService.setItem(USER_LOGIN_INFO_KEY, JSON.stringify(response));
           this.updateUserLoginInfo(response);
         }),
@@ -69,5 +77,15 @@ export class LoginService {
   logoutWithoutRoute(): void {
     this.sessionStorageService.removeItem(USER_LOGIN_INFO_KEY); // Remove the user login info from session storage.
     this.updateUserLoginInfo(null); // Remove the user login info from memory.
+  }
+
+  isIUser(value: IUser | null): value is IUser {
+    return (
+      value !== null &&
+      typeof value.userId === 'number' &&
+      typeof value.firstName === 'string' &&
+      typeof value.username === 'string' &&
+      typeof value.jwtToken === 'string'
+    );
   }
 }

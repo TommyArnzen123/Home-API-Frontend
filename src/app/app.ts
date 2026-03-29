@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Header } from './header/header';
 import { Footer } from './footer/footer';
-import { LoadingComponent } from './loading-indicator/loading-indicator';
+import { LoadingIndicator } from './loading-indicator/loading-indicator';
 import { Breadcrumb } from './breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, Footer, LoadingComponent, Breadcrumb],
+  imports: [RouterOutlet, Header, Footer, LoadingIndicator, Breadcrumb],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

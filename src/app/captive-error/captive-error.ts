@@ -11,11 +11,11 @@ import { HOME_SCREEN_INFO_ERROR, SESSION_TIMEOUT_ERROR } from './captive-error-c
   styleUrl: './captive-error.scss',
 })
 export class CaptiveError implements OnInit {
-  homeScreenInfoError: string | null = null;
-  sessionTimeoutError: string | null = null;
-
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly loginService = inject(LoginService);
+
+  protected homeScreenInfoError: string | null = null;
+  protected sessionTimeoutError: string | null = null;
 
   ngOnInit(): void {
     // Log the user out of the application.

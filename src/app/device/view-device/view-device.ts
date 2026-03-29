@@ -52,13 +52,12 @@ const averageTempInfo: IAverageTemperatureByHour[] = [
   styleUrl: './view-device.scss',
 })
 export class ViewDevice implements OnInit, OnDestroy {
-  subscriptions: Subscription[] = [];
+  private subscriptions: Subscription[] = [];
 
-  deviceId: number | null = null;
-  locationId: number | null = null;
-  deviceInformation!: IDeviceInformationCurrentDay;
-  mostRecentTemperatureDate!: Date;
-  averageTemperatureByHour: IAverageTemperatureByHour[] = [];
+  private deviceId: number | null = null;
+  private locationId: number | null = null;
+  protected deviceInformation!: IDeviceInformationCurrentDay;
+  protected mostRecentTemperatureDate!: Date;
 
   private readonly route = inject(ActivatedRoute);
   private readonly getInfoService = inject(GetInfoService);
@@ -89,16 +88,6 @@ export class ViewDevice implements OnInit, OnDestroy {
       this.deviceId = deviceId;
       this.breadcrumbService.updatePageInFocus('view-device');
     }
-  }
-
-  private isIUser(value: IUser | null): value is IUser {
-    return (
-      value !== null &&
-      typeof value.firstName === 'string' &&
-      typeof value.username === 'string' &&
-      typeof value.username === 'string' &&
-      typeof value.jwtToken === 'string'
-    );
   }
 
   ngOnInit(): void {
@@ -151,7 +140,7 @@ export class ViewDevice implements OnInit, OnDestroy {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  deleteDeviceVerification(): void {
+  protected deleteDeviceVerification(): void {
     const deleteVerificationModal: IModal = {
       title: 'Confirmation',
       content: 'Are you sure you want to delete the device?',
@@ -161,13 +150,12 @@ export class ViewDevice implements OnInit, OnDestroy {
 
     const deleteVerificationActions: IModalActions = {
       primaryAction: () => this.deleteDeviceAction(),
-      secondaryAction: () => this.modalService.closeModalElement(),
     };
 
     this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
   }
 
-  viewLocationById() {
+  private viewLocationById(): void {
     if (this.locationId) {
       this.routerService.viewLocationById(this.locationId);
     } else {
@@ -175,11 +163,11 @@ export class ViewDevice implements OnInit, OnDestroy {
     }
   }
 
-  viewHomepage() {
+  private viewHomepage(): void {
     this.routerService.viewHomePage();
   }
 
-  deleteDeviceAction() {
+  private deleteDeviceAction(): void {
     if (this.deviceId) {
       const deleteDeviceRequest: IDeleteEntityRequest = {
         id: this.deviceId,
@@ -205,7 +193,7 @@ export class ViewDevice implements OnInit, OnDestroy {
 
   // Generate an array of average temperature by hour objects
   // with the current hour as the last item in the array.
-  generateHourlyTemperatureReading(): IAverageTemperatureByHour[] {
+  protected generateHourlyTemperatureReading(): IAverageTemperatureByHour[] {
     const currentDate = new Date();
     const currentHour = currentDate.getHours();
 
@@ -230,10 +218,14 @@ export class ViewDevice implements OnInit, OnDestroy {
     return formattedAverageTemperaturesByHour;
   }
 
-  insertAverageTemperatureByHourInformation(tempInfo: IAverageTemperatureByHour[]): void {
+  private insertAverageTemperatureByHourInformation(tempInfo: IAverageTemperatureByHour[]): void {
     for (let i = 0; i < tempInfo.length; i++) {
       averageTempInfo[tempInfo[i].hour].averageTemperature = tempInfo[i].averageTemperature;
       averageTempInfo[tempInfo[i].hour].temperatureAvailable = true;
     }
+  }
+
+  private isIUser(value: IUser | null): value is IUser {
+    return this.loginService.isIUser(value);
   }
 }

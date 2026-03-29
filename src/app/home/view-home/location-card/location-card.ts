@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, OnInit, OnDestroy } from '@angular/core';
 import { MatCard, MatCardActions, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -20,11 +20,7 @@ import { DELETE_LOCATION_ERROR_MODAL } from '../../../constants/error-constants'
   styleUrl: './location-card.scss',
 })
 export class LocationCard implements OnInit, OnDestroy {
-  subscriptions: Subscription[] = [];
-
-  @Input({ required: true }) locationInfo!: ILocation;
-
-  @Output() locationDeleted = new EventEmitter<IDeleteLocationResponse>();
+  private subscriptions: Subscription[] = [];
 
   private readonly routerService = inject(RouterService);
   private readonly deleteService = inject(DeleteService);
@@ -32,7 +28,10 @@ export class LocationCard implements OnInit, OnDestroy {
 
   protected averageTemperature: number | null = null;
 
-  ngOnInit() {
+  @Input({ required: true }) locationInfo!: ILocation;
+  @Output() locationDeleted = new EventEmitter<IDeleteLocationResponse>();
+
+  ngOnInit(): void {
     let counter = 0;
     let temperature: number | null = 0;
 
@@ -54,11 +53,11 @@ export class LocationCard implements OnInit, OnDestroy {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  viewLocationById(): void {
+  protected viewLocationById(): void {
     this.routerService.viewLocationById(this.locationInfo.locationId);
   }
 
-  deleteLocationVerification(): void {
+  protected deleteLocationVerification(): void {
     const deleteVerificationModal: IModal = {
       title: 'Confirmation',
       content: 'Are you sure you want to delete the location?',
@@ -68,13 +67,12 @@ export class LocationCard implements OnInit, OnDestroy {
 
     const deleteVerificationActions: IModalActions = {
       primaryAction: () => this.deleteLocation(),
-      secondaryAction: () => this.modalService.closeModalElement(),
     };
 
     this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
   }
 
-  deleteLocation() {
+  private deleteLocation(): void {
     if (this.locationInfo && this.locationInfo.locationId) {
       const deleteLocationRequest: IDeleteEntityRequest = {
         id: this.locationInfo.locationId,

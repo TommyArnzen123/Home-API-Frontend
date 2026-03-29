@@ -19,25 +19,24 @@ import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
   styleUrl: './home-card.scss',
 })
 export class HomeCard implements OnDestroy {
-  subscriptions: Subscription[] = [];
-
-  @Input({ required: true }) homeInfo!: IHome;
-
-  @Output() homeDeleted = new EventEmitter<IDeleteHomeResponse>();
+  private subscriptions: Subscription[] = [];
 
   private readonly routerService = inject(RouterService);
   private readonly deleteService = inject(DeleteService);
   private readonly modalService = inject(ModalService);
 
+  @Input({ required: true }) homeInfo!: IHome;
+  @Output() homeDeleted = new EventEmitter<IDeleteHomeResponse>();
+
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  viewHomeById(): void {
+  protected viewHomeById(): void {
     this.routerService.viewHomeById(this.homeInfo.homeId);
   }
 
-  deleteHomeVerification(): void {
+  protected deleteHomeVerification(): void {
     const deleteVerificationModal: IModal = {
       title: 'Confirmation',
       content: 'Are you sure you want to delete the home?',
@@ -47,13 +46,12 @@ export class HomeCard implements OnDestroy {
 
     const deleteVerificationActions: IModalActions = {
       primaryAction: () => this.deleteHome(),
-      secondaryAction: () => this.modalService.closeModalElement(),
     };
 
     this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
   }
 
-  deleteHome(): void {
+  private deleteHome(): void {
     if (this.homeInfo && this.homeInfo.homeId) {
       const deleteHomeRequest: IDeleteEntityRequest = {
         id: this.homeInfo.homeId,

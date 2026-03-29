@@ -22,7 +22,7 @@ import { REGISTER_USER_ERROR_MODAL } from '../../../constants/error-constants';
 import { REGISTER_USER_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 
 @Component({
-  selector: 'home-register-user',
+  selector: 'register-user',
   imports: [
     MatCard,
     MatCardTitle,
@@ -37,13 +37,14 @@ import { REGISTER_USER_SUCCESS_MESSAGE } from '../../../constants/registration-c
   styleUrl: './register-user.scss',
 })
 export class RegisterUser implements OnInit, OnDestroy {
-  subscriptions: Subscription[] = [];
-  form!: FormGroup;
-  error!: string;
+  private subscriptions: Subscription[] = [];
 
   private readonly routerService = inject(RouterService);
   private readonly registrationService = inject(RegistrationService);
   private readonly modalService = inject(ModalService);
+
+  protected form!: FormGroup;
+  protected error!: string;
 
   ngOnInit(): void {
     this.form = new FormGroup(
@@ -65,7 +66,7 @@ export class RegisterUser implements OnInit, OnDestroy {
     });
   }
 
-  register() {
+  protected register(): void {
     this.form.markAllAsTouched();
 
     if (this.form.valid) {
@@ -79,17 +80,17 @@ export class RegisterUser implements OnInit, OnDestroy {
     }
   }
 
-  viewLoginPage() {
+  protected viewLoginPage(): void {
     this.routerService.viewLoginPage();
   }
 
-  registerUserAction(
+  private registerUserAction(
     firstNameValue: string,
     lastNameValue: string,
     usernameValue: string,
     passwordValue: string,
     emailValue: string,
-  ) {
+  ): void {
     const registerUserRequest: IRegisterUserRequest = {
       firstName: firstNameValue,
       lastName: lastNameValue,
@@ -115,7 +116,7 @@ export class RegisterUser implements OnInit, OnDestroy {
     );
   }
 
-  passwordConfirmationValidator(): ValidatorFn {
+  private passwordConfirmationValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const passwordField = control.get('password');
       const passwordConfirmationField = control.get('confirmPassword');

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LoadingComponent } from './loading-indicator';
+import { LoadingIndicator } from './loading-indicator';
 import { LoadingService } from '../services/loading';
 import { signal, WritableSignal } from '@angular/core';
 import { LoadingInterface } from '../model/loading';
@@ -16,9 +16,9 @@ const showLoadingMessage: LoadingInterface = {
   message: 'It is loading.',
 };
 
-describe('LoadingComponent', () => {
-  let component: LoadingComponent;
-  let fixture: ComponentFixture<LoadingComponent>;
+describe('LoadingIndicator', () => {
+  let component: LoadingIndicator;
+  let fixture: ComponentFixture<LoadingIndicator>;
   let loadingServiceMock: jest.Mocked<LoadingService>;
   let loadingSignal: WritableSignal<LoadingInterface>;
 
@@ -28,11 +28,11 @@ describe('LoadingComponent', () => {
     loadingServiceMock = { loading: loadingSignal } as unknown as jest.Mocked<LoadingService>;
 
     await TestBed.configureTestingModule({
-      imports: [LoadingComponent],
+      imports: [LoadingIndicator],
       providers: [{ provide: LoadingService, useValue: loadingServiceMock }],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(LoadingComponent);
+    fixture = TestBed.createComponent(LoadingIndicator);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

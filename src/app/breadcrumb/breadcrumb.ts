@@ -48,31 +48,25 @@ export class Breadcrumb implements OnInit, OnDestroy {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  protected isIUser(value: IUser | null): value is IUser {
-    return (
-      value !== null &&
-      typeof value.userId === 'string' &&
-      typeof value.firstName === 'string' &&
-      typeof value.username === 'string' &&
-      typeof value.jwtToken === 'string'
-    );
-  }
-
-  viewHomePage(): void {
+  protected viewHomePage(): void {
     this.routerService.viewHomePage();
   }
 
-  viewHomeById(): void {
+  protected viewHomeById(): void {
     const id = this.homeId();
     if (id !== null) {
       this.routerService.viewHomeById(id);
     }
   }
 
-  viewLocationById(): void {
+  protected viewLocationById(): void {
     const id = this.locationId();
     if (id !== null) {
       this.routerService.viewLocationById(id);
     }
+  }
+
+  protected isIUser(value: IUser | null): value is IUser {
+    return this.loginService.isIUser(value);
   }
 }

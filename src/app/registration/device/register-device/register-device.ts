@@ -34,17 +34,17 @@ import { REGISTER_DEVICE_ERROR_MODAL } from '../../../constants/error-constants'
   styleUrl: './register-device.scss',
 })
 export class RegisterDevice implements OnInit, OnDestroy {
-  subscriptions: Subscription[] = [];
-  form!: FormGroup;
-
-  user: Signal<IUser | null>;
-  locationId!: number | null;
+  private subscriptions: Subscription[] = [];
 
   private readonly route = inject(ActivatedRoute);
   private readonly routerService = inject(RouterService);
   private readonly registrationService = inject(RegistrationService);
   private readonly loginService = inject(LoginService);
   private readonly modalService = inject(ModalService);
+
+  protected form!: FormGroup;
+  private user: Signal<IUser | null>;
+  private locationId!: number | null;
 
   constructor() {
     this.locationId = Number(this.route.snapshot.paramMap.get('locationId'));
@@ -63,7 +63,7 @@ export class RegisterDevice implements OnInit, OnDestroy {
     });
   }
 
-  register() {
+  protected register(): void {
     this.form.markAllAsTouched();
 
     if (this.form.valid) {
@@ -75,7 +75,7 @@ export class RegisterDevice implements OnInit, OnDestroy {
     }
   }
 
-  viewLocationById() {
+  protected viewLocationById(): void {
     const id = this.locationId;
 
     if (id !== null) {
@@ -83,7 +83,7 @@ export class RegisterDevice implements OnInit, OnDestroy {
     }
   }
 
-  registerDeviceAction(deviceName: string, jwtToken: string) {
+  private registerDeviceAction(deviceName: string, jwtToken: string): void {
     if (this.locationId) {
       const registerDeviceRequest: IRegisterGenericEntityRequest = {
         parentEntityId: Number(this.locationId),

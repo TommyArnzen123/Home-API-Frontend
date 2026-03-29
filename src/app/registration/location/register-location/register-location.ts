@@ -1,4 +1,4 @@
-import { Component, inject, Signal, OnDestroy } from '@angular/core';
+import { Component, inject, Signal, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
@@ -33,18 +33,18 @@ import { REGISTER_LOCATION_ERROR_MODAL } from '../../../constants/error-constant
   templateUrl: './register-location.html',
   styleUrl: './register-location.scss',
 })
-export class RegisterLocation implements OnDestroy {
-  subscriptions: Subscription[] = [];
-  form!: FormGroup;
-
-  user: Signal<IUser | null>;
-  homeId!: number | null;
+export class RegisterLocation implements OnInit, OnDestroy {
+  private subscriptions: Subscription[] = [];
 
   private readonly route = inject(ActivatedRoute);
   private readonly routerService = inject(RouterService);
   private readonly registrationService = inject(RegistrationService);
   private readonly loginService = inject(LoginService);
   private readonly modalService = inject(ModalService);
+
+  protected form!: FormGroup;
+  private user: Signal<IUser | null>;
+  private homeId!: number | null;
 
   constructor() {
     this.homeId = Number(this.route.snapshot.paramMap.get('homeId'));
@@ -63,7 +63,7 @@ export class RegisterLocation implements OnDestroy {
     });
   }
 
-  register() {
+  protected register(): void {
     this.form.markAllAsTouched();
 
     if (this.form.valid) {
@@ -75,7 +75,7 @@ export class RegisterLocation implements OnDestroy {
     }
   }
 
-  viewHomeById() {
+  protected viewHomeById(): void {
     const id = this.homeId;
 
     if (id !== null) {
@@ -83,7 +83,7 @@ export class RegisterLocation implements OnDestroy {
     }
   }
 
-  registerLocationAction(locationName: string, jwtToken: string) {
+  private registerLocationAction(locationName: string, jwtToken: string): void {
     if (this.homeId) {
       const registerLocationRequest: IRegisterGenericEntityRequest = {
         parentEntityId: Number(this.homeId),

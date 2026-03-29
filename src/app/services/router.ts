@@ -20,7 +20,7 @@ import { ICaptiveError } from '../model/captive-error';
   providedIn: 'root',
 })
 export class RouterService {
-  private router = inject(Router);
+  private readonly router = inject(Router);
 
   // Route to the login page.
   viewLoginPage() {
