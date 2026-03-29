@@ -151,12 +151,12 @@ export class ViewLocation implements OnInit, OnDestroy {
       this.routerService.viewHomeById(this.homeId);
     } else {
       // The home ID value is not set, route to the home screen.
-      this.viewHomePage();
+      this.viewHomepage();
     }
   }
 
-  private viewHomePage(): void {
-    this.routerService.viewHomePage();
+  private viewHomepage(): void {
+    this.routerService.viewHomepage();
   }
 
   protected deleteLocationVerification(): void {

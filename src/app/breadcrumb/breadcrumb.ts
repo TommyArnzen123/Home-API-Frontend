@@ -48,8 +48,8 @@ export class Breadcrumb implements OnInit, OnDestroy {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  protected viewHomePage(): void {
-    this.routerService.viewHomePage();
+  protected viewHomepage(): void {
+    this.routerService.viewHomepage();
   }
 
   protected viewHomeById(): void {

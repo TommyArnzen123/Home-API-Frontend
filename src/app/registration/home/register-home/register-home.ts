@@ -71,8 +71,8 @@ export class RegisterHome implements OnInit, OnDestroy {
     }
   }
 
-  protected viewHomePage(): void {
-    this.routerService.viewHomePage();
+  protected viewHomepage(): void {
+    this.routerService.viewHomepage();
   }
 
   private registerHomeAction(userId: number, homeName: string, jwtToken: string): void {
@@ -88,7 +88,7 @@ export class RegisterHome implements OnInit, OnDestroy {
             // The home has been added to the application.
             // Display a success modal and route the user to the home page component.
             this.modalService.showModalElement(REGISTER_HOME_SUCCESS_MESSAGE);
-            this.viewHomePage();
+            this.viewHomepage();
           }
         },
         error: () => {

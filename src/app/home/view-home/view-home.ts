@@ -55,7 +55,7 @@ export class ViewHome implements OnInit, OnDestroy {
         disableClose: true,
       };
       const viewHomeInvalidHomeIDErrorActions: IModalActions = {
-        primaryAction: () => this.viewHomePage(),
+        primaryAction: () => this.viewHomepage(),
       };
       this.modalService.showModalElement(
         viewHomeInvalidHomeIDErrorModal,
@@ -98,7 +98,7 @@ export class ViewHome implements OnInit, OnDestroy {
                 disableClose: true,
               };
               const viewHomeGetInfoErrorActions: IModalActions = {
-                primaryAction: () => this.viewHomePage(),
+                primaryAction: () => this.viewHomepage(),
               };
               this.modalService.showModalElement(
                 viewHomeGetInfoErrorModal,
@@ -124,8 +124,8 @@ export class ViewHome implements OnInit, OnDestroy {
     }
   }
 
-  private viewHomePage(): void {
-    this.routerService.viewHomePage();
+  private viewHomepage(): void {
+    this.routerService.viewHomepage();
   }
 
   protected deleteHomeVerification(): void {
@@ -154,7 +154,7 @@ export class ViewHome implements OnInit, OnDestroy {
           next: (response: IDeleteHomeResponse) => {
             this.modalService.showModalElement(DELETE_HOME_SUCCESS_MESSAGE);
 
-            this.viewHomePage();
+            this.viewHomepage();
           },
           error: () => {
             this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);

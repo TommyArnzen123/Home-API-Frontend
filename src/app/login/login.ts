@@ -44,7 +44,7 @@ export class Login implements OnInit, OnDestroy {
     // If the user is logged in (the user value is set in the login service),
     // route the user to the home page component.
     if (user()) {
-      this.viewHomePage();
+      this.viewHomepage();
     }
   }
 
@@ -65,8 +65,8 @@ export class Login implements OnInit, OnDestroy {
     }
   }
 
-  private viewHomePage(): void {
-    this.routerService.viewHomePage();
+  private viewHomepage(): void {
+    this.routerService.viewHomepage();
   }
 
   protected viewRegisterUserPage(): void {
@@ -84,7 +84,7 @@ export class Login implements OnInit, OnDestroy {
         this.loginService.login(loginRequest).subscribe({
           next: (response: IUser) => {
             if (response) {
-              this.viewHomePage();
+              this.viewHomepage();
             }
           },
           error: () => {

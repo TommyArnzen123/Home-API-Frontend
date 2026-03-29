@@ -164,7 +164,7 @@ export class ViewDevice implements OnInit, OnDestroy {
   }
 
   private viewHomepage(): void {
-    this.routerService.viewHomePage();
+    this.routerService.viewHomepage();
   }
 
   private deleteDeviceAction(): void {

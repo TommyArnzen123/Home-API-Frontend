@@ -58,7 +58,7 @@ export class RouterService {
   }
 
   // Route to the homepage.
-  viewHomePage() {
+  viewHomepage() {
     this.router.navigate([HOME_PAGE_ROUTE]);
   }
 
