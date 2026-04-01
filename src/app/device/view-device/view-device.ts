@@ -159,12 +159,12 @@ export class ViewDevice implements OnInit, OnDestroy {
     if (this.locationId) {
       this.routerService.viewLocationById(this.locationId);
     } else {
-      this.viewHomepage();
+      this.viewHomescreen();
     }
   }
 
-  private viewHomepage(): void {
-    this.routerService.viewHomepage();
+  private viewHomescreen(): void {
+    this.routerService.viewHomescreen();
   }
 
   private deleteDeviceAction(): void {

@@ -1,5 +1,5 @@
 export const ROOT_ROUTE = '';
-export const HOME_PAGE_ROUTE = 'home-page';
+export const HOMESCREEN_ROUTE = 'homescreen';
 export const LOGIN_ROUTE = 'login';
 export const REGISTER_USER_ROUTE = 'register-user';
 export const REGISTER_HOME_ROUTE = 'register-home';

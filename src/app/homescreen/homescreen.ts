@@ -11,13 +11,16 @@ import { IUser } from '../model/login';
 import { IHome, IEntityInfoRequest, IHomeScreenInfoResponse } from '../model/get-info';
 import { IDeleteHomeResponse } from '../model/delete-actions';
 
+// TO DO: Rename the file to 'homescreen.ts'.
+//        Update required items accordingly.
+//        HomePage references should be Homescreen.
 @Component({
-  selector: 'home-page',
+  selector: 'homescreen',
   imports: [ItemTotals, HomeCard, MatButton],
-  templateUrl: './home-page.html',
-  styleUrl: './home-page.scss',
+  templateUrl: './homescreen.html',
+  styleUrl: './homescreen.scss',
 })
-export class HomePage implements OnInit, OnDestroy {
+export class Homescreen implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   private readonly loginService = inject(LoginService);
@@ -53,7 +56,7 @@ export class HomePage implements OnInit, OnDestroy {
         jwtToken: user()!.jwtToken,
       };
 
-      // Get the home screen info.
+      // Get the homescreen info.
       this.subscriptions.push(
         this.getInfoService.getHomeScreenInfo(getHomeScreenInfoRequest).subscribe({
           next: (response: IHomeScreenInfoResponse) => {
@@ -61,13 +64,14 @@ export class HomePage implements OnInit, OnDestroy {
             this.setHomeInfo(response);
           },
           error: () => {
-            // If there is an error getting the home screen info, route the user
+            // If there is an error getting the homescreen info, route the user
             // to the captive error screen.
             this.routerService.viewCaptiveErrorScreen({ homeScreenInfoError: true });
           },
         }),
       );
     } else {
+      // If the user login info object is not defined, log the user out.
       this.loginService.logout();
     }
   }
@@ -76,6 +80,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
+  // TO DO: Rename method -> setEntityTotals
   private setHomeInfo(homeInfo: IHomeScreenInfoResponse): void {
     this.totalHomes = homeInfo.homes.length;
     homeInfo.homes.forEach((home) => {

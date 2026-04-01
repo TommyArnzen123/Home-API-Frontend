@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { isUserAuthenticated } from './guards/auth.guard';
 import { Login } from './login/login';
-import { HomePage } from './home-page/home-page';
+import { Homescreen } from './homescreen/homescreen';
 import { RegisterUser } from './registration/user/register-user/register-user';
 import { ViewHome } from './home/view-home/view-home';
 import { ViewDevice } from './device/view-device/view-device';
@@ -14,7 +14,7 @@ import { Settings } from './menu-items/settings/settings';
 import { About } from './menu-items/about/about';
 import {
   CAPTIVE_ERROR_ROUTE,
-  HOME_PAGE_ROUTE,
+  HOMESCREEN_ROUTE,
   LOGIN_ROUTE,
   REGISTER_DEVICE_ROUTE,
   REGISTER_HOME_ROUTE,
@@ -33,8 +33,8 @@ export const routes: Routes = [
     path: ROOT_ROUTE,
     canActivate: [isUserAuthenticated],
     children: [
-      { path: ROOT_ROUTE, redirectTo: HOME_PAGE_ROUTE, pathMatch: 'full' },
-      { path: HOME_PAGE_ROUTE, component: HomePage },
+      { path: ROOT_ROUTE, redirectTo: HOMESCREEN_ROUTE, pathMatch: 'full' },
+      { path: HOMESCREEN_ROUTE, component: Homescreen },
       {
         path: REGISTER_HOME_ROUTE,
         component: RegisterHome,
@@ -78,5 +78,5 @@ export const routes: Routes = [
     component: RegisterUser,
   },
   { path: CAPTIVE_ERROR_ROUTE, component: CaptiveError },
-  { path: '**', redirectTo: HOME_PAGE_ROUTE },
+  { path: '**', redirectTo: HOMESCREEN_ROUTE },
 ];

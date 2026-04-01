@@ -43,8 +43,8 @@ export class Header implements OnInit, OnDestroy {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  protected viewHomepage(): void {
-    this.routerService.viewHomepage();
+  protected viewHomescreen(): void {
+    this.routerService.viewHomescreen();
   }
 
   protected viewSettingsPage(): void {

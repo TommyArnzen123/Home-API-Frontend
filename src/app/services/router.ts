@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import {
   ABOUT_ROUTE,
   CAPTIVE_ERROR_ROUTE,
-  HOME_PAGE_ROUTE,
+  HOMESCREEN_ROUTE,
   LOGIN_ROUTE,
   REGISTER_DEVICE_ROUTE,
   REGISTER_HOME_ROUTE,
@@ -57,9 +57,9 @@ export class RouterService {
     this.router.navigate([SETTINGS_ROUTE]);
   }
 
-  // Route to the homepage.
-  viewHomepage() {
-    this.router.navigate([HOME_PAGE_ROUTE]);
+  // Route to the homescreen.
+  viewHomescreen() {
+    this.router.navigate([HOMESCREEN_ROUTE]);
   }
 
   // Route to the 'view home' page.
