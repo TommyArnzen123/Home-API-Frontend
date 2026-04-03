@@ -1,3 +1,48 @@
-.button-display {
-  width: 200px;
+.homescreen-container {
+  display: flex;
+  flex-direction: row;
+  max-height: 80%;
+
+  .home-container {
+    width: 100%;
+
+    .home-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      max-height: 100%;
+      overflow: auto;
+
+      .home-item {
+        margin-bottom: 10px;
+      }
+
+      .no-homes-registered-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin-top: 50px;
+        height: 300px;
+
+        .no-homes-registered-icon {
+          width: 150px;
+        }
+
+        .no-homes-registered-text {
+          font-size: 20px;
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  .account-overview-container {
+    width: 200px;
+    padding: 10px;
+
+    .button-display {
+      width: 200px;
+    }
+  }
 }

@@ -1,6 +1,6 @@
 import { Injectable, Signal, signal } from '@angular/core';
 
-export type PageInFocus = 'home-page' | 'view-home' | 'view-location' | 'view-device';
+export type PageInFocus = 'homescreen' | 'view-home' | 'view-location' | 'view-device';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +15,7 @@ export class BreadcrumbService {
   #deviceId$ = signal<number | null>(null);
   private deviceIdReadonly = this.#deviceId$.asReadonly();
 
-  #pageInFocus$ = signal<PageInFocus>('home-page');
+  #pageInFocus$ = signal<PageInFocus>('homescreen');
   private pageInFocusReadonly = this.#pageInFocus$.asReadonly();
 
   getHomeId(): Signal<number | null> {

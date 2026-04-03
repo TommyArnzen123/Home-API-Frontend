@@ -60,7 +60,7 @@ export class HomeCard implements OnDestroy {
       this.subscriptions.push(
         this.deleteService.deleteHomeById(deleteHomeRequest).subscribe({
           next: (response: IDeleteHomeResponse) => {
-            // Emit home deletion response to the home-page component to
+            // Emit home deletion response to the homescreen component to
             // update the entity displays.
             this.homeDeleted.emit(response);
             this.modalService.showModalElement(DELETE_HOME_SUCCESS_MESSAGE);

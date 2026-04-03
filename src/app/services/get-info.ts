@@ -4,7 +4,7 @@ import { EnvironmentService } from './environment';
 import {
   IEntityInfoRequest,
   IDeviceInformationCurrentDay,
-  IHomeScreenInfoResponse,
+  IHomescreenInfoResponse,
   ILocation,
   IViewHomeInfoResponse,
 } from '../model/get-info';
@@ -23,8 +23,8 @@ export class GetInfoService {
   private readonly httpClient = inject(HttpClient);
   private readonly environmentService = inject(EnvironmentService);
 
-  getHomeScreenInfo(request: IEntityInfoRequest) {
-    return this.httpClient.get<IHomeScreenInfoResponse>(
+  getHomescreenInfo(request: IEntityInfoRequest) {
+    return this.httpClient.get<IHomescreenInfoResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.getInfoRoot +
         this.getHomeScreenInfoPath +

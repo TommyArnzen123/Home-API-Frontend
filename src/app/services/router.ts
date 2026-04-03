@@ -81,7 +81,7 @@ export class RouterService {
   viewCaptiveErrorScreen(params: ICaptiveError) {
     // Set the params that have been defined.
     const queryParams = {
-      ...(params.homeScreenInfoError && { homeScreenInfoError: true }),
+      ...(params.homescreenInfoError && { homescreenInfoError: true }),
       ...(params.sessionTimeoutError && { sessionTimeoutError: true }),
     };
 

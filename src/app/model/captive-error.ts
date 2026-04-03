@@ -1,4 +1,4 @@
 export interface ICaptiveError {
-  homeScreenInfoError?: boolean;
+  homescreenInfoError?: boolean;
   sessionTimeoutError?: boolean;
 }

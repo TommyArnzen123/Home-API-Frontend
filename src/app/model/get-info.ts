@@ -56,7 +56,7 @@ export interface IEntityInfoRequest {
   jwtToken: string;
 }
 
-export interface IHomeScreenInfoResponse {
+export interface IHomescreenInfoResponse {
   userId: number;
   homes: IHome[];
 }

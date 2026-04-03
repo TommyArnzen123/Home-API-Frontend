@@ -8,12 +8,9 @@ import { RouterService } from '../services/router';
 import { HomeCard } from './home-card/home-card';
 import { ItemTotals } from '../item-totals/item-totals';
 import { IUser } from '../model/login';
-import { IHome, IEntityInfoRequest, IHomeScreenInfoResponse } from '../model/get-info';
+import { IHome, IEntityInfoRequest, IHomescreenInfoResponse } from '../model/get-info';
 import { IDeleteHomeResponse } from '../model/delete-actions';
 
-// TO DO: Rename the file to 'homescreen.ts'.
-//        Update required items accordingly.
-//        HomePage references should be Homescreen.
 @Component({
   selector: 'homescreen',
   imports: [ItemTotals, HomeCard, MatButton],
@@ -28,8 +25,8 @@ export class Homescreen implements OnInit, OnDestroy {
   private readonly breadcrumbService = inject(BreadcrumbService);
   private readonly routerService = inject(RouterService);
 
-  protected greetingMessage!: string;
-  private userFirstName!: string;
+  protected greetingMessage: string = '';
+  private userFirstName: string = '';
   protected homeInfo: IHome[] = [];
 
   protected totalHomes = 0;
@@ -37,7 +34,7 @@ export class Homescreen implements OnInit, OnDestroy {
   protected totalDevices = 0;
 
   constructor() {
-    this.breadcrumbService.updatePageInFocus('home-page');
+    this.breadcrumbService.updatePageInFocus('homescreen');
   }
 
   ngOnInit(): void {
@@ -46,27 +43,24 @@ export class Homescreen implements OnInit, OnDestroy {
     if (this.isIUser(user())) {
       this.userFirstName = this.formatName(user()!.firstName);
 
-      // Get the current hour and set the greeting message.
-      const currentDate = new Date();
-      const currentHour = currentDate.getHours();
-      this.greetingMessage = this.setGreetingMessage(currentHour);
+      this.setGreetingMessage();
 
-      const getHomeScreenInfoRequest: IEntityInfoRequest = {
+      const getHomescreenInfoRequest: IEntityInfoRequest = {
         id: user()!.userId,
         jwtToken: user()!.jwtToken,
       };
 
       // Get the homescreen info.
       this.subscriptions.push(
-        this.getInfoService.getHomeScreenInfo(getHomeScreenInfoRequest).subscribe({
-          next: (response: IHomeScreenInfoResponse) => {
+        this.getInfoService.getHomescreenInfo(getHomescreenInfoRequest).subscribe({
+          next: (response: IHomescreenInfoResponse) => {
             this.homeInfo = response.homes;
-            this.setHomeInfo(response);
+            this.setEntityTotals(response);
           },
           error: () => {
             // If there is an error getting the homescreen info, route the user
             // to the captive error screen.
-            this.routerService.viewCaptiveErrorScreen({ homeScreenInfoError: true });
+            this.routerService.viewCaptiveErrorScreen({ homescreenInfoError: true });
           },
         }),
       );
@@ -80,8 +74,7 @@ export class Homescreen implements OnInit, OnDestroy {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  // TO DO: Rename method -> setEntityTotals
-  private setHomeInfo(homeInfo: IHomeScreenInfoResponse): void {
+  private setEntityTotals(homeInfo: IHomescreenInfoResponse): void {
     this.totalHomes = homeInfo.homes.length;
     homeInfo.homes.forEach((home) => {
       this.totalLocations += home.totalLocations;
@@ -95,18 +88,27 @@ export class Homescreen implements OnInit, OnDestroy {
 
   private formatName(name: string): string {
     let formattedName = name.toLowerCase();
-    formattedName = name.charAt(0).toUpperCase() + name.substring(1);
+    formattedName = formattedName.charAt(0).toUpperCase() + formattedName.substring(1);
     return formattedName;
   }
 
-  private setGreetingMessage(currentHour: number): string {
+  private setGreetingMessage(): void {
+    // Get the current hour.
+    const currentDate = new Date();
+    const currentHour = currentDate.getHours();
+
+    // Set a default message.
+    let message = 'Hello ' + this.userFirstName + '!';
+
     if (currentHour >= 0 && currentHour <= 11) {
-      return 'Good Morning ' + this.userFirstName + '!';
+      message = 'Good Morning ' + this.userFirstName + '!';
     } else if (currentHour >= 12 && currentHour <= 16) {
-      return 'Good Afternoon ' + this.userFirstName + '!';
+      message = 'Good Afternoon ' + this.userFirstName + '!';
     } else {
-      return 'Good Evening ' + this.userFirstName + '!';
+      message = 'Good Evening ' + this.userFirstName + '!';
     }
+
+    this.greetingMessage = message;
   }
 
   protected homeDeletedAction(deleteHomeResponse: IDeleteHomeResponse): void {
