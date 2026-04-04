@@ -6,20 +6,43 @@
   flex-direction: column;
   justify-content: space-between;
 
-  .average-temperature {
-    padding-left: 15px;
-    font-size: 100px;
+  .location-card-content {
+    display: flex;
+    flex-direction: row;
+    padding-right: 15px;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    .temperature {
+      padding-left: 15px;
+    }
+
+    .average-temperature {
+      font-size: 50px;
+    }
+
+    .default-temperature {
+      font-size: 100px;
+    }
+
+    .entity {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .entity-icon {
+        width: 75px;
+      }
+
+      .total-items {
+        font-size: 30px;
+      }
+    }
   }
 
-  .temperature-format {
-    font-size: 55px;
-  }
-
-  .total-items {
-    font-size: 30px;
-  }
-
-  .flexDisplay {
+  .button-container {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -30,10 +53,5 @@
     button {
       width: 100%;
     }
-  }
-
-  .default-location-icon {
-    height: 150px;
-    object-fit: contain;
   }
 }

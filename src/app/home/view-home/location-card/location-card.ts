@@ -15,7 +15,7 @@ import { DELETE_LOCATION_ERROR_MODAL } from '../../../constants/error-constants'
 
 @Component({
   selector: 'location-card',
-  imports: [MatCard, MatButton, MatIcon, MatCardHeader, MatCardTitle, MatCardActions, DecimalPipe],
+  imports: [MatCard, MatCardHeader, MatCardTitle, MatCardActions, MatButton, MatIcon, DecimalPipe],
   templateUrl: './location-card.html',
   styleUrl: './location-card.scss',
 })
