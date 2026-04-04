@@ -1,4 +1,4 @@
-.titleElements {
+.top-row-container {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -8,4 +8,50 @@
 
 .button-display {
   width: 200px;
+  margin-right: 10px;
+}
+
+.body-content-container {
+  display: flex;
+  flex-direction: row;
+  max-height: 80%;
+
+  .locations-container {
+    width: 100%;
+
+    .location-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      max-height: 100%;
+      overflow: auto;
+
+      .location-item {
+        margin-bottom: 10px;
+      }
+
+      .no-locations-registered-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin-top: 50px;
+        min-height: 250px;
+
+        .no-locations-registered-icon {
+          width: 125px;
+          margin-bottom: 20px;
+        }
+
+        .no-locations-registered-text {
+          font-size: 20px;
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  .home-overview-container {
+    width: 220px;
+  }
 }

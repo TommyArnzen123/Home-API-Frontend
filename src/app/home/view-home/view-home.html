@@ -1,22 +1,17 @@
-<div class="titleElements">
+<div class="top-row-container">
   <h1>{{ homeName }}</h1>
-  <button
-    class="button-display"
-    style="margin-right: 10px"
-    matButton="outlined"
-    (click)="deleteHomeVerification()"
-  >
+  <button class="button-display" matButton="outlined" (click)="deleteHomeVerification()">
     <mat-icon>delete</mat-icon>Delete Home
   </button>
 </div>
 
-<div style="display: flex; flex-direction: row; max-height: 80%">
-  <div style="width: 100%">
+<div class="body-content-container">
+  <div class="locations-container">
     <h1>Locations</h1>
-    <div style="display: flex; flex-wrap: wrap; gap: 30px; max-height: 100%; overflow: auto">
+    <div class="location-items">
       @if (locations.length > 0) {
         @for (location of locations; track location.locationId) {
-          <div style="margin-bottom: 10px">
+          <div class="location-item">
             <location-card
               [locationInfo]="location"
               (locationDeleted)="locationDeletedAction($event)"
@@ -24,23 +19,9 @@
           </div>
         }
       } @else {
-        <div
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            margin-top: 50px;
-            min-height: 250px;
-          "
-        >
-          <img
-            class="default-location-icon"
-            style="width: 125px; margin-bottom: 20px"
-            src="location-icon.svg"
-            alt="Location icon."
-          />
-          <div style="font-size: 20px; text-align: center">
+        <div class="no-locations-registered-container">
+          <img class="no-locations-registered-icon" src="location-icon.svg" alt="Location icon." />
+          <div class="no-locations-registered-text">
             You currently do not have any locations registered. Click the 'Register New Location'
             button to register a location.
           </div>
@@ -48,7 +29,7 @@
       }
     </div>
   </div>
-  <div style="width: 220px; padding: 10px">
+  <div class="home-overview-container">
     <div>
       <button class="button-display" matButton="filled" (click)="viewRegisterLocationPage()">
         Register New Location

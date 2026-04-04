@@ -46,9 +46,10 @@ export class ViewHome implements OnInit, OnDestroy {
 
   constructor() {
     const homeId = Number(this.route.snapshot.paramMap.get('homeId'));
+
     if (isNaN(homeId)) {
       // If the value provided for the homeId is not a number, route the user to the
-      // home screen. No home data can be received if an ID is not provided.
+      // homescreen. No home data can be received if a home ID is not provided.
       const viewHomeInvalidHomeIDErrorModal: IModal = {
         title: 'Something Went Wrong...',
         content: 'The home ID provided was invalid.',
@@ -78,7 +79,7 @@ export class ViewHome implements OnInit, OnDestroy {
           jwtToken: user()!.jwtToken,
         };
 
-        // Get the home screen info.
+        // Get the homescreen info.
         this.subscriptions.push(
           this.getInfoService.getViewHomeInfo(getViewHomeInfoRequest).subscribe({
             next: (response: IViewHomeInfoResponse) => {
@@ -91,7 +92,7 @@ export class ViewHome implements OnInit, OnDestroy {
             },
             error: () => {
               // If there is an error getting information for the view home page, display an error
-              // message modal and route the user back to the home screen route.
+              // message modal and route the user back to the homescreen route.
               const viewHomeGetInfoErrorModal: IModal = {
                 title: 'Something Went Wrong...',
                 content: 'There was an error viewing the selected home.',
@@ -118,9 +119,8 @@ export class ViewHome implements OnInit, OnDestroy {
   }
 
   protected viewRegisterLocationPage(): void {
-    const id = this.homeId;
-    if (id !== null) {
-      this.routerService.viewRegisterLocationPage(id);
+    if (this.homeId !== null) {
+      this.routerService.viewRegisterLocationPage(this.homeId);
     }
   }
 
