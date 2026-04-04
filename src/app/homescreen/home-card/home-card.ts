@@ -10,11 +10,11 @@ import { IDeleteEntityRequest, IDeleteHomeResponse } from '../../model/delete-ac
 import { IModal, IModalActions } from '../../model/modal';
 import { IHome } from '../../model/get-info';
 import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
-import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
+import { DELETE_HOME_SUCCESS_MODAL } from '../../constants/delete-constants';
 
 @Component({
   selector: 'home-card',
-  imports: [MatCard, MatButton, MatIcon, MatCardHeader, MatCardTitle, MatCardActions],
+  imports: [MatButton, MatIcon, MatCard, MatCardHeader, MatCardTitle, MatCardActions],
   templateUrl: './home-card.html',
   styleUrl: './home-card.scss',
 })
@@ -63,7 +63,7 @@ export class HomeCard implements OnDestroy {
             // Emit home deletion response to the homescreen component to
             // update the entity displays.
             this.homeDeleted.emit(response);
-            this.modalService.showModalElement(DELETE_HOME_SUCCESS_MESSAGE);
+            this.modalService.showModalElement(DELETE_HOME_SUCCESS_MODAL);
           },
           error: () => {
             this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);

@@ -10,7 +10,7 @@ import { RouterService } from '../../../services/router';
 import { IDeleteEntityRequest, IDeleteDeviceResponse } from '../../../model/delete-actions';
 import { IModal, IModalActions } from '../../../model/modal';
 import { IDevice } from '../../../model/get-info';
-import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../../constants/delete-constants';
+import { DELETE_DEVICE_SUCCESS_MODAL } from '../../../constants/delete-constants';
 import { DELETE_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
 
 @Component({
@@ -61,7 +61,7 @@ export class DeviceCard implements OnDestroy {
       this.subscriptions.push(
         this.deleteService.deleteDeviceById(deleteDeviceRequest).subscribe({
           next: (response: IDeleteDeviceResponse) => {
-            this.modalService.showModalElement(DELETE_DEVICE_SUCCESS_MESSAGE);
+            this.modalService.showModalElement(DELETE_DEVICE_SUCCESS_MODAL);
             this.deviceDeleted.emit(response);
           },
           error: () => {

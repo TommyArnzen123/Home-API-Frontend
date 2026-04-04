@@ -10,7 +10,7 @@ import { RouterService } from '../../../services/router';
 import { IDeleteEntityRequest, IDeleteLocationResponse } from '../../../model/delete-actions';
 import { IModal, IModalActions } from '../../../model/modal';
 import { ILocation } from '../../../model/get-info';
-import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../../constants/delete-constants';
+import { DELETE_LOCATION_SUCCESS_MODAL } from '../../../constants/delete-constants';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
 
 @Component({
@@ -81,7 +81,7 @@ export class LocationCard implements OnInit, OnDestroy {
       this.subscriptions.push(
         this.deleteService.deleteLocationById(deleteLocationRequest).subscribe({
           next: (response: IDeleteLocationResponse) => {
-            this.modalService.showModalElement(DELETE_LOCATION_SUCCESS_MESSAGE);
+            this.modalService.showModalElement(DELETE_LOCATION_SUCCESS_MODAL);
             this.locationDeleted.emit(response);
           },
           error: () => {

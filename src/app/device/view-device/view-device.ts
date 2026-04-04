@@ -16,7 +16,7 @@ import { IModal, IModalActions } from '../../model/modal';
 import { IDeleteEntityRequest, IDeleteDeviceResponse } from '../../model/delete-actions';
 import { IUser } from '../../model/login';
 import { DELETE_DEVICE_ERROR_MODAL } from '../../constants/error-constants';
-import { DELETE_DEVICE_SUCCESS_MESSAGE } from '../../constants/delete-constants';
+import { DELETE_DEVICE_SUCCESS_MODAL } from '../../constants/delete-constants';
 
 const averageTempInfo: IAverageTemperatureByHour[] = [
   { hour: 0, averageTemperature: 0, temperatureAvailable: false },
@@ -176,7 +176,7 @@ export class ViewDevice implements OnInit, OnDestroy {
       this.subscriptions.push(
         this.deleteService.deleteDeviceById(deleteDeviceRequest).subscribe({
           next: (response: IDeleteDeviceResponse) => {
-            this.modalService.showModalElement(DELETE_DEVICE_SUCCESS_MESSAGE);
+            this.modalService.showModalElement(DELETE_DEVICE_SUCCESS_MODAL);
 
             // Route to the view location page.
             this.viewLocationById();

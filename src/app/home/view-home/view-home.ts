@@ -19,7 +19,7 @@ import {
   IDeleteLocationResponse,
 } from '../../model/delete-actions';
 import { IModal, IModalActions } from '../../model/modal';
-import { DELETE_HOME_SUCCESS_MESSAGE } from '../../constants/delete-constants';
+import { DELETE_HOME_SUCCESS_MODAL } from '../../constants/delete-constants';
 import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 
 @Component({
@@ -152,7 +152,7 @@ export class ViewHome implements OnInit, OnDestroy {
       this.subscriptions.push(
         this.deleteService.deleteHomeById(deleteHomeRequest).subscribe({
           next: (response: IDeleteHomeResponse) => {
-            this.modalService.showModalElement(DELETE_HOME_SUCCESS_MESSAGE);
+            this.modalService.showModalElement(DELETE_HOME_SUCCESS_MODAL);
 
             this.viewHomescreen();
           },

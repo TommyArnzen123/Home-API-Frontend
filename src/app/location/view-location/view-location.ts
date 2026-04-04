@@ -21,7 +21,7 @@ import {
   IDeleteLocationResponse,
 } from '../../model/delete-actions';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../constants/error-constants';
-import { DELETE_LOCATION_SUCCESS_MESSAGE } from '../../constants/delete-constants';
+import { DELETE_LOCATION_SUCCESS_MODAL } from '../../constants/delete-constants';
 
 @Component({
   selector: 'view-location',
@@ -183,7 +183,7 @@ export class ViewLocation implements OnInit, OnDestroy {
       this.subscriptions.push(
         this.deleteService.deleteLocationById(deleteLocationRequest).subscribe({
           next: (response: IDeleteLocationResponse) => {
-            this.modalService.showModalElement(DELETE_LOCATION_SUCCESS_MESSAGE);
+            this.modalService.showModalElement(DELETE_LOCATION_SUCCESS_MODAL);
 
             this.viewHomeById();
           },

@@ -2,24 +2,22 @@
   <mat-card-header>
     <mat-card-title>{{ homeInfo.homeName }}</mat-card-title>
   </mat-card-header>
-  <div
-    style="display: flex; flex-direction: row; padding-right: 15px; align-items: center; gap: 10px"
-  >
+  <div class="home-card-content">
     <div>
       <img class="default-home-icon" mat-card-image src="home-icon-main.svg" alt="Home icon." />
     </div>
-    <div style="display: flex; flex-direction: column; gap: 10px">
-      <div style="display: flex; flex-direction: row; align-items: center">
-        <img src="location-icon.svg" style="width: 75px" alt="Location icon." />
+    <div class="entity-totals-container">
+      <div class="entity">
+        <img src="location-icon.svg" class="entity-icon" alt="Location icon." />
         <div class="total-items">{{ homeInfo.totalLocations }}</div>
       </div>
-      <div style="display: flex; flex-direction: row; align-items: center">
-        <img src="device-icon.svg" style="width: 75px" alt="Device icon." />
+      <div class="entity">
+        <img src="device-icon.svg" class="entity-icon" alt="Device icon." />
         <div class="total-items">{{ homeInfo.totalDevices }}</div>
       </div>
     </div>
   </div>
-  <mat-card-actions class="flexDisplay">
+  <mat-card-actions class="button-container">
     <button matButton="outlined" (click)="viewHomeById()">View</button>
     <button matButton="filled" (click)="deleteHomeVerification()">
       <mat-icon>delete</mat-icon>Delete

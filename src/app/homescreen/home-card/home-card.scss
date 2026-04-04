@@ -2,11 +2,40 @@
   width: 100%;
   min-width: 350px;
 
-  .total-items {
-    font-size: 30px;
+  .home-card-content {
+    display: flex;
+    flex-direction: row;
+    padding-right: 15px;
+    align-items: center;
+    gap: 10px;
+
+    .default-home-icon {
+      height: 200px;
+      object-fit: contain;
+    }
+
+    .entity-totals-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .entity {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .entity-icon {
+          width: 75px;
+        }
+
+        .total-items {
+          font-size: 30px;
+        }
+      }
+    }
   }
 
-  .flexDisplay {
+  .button-container {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -17,10 +46,5 @@
     button {
       width: 100%;
     }
-  }
-
-  .default-home-icon {
-    height: 200px;
-    object-fit: contain;
   }
 }
