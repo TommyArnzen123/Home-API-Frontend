@@ -93,7 +93,7 @@ export class ViewLocation implements OnInit, OnDestroy {
               this.locationName = response.locationName;
               this.devices = response.devices;
               this.totalDevices = response.devices.length;
-              this.setAverageTemperature(response.devices);
+              this.setAverageTemperature();
             },
             error: () => {
               // If there is an error getting information for the view location page, display an error
@@ -125,10 +125,10 @@ export class ViewLocation implements OnInit, OnDestroy {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  private setAverageTemperature(devices: IDevice[]): void {
+  private setAverageTemperature(): void {
     let counter = 0;
     let averageTemp: number | null = null;
-    devices.forEach((device) => {
+    this.devices.forEach((device) => {
       if (device.temperature) {
         averageTemp = averageTemp
           ? averageTemp + device.temperature.temperature
@@ -204,6 +204,8 @@ export class ViewLocation implements OnInit, OnDestroy {
     this.devices = this.devices.filter(
       (device) => device.deviceId !== deleteDeviceResponse.deviceId,
     );
+
+    this.setAverageTemperature();
   }
 
   private isIUser(value: IUser | null): value is IUser {
