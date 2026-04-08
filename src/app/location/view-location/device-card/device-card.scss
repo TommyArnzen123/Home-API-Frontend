@@ -1,7 +1,14 @@
 .device-card {
   width: 100%;
 
-  .flexDisplay {
+  .device-card-content {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    font-size: 40px;
+  }
+
+  .button-container {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -12,10 +19,5 @@
     button {
       width: 100%;
     }
-  }
-
-  .default-device-icon {
-    height: 200px;
-    object-fit: contain;
   }
 }

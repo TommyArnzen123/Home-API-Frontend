@@ -68,8 +68,8 @@ export class ViewDevice implements OnInit, OnDestroy {
   private readonly routerService = inject(RouterService);
 
   constructor() {
-    const deviceId = Number(this.route.snapshot.paramMap.get('deviceId'));
-    if (isNaN(deviceId)) {
+    const id = Number(this.route.snapshot.paramMap.get('deviceId'));
+    if (isNaN(id)) {
       // If the value provided for the deviceId is not a number, route the user away
       // from the view device page.
       const viewDeviceInvalidDeviceIDErrorModal: IModal = {
@@ -85,7 +85,7 @@ export class ViewDevice implements OnInit, OnDestroy {
         viewDeviceInvalidDeviceIDErrorActions,
       );
     } else {
-      this.deviceId = deviceId;
+      this.deviceId = id;
       this.breadcrumbService.updatePageInFocus('view-device');
     }
   }

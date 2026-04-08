@@ -1,11 +1,74 @@
-.titleElements {
+.top-row-container {
   display: flex;
   flex-direction: row;
   width: 100%;
   align-items: center;
   justify-content: space-between;
+
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-right: 10px;
+
+    .button-display {
+      width: 200px;
+    }
+  }
 }
 
-.button-display {
-  width: 200px;
+.body-content-container {
+  display: flex;
+  flex-direction: row;
+  max-height: 80%;
+
+  .temperature-container {
+    width: 100%;
+    margin-right: 10px;
+
+    .current-average-location-temperature {
+      text-align: center;
+      font-size: 100px;
+    }
+
+    .no-current-average-location-temperature {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 20px;
+
+      .no-temperature-message-top-line {
+        margin-bottom: 5px;
+      }
+    }
+  }
+
+  .right-panel {
+    padding-right: 10px;
+    width: 270px;
+
+    .devices-container {
+      max-height: 90%;
+      overflow: auto;
+
+      .device-items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+
+        .no-devices-registered-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin-top: 20px;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+.icon {
+  width: 75px;
+  margin-bottom: 30px;
 }

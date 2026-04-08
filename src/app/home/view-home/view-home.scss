@@ -4,17 +4,23 @@
   width: 100%;
   align-items: center;
   justify-content: space-between;
-}
 
-.button-display {
-  width: 200px;
-  margin-right: 10px;
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-right: 10px;
+
+    .button-display {
+      width: 200px;
+    }
+  }
 }
 
 .body-content-container {
   display: flex;
   flex-direction: row;
-  max-height: 80%;
+  max-height: 75%;
 
   .locations-container {
     width: 100%;

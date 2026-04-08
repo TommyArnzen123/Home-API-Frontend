@@ -1,4 +1,9 @@
-<h1>{{ greetingMessage }}</h1>
+<div class="top-row-container">
+  <h1>{{ greetingMessage }}</h1>
+  <button class="button-display" matButton="filled" (click)="viewRegisterHomePage()">
+    Register New Home
+  </button>
+</div>
 
 <div class="homescreen-container">
   <div class="home-container">
@@ -22,11 +27,6 @@
     </div>
   </div>
   <div class="account-overview-container">
-    <div>
-      <button class="button-display" matButton="filled" (click)="viewRegisterHomePage()">
-        Register New Home
-      </button>
-    </div>
     <div>
       <item-totals
         [displayTotalHomes]="true"

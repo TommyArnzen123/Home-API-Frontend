@@ -15,7 +15,7 @@ import { DELETE_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
 
 @Component({
   selector: 'device-card',
-  imports: [MatCard, MatButton, MatIcon, MatCardHeader, MatCardTitle, MatCardActions, DecimalPipe],
+  imports: [MatButton, MatIcon, MatCard, MatCardHeader, MatCardTitle, MatCardActions, DecimalPipe],
   templateUrl: './device-card.html',
   styleUrl: './device-card.scss',
 })

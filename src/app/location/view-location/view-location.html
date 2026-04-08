@@ -1,69 +1,47 @@
-<div class="titleElements">
+<div class="top-row-container">
   <h1>{{ locationName }}</h1>
-  <button
-    class="button-display"
-    style="margin-right: 10px"
-    matButton="outlined"
-    (click)="deleteLocationVerification()"
-  >
-    <mat-icon>delete</mat-icon>Delete Location
-  </button>
+  <div class="button-container">
+    <button class="button-display" matButton="outlined" (click)="deleteLocationVerification()">
+      <mat-icon>delete</mat-icon>Delete Location
+    </button>
+    <button class="button-display" matButton="filled" (click)="viewRegisterDevicePage()">
+      Register New Device
+    </button>
+  </div>
 </div>
 
-<div style="display: flex; flex-direction: row">
-  <div style="width: 100%; margin-top: 100px">
+<div class="body-content-container">
+  <div class="temperature-container">
     @if (totalDevices > 0 && averageTemperature) {
-      <p style="text-align: center; font-size: 100px">
+      <p class="current-average-location-temperature">
         {{ averageTemperature | number: '1.2-2' }}°F
       </p>
     } @else {
-      <div style="display: flex; flex-direction: column; align-items: center">
-        <img
-          src="temperature-icon.svg"
-          style="width: 75px; margin-bottom: 30px"
-          alt="Temperature icon."
-        />
+      <div class="no-current-average-location-temperature">
+        <img src="temperature-icon.svg" class="icon" alt="Temperature icon." />
         @if (totalDevices > 0) {
-          <div style="text-align: center; font-size: 20px; margin-bottom: 5px">
+          <div class="no-temperature-message-top-line">
             There have been no temperature readings in the past 10 minutes for this location.
           </div>
-          <div style="text-align: center; font-size: 20px">
-            Please ensure your devices are on and functioning.
-          </div>
+          <div>Please ensure your devices are on and functioning.</div>
         } @else {
-          <div style="text-align: center; font-size: 20px">
-            Please register a device to begin recording temperatures.
-          </div>
+          <div>Please register a device to begin recording temperatures.</div>
         }
       </div>
     }
   </div>
-  <div style="width: 270px; padding: 10px; display: flex; flex-direction: column">
-    <div style="width: 100%">
-      <button
-        class="button-display"
-        style="float: right; margin-bottom: 5px"
-        matButton="filled"
-        (click)="viewRegisterDevicePage()"
-      >
-        Register New Device
-      </button>
-    </div>
-    <div style="max-height: 90%; padding: 10px; overflow: auto">
-      <h2>Devices [{{ totalDevices }}]</h2>
-      <div style="display: flex; flex-wrap: wrap; gap: 15px">
+  <div class="right-panel">
+    <h2>Devices [{{ totalDevices }}]</h2>
+    <div class="devices-container">
+      <div class="device-items">
         @if (devices.length > 0) {
           @for (device of devices; track device.deviceId) {
             <device-card [deviceInfo]="device" (deviceDeleted)="deviceDeletedAction($event)" />
           }
         } @else {
-          <div style="display: flex; flex-direction: column; align-items: center; margin-top: 20px">
-            <img
-              src="frozen-house-icon.svg"
-              style="width: 75px; margin-bottom: 30px"
-              alt="Frozen house icon."
-            />
-            <div style="text-align: center">Unfreeze this location by registering a device.</div>
+          <div class="no-devices-registered-container">
+            <img src="frozen-house-icon.svg" class="icon" alt="Frozen house icon." />
+            <div>Unfreeze this location by registering a device.</div>
           </div>
         }
       </div>

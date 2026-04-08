@@ -1,7 +1,6 @@
 import { Component, inject, Signal, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatButton } from '@angular/material/button';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIcon } from '@angular/material/icon';
 import { DecimalPipe } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -25,7 +24,7 @@ import { DELETE_LOCATION_SUCCESS_MODAL } from '../../constants/delete-constants'
 
 @Component({
   selector: 'view-location',
-  imports: [MatGridListModule, MatButton, MatIcon, DeviceCard, DecimalPipe],
+  imports: [MatButton, MatIcon, DeviceCard, DecimalPipe],
   templateUrl: './view-location.html',
   styleUrl: './view-location.scss',
 })
@@ -48,9 +47,9 @@ export class ViewLocation implements OnInit, OnDestroy {
   protected averageTemperature: number | null = null;
 
   constructor() {
-    const locationId = Number(this.route.snapshot.paramMap.get('locationId'));
-    console.log(locationId);
-    if (isNaN(locationId)) {
+    const id = Number(this.route.snapshot.paramMap.get('locationId'));
+
+    if (isNaN(id)) {
       // If the value provided for the locationId is not a number, route the user away
       // from the view location page.
       const viewLocationInvalidLocationIDErrorModal: IModal = {
@@ -66,7 +65,7 @@ export class ViewLocation implements OnInit, OnDestroy {
         viewLocationInvalidLocationIDErrorActions,
       );
     } else {
-      this.locationId = locationId;
+      this.locationId = id;
       this.breadcrumbService.updateLocationId(this.locationId);
       this.breadcrumbService.updatePageInFocus('view-location');
     }
@@ -74,12 +73,12 @@ export class ViewLocation implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
-    const homeIdSignal: Signal<number | null> = this.breadcrumbService.getHomeId();
-    this.homeId = homeIdSignal();
 
     if (this.isIUser(user())) {
+      const homeIdSignal: Signal<number | null> = this.breadcrumbService.getHomeId();
+      this.homeId = homeIdSignal();
+
       if (this.locationId) {
-        console.log(this.locationId);
         const getViewLocationInfoRequest: IEntityInfoRequest = {
           id: this.locationId,
           jwtToken: user()!.jwtToken,
@@ -90,11 +89,11 @@ export class ViewLocation implements OnInit, OnDestroy {
           this.getInfoService.getViewLocationInfo(getViewLocationInfoRequest).subscribe({
             next: (response: ILocation) => {
               this.homeId = response.homeId;
+              this.breadcrumbService.updateHomeId(response.homeId);
               this.locationName = response.locationName;
               this.devices = response.devices;
               this.totalDevices = response.devices.length;
               this.setAverageTemperature(response.devices);
-              this.breadcrumbService.updateHomeId(response.homeId);
             },
             error: () => {
               // If there is an error getting information for the view location page, display an error
@@ -114,6 +113,8 @@ export class ViewLocation implements OnInit, OnDestroy {
             },
           }),
         );
+      } else {
+        this.viewHomeById();
       }
     } else {
       this.loginService.logout();
@@ -140,9 +141,8 @@ export class ViewLocation implements OnInit, OnDestroy {
   }
 
   protected viewRegisterDevicePage(): void {
-    const id = this.locationId;
-    if (id !== null) {
-      this.routerService.viewRegisterDevicePage(id);
+    if (this.locationId !== null) {
+      this.routerService.viewRegisterDevicePage(this.locationId);
     }
   }
 
@@ -150,7 +150,7 @@ export class ViewLocation implements OnInit, OnDestroy {
     if (this.homeId !== null) {
       this.routerService.viewHomeById(this.homeId);
     } else {
-      // The home ID value is not set, route to the home screen.
+      // The home ID value is not set, route to the homescreen.
       this.viewHomescreen();
     }
   }

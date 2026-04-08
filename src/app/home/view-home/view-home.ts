@@ -45,9 +45,9 @@ export class ViewHome implements OnInit, OnDestroy {
   protected totalDevices: number = 0;
 
   constructor() {
-    const homeId = Number(this.route.snapshot.paramMap.get('homeId'));
+    const id = Number(this.route.snapshot.paramMap.get('homeId'));
 
-    if (isNaN(homeId)) {
+    if (isNaN(id)) {
       // If the value provided for the homeId is not a number, route the user to the
       // homescreen. No home data can be received if a home ID is not provided.
       const viewHomeInvalidHomeIDErrorModal: IModal = {
@@ -63,7 +63,7 @@ export class ViewHome implements OnInit, OnDestroy {
         viewHomeInvalidHomeIDErrorActions,
       );
     } else {
-      this.homeId = homeId;
+      this.homeId = id;
       this.breadcrumbService.updateHomeId(this.homeId);
       this.breadcrumbService.updatePageInFocus('view-home');
     }

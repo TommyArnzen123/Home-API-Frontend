@@ -1,8 +1,14 @@
 <div class="top-row-container">
   <h1>{{ homeName }}</h1>
-  <button class="button-display" matButton="outlined" (click)="deleteHomeVerification()">
-    <mat-icon>delete</mat-icon>Delete Home
-  </button>
+  <div class="button-container">
+    <button class="button-display" matButton="outlined" (click)="deleteHomeVerification()">
+      <mat-icon>delete</mat-icon>Delete Home
+    </button>
+
+    <button class="button-display" matButton="filled" (click)="viewRegisterLocationPage()">
+      Register New Location
+    </button>
+  </div>
 </div>
 
 <div class="body-content-container">
@@ -30,11 +36,6 @@
     </div>
   </div>
   <div class="home-overview-container">
-    <div>
-      <button class="button-display" matButton="filled" (click)="viewRegisterLocationPage()">
-        Register New Location
-      </button>
-    </div>
     <div>
       <item-totals
         [displayTotalHomes]="false"
