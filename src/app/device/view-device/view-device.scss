@@ -1,57 +1,55 @@
-.device-name-and-delete-button-container {
+.top-row-container {
   display: flex;
   flex-direction: row;
   width: 100%;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
-
-  .device-name {
-    float: left;
-  }
-
-  .delete-button {
-    float: right;
-  }
 }
 
-.most-recent-temperature-container {
+.body-content-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
+  gap: 50px;
 
-  .temperature-display {
-    font-size: 50px;
-  }
-
-  .date-recorded-display {
-    font-size: 25px;
-    margin-top: 20px;
-  }
-}
-
-.temperature-by-hour-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 100%;
-
-  .title {
-    text-align: center;
-  }
-
-  .hourly-display {
+  .most-recent-temperature-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
-    gap: 25px;
-    width: 100%;
-    overflow: scroll;
+    align-items: center;
+    gap: 10px;
+
+    .temperature-display {
+      font-size: 50px;
+    }
+
+    .date-recorded-display {
+      font-size: 25px;
+      margin-top: 20px;
+    }
   }
 
-  .individual-temperature-item {
-    margin-bottom: 10px;
+  .temperature-by-hour-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+
+    .title {
+      text-align: center;
+    }
+
+    .hourly-display {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 25px;
+      width: 100%;
+      overflow: scroll;
+    }
+
+    .individual-temperature-item {
+      margin-bottom: 10px;
+    }
   }
 }

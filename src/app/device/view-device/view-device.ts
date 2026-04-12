@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
@@ -69,6 +69,7 @@ export class ViewDevice implements OnInit, OnDestroy {
 
   constructor() {
     const id = Number(this.route.snapshot.paramMap.get('deviceId'));
+
     if (isNaN(id)) {
       // If the value provided for the deviceId is not a number, route the user away
       // from the view device page.
@@ -92,10 +93,11 @@ export class ViewDevice implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
-    const locationIdSignal: Signal<number | null> = this.breadcrumbService.getLocationId();
-    this.locationId = locationIdSignal();
 
     if (this.isIUser(user())) {
+      const locationIdSignal: Signal<number | null> = this.breadcrumbService.getLocationId();
+      this.locationId = locationIdSignal();
+
       if (this.deviceId) {
         this.subscriptions.push(
           this.getInfoService.getViewDeviceInformation(this.deviceId).subscribe({
@@ -193,7 +195,7 @@ export class ViewDevice implements OnInit, OnDestroy {
 
   // Generate an array of average temperature by hour objects
   // with the current hour as the last item in the array.
-  protected generateHourlyTemperatureReading(): IAverageTemperatureByHour[] {
+  protected generateHourlyTemperatureReadings(): IAverageTemperatureByHour[] {
     const currentDate = new Date();
     const currentHour = currentDate.getHours();
 
