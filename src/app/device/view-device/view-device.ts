@@ -11,7 +11,11 @@ import { BreadcrumbService } from '../../services/breadcrumb';
 import { LoginService } from '../../services/login';
 import { RouterService } from '../../services/router';
 import { DisplayTempByHour } from './display-temp-by-hour/display-temp-by-hour';
-import { IAverageTemperatureByHour, IDeviceInformationCurrentDay } from '../../model/get-info';
+import {
+  IAverageTemperatureByHour,
+  IDeviceInformationCurrentDay,
+  IEntityInfoRequest,
+} from '../../model/get-info';
 import { IModal, IModalActions } from '../../model/modal';
 import { IDeleteEntityRequest, IDeleteDeviceResponse } from '../../model/delete-actions';
 import { IUser } from '../../model/login';
@@ -99,8 +103,13 @@ export class ViewDevice implements OnInit, OnDestroy {
       this.locationId = locationIdSignal();
 
       if (this.deviceId) {
+        const getViewDeviceInfoRequest: IEntityInfoRequest = {
+          id: this.deviceId,
+          jwtToken: user()!.jwtToken,
+        };
+
         this.subscriptions.push(
-          this.getInfoService.getViewDeviceInformation(this.deviceId).subscribe({
+          this.getInfoService.getViewDeviceInformation(getViewDeviceInfoRequest).subscribe({
             next: (response: IDeviceInformationCurrentDay) => {
               this.locationId = response.locationId;
               this.deviceInformation = response;

@@ -65,14 +65,17 @@ export class GetInfoService {
     );
   }
 
-  getViewDeviceInformation(deviceId: number) {
+  getViewDeviceInformation(request: IEntityInfoRequest) {
     return this.httpClient.get<IDeviceInformationCurrentDay>(
       this.environmentService.getEnvironment().backendUrl +
         this.getInfoRoot +
         this.getInformationByDeviceCurrentDay +
         '/' +
-        deviceId,
-      { context: new HttpContext().set(LoadingContextToken, 'Getting device info') },
+        request.id,
+      {
+        headers: this.generateHeaderWithBearerToken(request.jwtToken),
+        context: new HttpContext().set(LoadingContextToken, 'Getting device info'),
+      },
     );
   }
 
