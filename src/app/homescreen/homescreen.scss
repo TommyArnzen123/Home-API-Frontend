@@ -5,6 +5,10 @@
   align-items: center;
   justify-content: space-between;
   margin-top: 10px;
+
+  .button-display {
+    width: 200px;
+  }
 }
 
 .homescreen-container {
@@ -49,9 +53,5 @@
   .account-overview-container {
     width: 200px;
     padding: 10px;
-
-    .button-display {
-      width: 200px;
-    }
   }
 }
