@@ -12,6 +12,7 @@ import { IModal, IModalActions } from '../../../model/modal';
 import { ILocation } from '../../../model/get-info';
 import { DELETE_LOCATION_SUCCESS_MODAL } from '../../../constants/delete-constants';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
+import { DELETE_LOCATION_CONFIRMATION_MODAL } from '../../../constants/dialog-confirmation-constants';
 
 @Component({
   selector: 'location-card',
@@ -57,19 +58,15 @@ export class LocationCard implements OnInit, OnDestroy {
     this.routerService.viewLocationById(this.locationInfo.locationId);
   }
 
-  protected deleteLocationVerification(): void {
-    const deleteVerificationModal: IModal = {
-      title: 'Confirmation',
-      content: 'Are you sure you want to delete the location?',
-      primaryText: 'Delete',
-      secondaryText: 'Cancel',
-    };
-
-    const deleteVerificationActions: IModalActions = {
+  protected deleteLocationConfirmation(): void {
+    const deleteLocationConfirmationActions: IModalActions = {
       primaryAction: () => this.deleteLocation(),
     };
 
-    this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
+    this.modalService.showModalElement(
+      DELETE_LOCATION_CONFIRMATION_MODAL,
+      deleteLocationConfirmationActions,
+    );
   }
 
   private deleteLocation(): void {

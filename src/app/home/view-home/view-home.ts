@@ -20,7 +20,12 @@ import {
 } from '../../model/delete-actions';
 import { IModal, IModalActions } from '../../model/modal';
 import { DELETE_HOME_SUCCESS_MODAL } from '../../constants/delete-constants';
-import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
+import {
+  VIEW_HOME_INVALID_HOME_ID_ERROR_MODAL,
+  DELETE_HOME_ERROR_MODAL,
+  VIEW_HOME_GET_INFO_ERROR_MODAL,
+} from '../../constants/error-constants';
+import { DELETE_HOME_CONFIRMATION_MODAL } from '../../constants/dialog-confirmation-constants';
 
 @Component({
   selector: 'view-home',
@@ -49,17 +54,12 @@ export class ViewHome implements OnInit, OnDestroy {
 
     if (isNaN(id)) {
       // If the value provided for the homeId is not a number, route the user to the
-      // homescreen. No home data can be received if a home ID is not provided.
-      const viewHomeInvalidHomeIDErrorModal: IModal = {
-        title: 'Something Went Wrong...',
-        content: 'The home ID provided was invalid.',
-        disableClose: true,
-      };
+      // homescreen. No home data can be received if a valid home ID is not provided.
       const viewHomeInvalidHomeIDErrorActions: IModalActions = {
         primaryAction: () => this.viewHomescreen(),
       };
       this.modalService.showModalElement(
-        viewHomeInvalidHomeIDErrorModal,
+        VIEW_HOME_INVALID_HOME_ID_ERROR_MODAL,
         viewHomeInvalidHomeIDErrorActions,
       );
     } else {
@@ -93,16 +93,11 @@ export class ViewHome implements OnInit, OnDestroy {
             error: () => {
               // If there is an error getting information for the view home page, display an error
               // message modal and route the user back to the homescreen route.
-              const viewHomeGetInfoErrorModal: IModal = {
-                title: 'Something Went Wrong...',
-                content: 'There was an error viewing the selected home.',
-                disableClose: true,
-              };
               const viewHomeGetInfoErrorActions: IModalActions = {
                 primaryAction: () => this.viewHomescreen(),
               };
               this.modalService.showModalElement(
-                viewHomeGetInfoErrorModal,
+                VIEW_HOME_GET_INFO_ERROR_MODAL,
                 viewHomeGetInfoErrorActions,
               );
             },
@@ -128,19 +123,15 @@ export class ViewHome implements OnInit, OnDestroy {
     this.routerService.viewHomescreen();
   }
 
-  protected deleteHomeVerification(): void {
-    const deleteVerificationModal: IModal = {
-      title: 'Confirmation',
-      content: 'Are you sure you want to delete the home?',
-      primaryText: 'Delete',
-      secondaryText: 'Cancel',
-    };
-
-    const deleteVerificationActions: IModalActions = {
+  protected deleteHomeConfirmation(): void {
+    const deleteHomeConfirmationActions: IModalActions = {
       primaryAction: () => this.deleteHome(),
     };
 
-    this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
+    this.modalService.showModalElement(
+      DELETE_HOME_CONFIRMATION_MODAL,
+      deleteHomeConfirmationActions,
+    );
   }
 
   private deleteHome(): void {

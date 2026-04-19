@@ -7,10 +7,11 @@ import { DeleteService } from '../../services/delete';
 import { ModalService } from '../../services/modal';
 import { RouterService } from '../../services/router';
 import { IDeleteEntityRequest, IDeleteHomeResponse } from '../../model/delete-actions';
-import { IModal, IModalActions } from '../../model/modal';
+import { IModalActions } from '../../model/modal';
 import { IHome } from '../../model/get-info';
 import { DELETE_HOME_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_HOME_SUCCESS_MODAL } from '../../constants/delete-constants';
+import { DELETE_HOME_CONFIRMATION_MODAL } from '../../constants/dialog-confirmation-constants';
 
 @Component({
   selector: 'home-card',
@@ -36,19 +37,15 @@ export class HomeCard implements OnDestroy {
     this.routerService.viewHomeById(this.homeInfo.homeId);
   }
 
-  protected deleteHomeVerification(): void {
-    const deleteVerificationModal: IModal = {
-      title: 'Confirmation',
-      content: 'Are you sure you want to delete the home?',
-      primaryText: 'Delete',
-      secondaryText: 'Cancel',
-    };
-
-    const deleteVerificationActions: IModalActions = {
+  protected deleteHomeConfirmation(): void {
+    const deleteHomeConfirmationActions: IModalActions = {
       primaryAction: () => this.deleteHome(),
     };
 
-    this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
+    this.modalService.showModalElement(
+      DELETE_HOME_CONFIRMATION_MODAL,
+      deleteHomeConfirmationActions,
+    );
   }
 
   private deleteHome(): void {

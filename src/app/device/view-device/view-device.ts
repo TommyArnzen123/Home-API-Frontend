@@ -16,11 +16,16 @@ import {
   IDeviceInformationCurrentDay,
   IEntityInfoRequest,
 } from '../../model/get-info';
-import { IModal, IModalActions } from '../../model/modal';
+import { IModalActions } from '../../model/modal';
 import { IDeleteEntityRequest, IDeleteDeviceResponse } from '../../model/delete-actions';
 import { IUser } from '../../model/login';
-import { DELETE_DEVICE_ERROR_MODAL } from '../../constants/error-constants';
+import {
+  DELETE_DEVICE_ERROR_MODAL,
+  VIEW_DEVICE_GET_INFO_ERROR_MODAL,
+  VIEW_DEVICE_INVALID_DEVICE_ID_ERROR_MODAL,
+} from '../../constants/error-constants';
 import { DELETE_DEVICE_SUCCESS_MODAL } from '../../constants/delete-constants';
+import { DELETE_DEVICE_CONFIRMATION_MODAL } from '../../constants/dialog-confirmation-constants';
 
 const averageTempInfo: IAverageTemperatureByHour[] = [
   { hour: 0, averageTemperature: 0, temperatureAvailable: false },
@@ -77,16 +82,11 @@ export class ViewDevice implements OnInit, OnDestroy {
     if (isNaN(id)) {
       // If the value provided for the deviceId is not a number, route the user away
       // from the view device page.
-      const viewDeviceInvalidDeviceIDErrorModal: IModal = {
-        title: 'Something Went Wrong...',
-        content: 'The device ID provided was invalid.',
-        disableClose: true,
-      };
       const viewDeviceInvalidDeviceIDErrorActions: IModalActions = {
         primaryAction: () => this.viewLocationById(),
       };
       this.modalService.showModalElement(
-        viewDeviceInvalidDeviceIDErrorModal,
+        VIEW_DEVICE_INVALID_DEVICE_ID_ERROR_MODAL,
         viewDeviceInvalidDeviceIDErrorActions,
       );
     } else {
@@ -126,16 +126,11 @@ export class ViewDevice implements OnInit, OnDestroy {
             error: () => {
               // If there is an error getting information for the view device page, display an error
               // message modal and route the user back to the view location route.
-              const viewDeviceGetInfoErrorModal: IModal = {
-                title: 'Something Went Wrong...',
-                content: 'There was an error viewing the selected device.',
-                disableClose: true,
-              };
               const viewDeviceGetInfoErrorActions: IModalActions = {
                 primaryAction: () => this.viewLocationById(),
               };
               this.modalService.showModalElement(
-                viewDeviceGetInfoErrorModal,
+                VIEW_DEVICE_GET_INFO_ERROR_MODAL,
                 viewDeviceGetInfoErrorActions,
               );
             },
@@ -151,19 +146,15 @@ export class ViewDevice implements OnInit, OnDestroy {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  protected deleteDeviceVerification(): void {
-    const deleteVerificationModal: IModal = {
-      title: 'Confirmation',
-      content: 'Are you sure you want to delete the device?',
-      primaryText: 'Delete',
-      secondaryText: 'Cancel',
-    };
-
-    const deleteVerificationActions: IModalActions = {
+  protected deleteDeviceConfirmation(): void {
+    const deleteDeviceConfirmationActions: IModalActions = {
       primaryAction: () => this.deleteDeviceAction(),
     };
 
-    this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
+    this.modalService.showModalElement(
+      DELETE_DEVICE_CONFIRMATION_MODAL,
+      deleteDeviceConfirmationActions,
+    );
   }
 
   private viewLocationById(): void {

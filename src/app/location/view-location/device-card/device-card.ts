@@ -12,6 +12,7 @@ import { IModal, IModalActions } from '../../../model/modal';
 import { IDevice } from '../../../model/get-info';
 import { DELETE_DEVICE_SUCCESS_MODAL } from '../../../constants/delete-constants';
 import { DELETE_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
+import { DELETE_DEVICE_CONFIRMATION_MODAL } from '../../../constants/dialog-confirmation-constants';
 
 @Component({
   selector: 'device-card',
@@ -37,19 +38,15 @@ export class DeviceCard implements OnDestroy {
     this.routerService.viewDeviceById(this.deviceInfo.deviceId);
   }
 
-  protected deleteDeviceVerification(): void {
-    const deleteVerificationModal: IModal = {
-      title: 'Confirmation',
-      content: 'Are you sure you want to delete the device?',
-      primaryText: 'Delete',
-      secondaryText: 'Cancel',
-    };
-
-    const deleteVerificationActions: IModalActions = {
+  protected deleteDeviceConfirmation(): void {
+    const deleteDeviceConfirmationActions: IModalActions = {
       primaryAction: () => this.deleteDevice(),
     };
 
-    this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
+    this.modalService.showModalElement(
+      DELETE_DEVICE_CONFIRMATION_MODAL,
+      deleteDeviceConfirmationActions,
+    );
   }
 
   private deleteDevice(): void {

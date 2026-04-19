@@ -11,7 +11,7 @@ import { LoginService } from '../../services/login';
 import { BreadcrumbService } from '../../services/breadcrumb';
 import { RouterService } from '../../services/router';
 import { DeviceCard } from './device-card/device-card';
-import { IModal, IModalActions } from '../../model/modal';
+import { IModalActions } from '../../model/modal';
 import { IDevice, ILocation, IEntityInfoRequest } from '../../model/get-info';
 import { IUser } from '../../model/login';
 import {
@@ -19,8 +19,13 @@ import {
   IDeleteEntityRequest,
   IDeleteLocationResponse,
 } from '../../model/delete-actions';
-import { DELETE_LOCATION_ERROR_MODAL } from '../../constants/error-constants';
+import {
+  DELETE_LOCATION_ERROR_MODAL,
+  VIEW_LOCATION_GET_INFO_ERROR_MODAL,
+  VIEW_LOCATION_INVALID_LOCATION_ID_ERROR_MODAL,
+} from '../../constants/error-constants';
 import { DELETE_LOCATION_SUCCESS_MODAL } from '../../constants/delete-constants';
+import { DELETE_LOCATION_CONFIRMATION_MODAL } from '../../constants/dialog-confirmation-constants';
 
 @Component({
   selector: 'view-location',
@@ -52,16 +57,11 @@ export class ViewLocation implements OnInit, OnDestroy {
     if (isNaN(id)) {
       // If the value provided for the locationId is not a number, route the user away
       // from the view location page.
-      const viewLocationInvalidLocationIDErrorModal: IModal = {
-        title: 'Something Went Wrong...',
-        content: 'The location ID provided was invalid.',
-        disableClose: true,
-      };
       const viewLocationInvalidLocationIDErrorActions: IModalActions = {
         primaryAction: () => this.viewHomeById(),
       };
       this.modalService.showModalElement(
-        viewLocationInvalidLocationIDErrorModal,
+        VIEW_LOCATION_INVALID_LOCATION_ID_ERROR_MODAL,
         viewLocationInvalidLocationIDErrorActions,
       );
     } else {
@@ -98,16 +98,11 @@ export class ViewLocation implements OnInit, OnDestroy {
             error: () => {
               // If there is an error getting information for the view location page, display an error
               // message modal and route the user back to the view home route.
-              const viewLocationGetInfoErrorModal: IModal = {
-                title: 'Something Went Wrong...',
-                content: 'There was an error viewing the selected location.',
-                disableClose: true,
-              };
               const viewLocationGetInfoErrorActions: IModalActions = {
                 primaryAction: () => this.viewHomeById(),
               };
               this.modalService.showModalElement(
-                viewLocationGetInfoErrorModal,
+                VIEW_LOCATION_GET_INFO_ERROR_MODAL,
                 viewLocationGetInfoErrorActions,
               );
             },
@@ -160,18 +155,14 @@ export class ViewLocation implements OnInit, OnDestroy {
   }
 
   protected deleteLocationVerification(): void {
-    const deleteVerificationModal: IModal = {
-      title: 'Confirmation',
-      content: 'Are you sure you want to delete the location?',
-      primaryText: 'Delete',
-      secondaryText: 'Cancel',
-    };
-
-    const deleteVerificationActions: IModalActions = {
+    const deleteLocationConfirmationActions: IModalActions = {
       primaryAction: () => this.deleteLocation(),
     };
 
-    this.modalService.showModalElement(deleteVerificationModal, deleteVerificationActions);
+    this.modalService.showModalElement(
+      DELETE_LOCATION_CONFIRMATION_MODAL,
+      deleteLocationConfirmationActions,
+    );
   }
 
   private deleteLocation(): void {
