@@ -18,7 +18,7 @@ import {
   IDeleteHomeResponse,
   IDeleteLocationResponse,
 } from '../../model/delete-actions';
-import { IModal, IModalActions } from '../../model/modal';
+import { IModalActions } from '../../model/modal';
 import { DELETE_HOME_SUCCESS_MODAL } from '../../constants/delete-constants';
 import {
   VIEW_HOME_INVALID_HOME_ID_ERROR_MODAL,

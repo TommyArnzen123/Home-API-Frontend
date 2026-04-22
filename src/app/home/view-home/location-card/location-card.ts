@@ -8,7 +8,7 @@ import { DeleteService } from '../../../services/delete';
 import { ModalService } from '../../../services/modal';
 import { RouterService } from '../../../services/router';
 import { IDeleteEntityRequest, IDeleteLocationResponse } from '../../../model/delete-actions';
-import { IModal, IModalActions } from '../../../model/modal';
+import { IModalActions } from '../../../model/modal';
 import { ILocation } from '../../../model/get-info';
 import { DELETE_LOCATION_SUCCESS_MODAL } from '../../../constants/delete-constants';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';

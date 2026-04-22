@@ -154,7 +154,7 @@ export class ViewLocation implements OnInit, OnDestroy {
     this.routerService.viewHomescreen();
   }
 
-  protected deleteLocationVerification(): void {
+  protected deleteLocationConfirmation(): void {
     const deleteLocationConfirmationActions: IModalActions = {
       primaryAction: () => this.deleteLocation(),
     };

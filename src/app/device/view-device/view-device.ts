@@ -148,7 +148,7 @@ export class ViewDevice implements OnInit, OnDestroy {
 
   protected deleteDeviceConfirmation(): void {
     const deleteDeviceConfirmationActions: IModalActions = {
-      primaryAction: () => this.deleteDeviceAction(),
+      primaryAction: () => this.deleteDevice(),
     };
 
     this.modalService.showModalElement(
@@ -169,7 +169,7 @@ export class ViewDevice implements OnInit, OnDestroy {
     this.routerService.viewHomescreen();
   }
 
-  private deleteDeviceAction(): void {
+  private deleteDevice(): void {
     if (this.deviceId) {
       const deleteDeviceRequest: IDeleteEntityRequest = {
         id: this.deviceId,
