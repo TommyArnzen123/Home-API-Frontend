@@ -35,7 +35,9 @@ export class DeviceCard implements OnDestroy {
   }
 
   protected viewDeviceById(): void {
-    this.routerService.viewDeviceById(this.deviceInfo.deviceId);
+    if (this.deviceInfo && this.deviceInfo.deviceId) {
+      this.routerService.viewDeviceById(this.deviceInfo.deviceId);
+    }
   }
 
   protected deleteDeviceConfirmation(): void {

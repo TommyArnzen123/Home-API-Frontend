@@ -55,7 +55,9 @@ export class LocationCard implements OnInit, OnDestroy {
   }
 
   protected viewLocationById(): void {
-    this.routerService.viewLocationById(this.locationInfo.locationId);
+    if (this.locationInfo && this.locationInfo.locationId) {
+      this.routerService.viewLocationById(this.locationInfo.locationId);
+    }
   }
 
   protected deleteLocationConfirmation(): void {

@@ -39,15 +39,20 @@ export class Homescreen implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
+    const userId = user()?.userId || undefined;
+    const firstName = user()?.firstName || undefined;
+    const jwtToken = user()?.jwtToken || undefined;
 
-    if (this.isIUser(user())) {
-      this.userFirstName = this.formatName(user()!.firstName);
+    if (this.isIUser(user()) && userId && jwtToken) {
+      if (firstName) {
+        this.userFirstName = this.formatName(firstName);
+      }
 
       this.setGreetingMessage();
 
       const getHomescreenInfoRequest: IEntityInfoRequest = {
-        id: user()!.userId,
-        jwtToken: user()!.jwtToken,
+        id: userId,
+        jwtToken: jwtToken,
       };
 
       // Get the homescreen info.
@@ -98,14 +103,14 @@ export class Homescreen implements OnInit, OnDestroy {
     const currentHour = currentDate.getHours();
 
     // Set a default message.
-    let message = 'Hello ' + this.userFirstName + '!';
+    let message = ('Hello ' + this.userFirstName).trim() + '!';
 
     if (currentHour >= 0 && currentHour <= 11) {
-      message = 'Good Morning ' + this.userFirstName + '!';
+      message = ('Good Morning ' + this.userFirstName).trim() + '!';
     } else if (currentHour >= 12 && currentHour <= 16) {
-      message = 'Good Afternoon ' + this.userFirstName + '!';
+      message = ('Good Afternoon ' + this.userFirstName).trim() + '!';
     } else {
-      message = 'Good Evening ' + this.userFirstName + '!';
+      message = ('Good Evening ' + this.userFirstName).trim() + '!';
     }
 
     this.greetingMessage = message;

@@ -34,7 +34,9 @@ export class HomeCard implements OnDestroy {
   }
 
   protected viewHomeById(): void {
-    this.routerService.viewHomeById(this.homeInfo.homeId);
+    if (this.homeInfo && this.homeInfo.homeId) {
+      this.routerService.viewHomeById(this.homeInfo.homeId);
+    }
   }
 
   protected deleteHomeConfirmation(): void {

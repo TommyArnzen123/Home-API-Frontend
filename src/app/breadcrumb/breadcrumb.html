@@ -15,7 +15,8 @@
         <div>></div>
         <div class="non-clickable">View Home</div>
       } @else if (
-        (homeId() && pageInFocus() === 'view-location') || pageInFocus() === 'view-device'
+        (homeId() && pageInFocus() === 'view-location') ||
+        (homeId() && pageInFocus() === 'view-device')
       ) {
         <div>></div>
         <div class="clickable" (click)="viewHomeById()">View Home</div>

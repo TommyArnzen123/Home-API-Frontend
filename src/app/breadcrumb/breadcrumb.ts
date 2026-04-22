@@ -56,6 +56,8 @@ export class Breadcrumb implements OnInit, OnDestroy {
     const id = this.homeId();
     if (id !== null) {
       this.routerService.viewHomeById(id);
+    } else {
+      this.viewHomescreen();
     }
   }
 
@@ -63,6 +65,8 @@ export class Breadcrumb implements OnInit, OnDestroy {
     const id = this.locationId();
     if (id !== null) {
       this.routerService.viewLocationById(id);
+    } else {
+      this.viewHomescreen();
     }
   }
 

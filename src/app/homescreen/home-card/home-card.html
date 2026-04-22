@@ -18,9 +18,11 @@
     </div>
   </div>
   <mat-card-actions class="button-container">
-    <button matButton="outlined" (click)="viewHomeById()">View</button>
-    <button matButton="filled" (click)="deleteHomeConfirmation()">
-      <mat-icon>delete</mat-icon>Delete
-    </button>
+    @if (this.homeInfo && this.homeInfo.homeId) {
+      <button matButton="outlined" (click)="viewHomeById()">View</button>
+      <button matButton="filled" (click)="deleteHomeConfirmation()">
+        <mat-icon>delete</mat-icon>Delete
+      </button>
+    }
   </mat-card-actions>
 </mat-card>
