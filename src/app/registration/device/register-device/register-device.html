@@ -11,14 +11,16 @@
         <mat-error>Please enter device name.</mat-error>
       }
       <br />
-      <div class="left-button">
-        <button (click)="viewLocationById()" type="button" matButton>
-          Return to View Location
-        </button>
-      </div>
-      <div class="right-button">
-        <button (click)="register()" type="submit" matButton>Register Device</button>
-      </div>
+      @if (locationId) {
+        <div class="left-button">
+          <button (click)="viewLocationById()" type="button" matButton>
+            Return to View Location
+          </button>
+        </div>
+        <div class="right-button">
+          <button (click)="register()" type="submit" matButton>Register Device</button>
+        </div>
+      }
     </form>
   </mat-card-content>
 </mat-card>

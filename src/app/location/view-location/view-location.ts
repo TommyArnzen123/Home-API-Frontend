@@ -22,7 +22,7 @@ import {
 import {
   DELETE_LOCATION_ERROR_MODAL,
   VIEW_LOCATION_GET_INFO_ERROR_MODAL,
-  VIEW_LOCATION_INVALID_LOCATION_ID_ERROR_MODAL,
+  INVALID_LOCATION_ID_ERROR_MODAL,
 } from '../../constants/error-constants';
 import { DELETE_LOCATION_SUCCESS_MODAL } from '../../constants/delete-constants';
 import { DELETE_LOCATION_CONFIRMATION_MODAL } from '../../constants/dialog-confirmation-constants';
@@ -44,7 +44,7 @@ export class ViewLocation implements OnInit, OnDestroy {
   private readonly modalService = inject(ModalService);
   private readonly breadcrumbService = inject(BreadcrumbService);
 
-  private locationId: number | null = null;
+  protected locationId: number | null = null;
   protected locationName: string | null = null;
   private homeId: number | null = null;
   protected devices: IDevice[] = [];
@@ -61,9 +61,10 @@ export class ViewLocation implements OnInit, OnDestroy {
         primaryAction: () => this.viewHomeById(),
       };
       this.modalService.showModalElement(
-        VIEW_LOCATION_INVALID_LOCATION_ID_ERROR_MODAL,
+        INVALID_LOCATION_ID_ERROR_MODAL,
         viewLocationInvalidLocationIDErrorActions,
       );
+      this.locationId = null;
     } else {
       this.locationId = id;
       this.breadcrumbService.updateLocationId(this.locationId);
@@ -73,15 +74,16 @@ export class ViewLocation implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
+    const jwtToken = user()?.jwtToken || undefined;
 
-    if (this.isIUser(user())) {
+    if (this.isIUser(user()) && jwtToken) {
       const homeIdSignal: Signal<number | null> = this.breadcrumbService.getHomeId();
       this.homeId = homeIdSignal();
 
       if (this.locationId) {
         const getViewLocationInfoRequest: IEntityInfoRequest = {
           id: this.locationId,
-          jwtToken: user()!.jwtToken,
+          jwtToken,
         };
 
         // Get the location info.
@@ -108,8 +110,6 @@ export class ViewLocation implements OnInit, OnDestroy {
             },
           }),
         );
-      } else {
-        this.viewHomeById();
       }
     } else {
       this.loginService.logout();

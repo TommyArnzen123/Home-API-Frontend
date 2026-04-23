@@ -63,7 +63,7 @@ const averageTempInfo: IAverageTemperatureByHour[] = [
 export class ViewDevice implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
-  private deviceId: number | null = null;
+  protected deviceId: number | null = null;
   private locationId: number | null = null;
   protected deviceInformation!: IDeviceInformationCurrentDay;
   protected mostRecentTemperatureDate!: Date;
@@ -89,6 +89,7 @@ export class ViewDevice implements OnInit, OnDestroy {
         VIEW_DEVICE_INVALID_DEVICE_ID_ERROR_MODAL,
         viewDeviceInvalidDeviceIDErrorActions,
       );
+      this.deviceId = null;
     } else {
       this.deviceId = id;
       this.breadcrumbService.updatePageInFocus('view-device');
@@ -97,15 +98,16 @@ export class ViewDevice implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
+    const jwtToken = user()?.jwtToken || undefined;
 
-    if (this.isIUser(user())) {
+    if (this.isIUser(user()) && jwtToken) {
       const locationIdSignal: Signal<number | null> = this.breadcrumbService.getLocationId();
       this.locationId = locationIdSignal();
 
       if (this.deviceId) {
         const getViewDeviceInfoRequest: IEntityInfoRequest = {
           id: this.deviceId,
-          jwtToken: user()!.jwtToken,
+          jwtToken,
         };
 
         this.subscriptions.push(
@@ -158,7 +160,7 @@ export class ViewDevice implements OnInit, OnDestroy {
   }
 
   private viewLocationById(): void {
-    if (this.locationId) {
+    if (this.locationId !== null) {
       this.routerService.viewLocationById(this.locationId);
     } else {
       this.viewHomescreen();

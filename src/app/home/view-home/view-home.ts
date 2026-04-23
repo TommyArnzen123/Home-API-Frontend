@@ -21,7 +21,7 @@ import {
 import { IModalActions } from '../../model/modal';
 import { DELETE_HOME_SUCCESS_MODAL } from '../../constants/delete-constants';
 import {
-  VIEW_HOME_INVALID_HOME_ID_ERROR_MODAL,
+  INVALID_HOME_ID_ERROR_MODAL,
   DELETE_HOME_ERROR_MODAL,
   VIEW_HOME_GET_INFO_ERROR_MODAL,
 } from '../../constants/error-constants';
@@ -44,7 +44,7 @@ export class ViewHome implements OnInit, OnDestroy {
   private readonly modalService = inject(ModalService);
   private readonly breadcrumbService = inject(BreadcrumbService);
 
-  private homeId: number | null = null;
+  protected homeId: number | null = null;
   protected homeName: string | null = null;
   protected locations: ILocation[] = [];
   protected totalDevices: number = 0;
@@ -59,9 +59,10 @@ export class ViewHome implements OnInit, OnDestroy {
         primaryAction: () => this.viewHomescreen(),
       };
       this.modalService.showModalElement(
-        VIEW_HOME_INVALID_HOME_ID_ERROR_MODAL,
+        INVALID_HOME_ID_ERROR_MODAL,
         viewHomeInvalidHomeIDErrorActions,
       );
+      this.homeId = null;
     } else {
       this.homeId = id;
       this.breadcrumbService.updateHomeId(this.homeId);
@@ -71,15 +72,16 @@ export class ViewHome implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
+    const jwtToken = user()?.jwtToken || undefined;
 
-    if (this.isIUser(user())) {
+    if (this.isIUser(user()) && jwtToken) {
       if (this.homeId) {
         const getViewHomeInfoRequest: IEntityInfoRequest = {
           id: this.homeId,
-          jwtToken: user()!.jwtToken,
+          jwtToken,
         };
 
-        // Get the homescreen info.
+        // Get the home info.
         this.subscriptions.push(
           this.getInfoService.getViewHomeInfo(getViewHomeInfoRequest).subscribe({
             next: (response: IViewHomeInfoResponse) => {

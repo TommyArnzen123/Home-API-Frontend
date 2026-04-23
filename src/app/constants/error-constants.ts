@@ -37,7 +37,7 @@ const DELETE_DEVICE_ERROR: IError = {
   errorCode: '0007',
 };
 
-const VIEW_HOME_INVALID_HOME_ID_ERROR: IError = {
+const INVALID_HOME_ID_ERROR: IError = {
   message: 'The home ID provided was invalid.',
   errorCode: '0008',
 };
@@ -47,7 +47,7 @@ const VIEW_HOME_GET_INFO_ERROR: IError = {
   errorCode: '0009',
 };
 
-const VIEW_LOCATION_INVALID_LOCATION_ID_ERROR: IError = {
+const INVALID_LOCATION_ID_ERROR: IError = {
   message: 'The location ID provided was invalid.',
   errorCode: '0010',
 };
@@ -110,10 +110,10 @@ export const DELETE_DEVICE_ERROR_MODAL: IModal = {
   footer: 'Error Code: ' + DELETE_DEVICE_ERROR.errorCode,
 };
 
-export const VIEW_HOME_INVALID_HOME_ID_ERROR_MODAL: IModal = {
+export const INVALID_HOME_ID_ERROR_MODAL: IModal = {
   title: 'Something Went Wrong...',
-  content: VIEW_HOME_INVALID_HOME_ID_ERROR.message,
-  footer: 'Error Code: ' + VIEW_HOME_INVALID_HOME_ID_ERROR.errorCode,
+  content: INVALID_HOME_ID_ERROR.message,
+  footer: 'Error Code: ' + INVALID_HOME_ID_ERROR.errorCode,
   disableClose: true,
 };
 
@@ -124,10 +124,10 @@ export const VIEW_HOME_GET_INFO_ERROR_MODAL: IModal = {
   disableClose: true,
 };
 
-export const VIEW_LOCATION_INVALID_LOCATION_ID_ERROR_MODAL: IModal = {
+export const INVALID_LOCATION_ID_ERROR_MODAL: IModal = {
   title: 'Something Went Wrong...',
-  content: VIEW_LOCATION_INVALID_LOCATION_ID_ERROR.message,
-  footer: 'Error Code: ' + VIEW_LOCATION_INVALID_LOCATION_ID_ERROR.errorCode,
+  content: INVALID_LOCATION_ID_ERROR.message,
+  footer: 'Error Code: ' + INVALID_LOCATION_ID_ERROR.errorCode,
   disableClose: true,
 };
 

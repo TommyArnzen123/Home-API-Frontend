@@ -8,9 +8,11 @@
   </div>
 
   <div>
-    <button matButton="outlined" (click)="deleteDeviceConfirmation()">
-      <mat-icon>delete</mat-icon>Delete Device
-    </button>
+    @if (deviceId) {
+      <button matButton="outlined" (click)="deleteDeviceConfirmation()">
+        <mat-icon>delete</mat-icon>Delete Device
+      </button>
+    }
   </div>
 </div>
 

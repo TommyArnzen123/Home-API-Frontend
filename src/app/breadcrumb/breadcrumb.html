@@ -5,9 +5,18 @@
       @if (
         pageInFocus() === 'view-home' ||
         pageInFocus() === 'view-location' ||
-        pageInFocus() === 'view-device'
+        pageInFocus() === 'view-device' ||
+        pageInFocus() === 'register-home' ||
+        pageInFocus() === 'register-location' ||
+        pageInFocus() === 'register-device'
       ) {
         <div class="clickable" (click)="viewHomescreen()">Home Screen</div>
+      }
+
+      <!-- Display the register home option. -->
+      @if (pageInFocus() === 'register-home') {
+        <div>></div>
+        <div class="non-clickable">Register Home</div>
       }
 
       <!-- Display the view home option. -->
@@ -16,19 +25,36 @@
         <div class="non-clickable">View Home</div>
       } @else if (
         (homeId() && pageInFocus() === 'view-location') ||
-        (homeId() && pageInFocus() === 'view-device')
+        (homeId() && pageInFocus() === 'view-device') ||
+        (homeId() && pageInFocus() === 'register-location') ||
+        (homeId() && pageInFocus() === 'register-device')
       ) {
         <div>></div>
         <div class="clickable" (click)="viewHomeById()">View Home</div>
+      }
+
+      <!-- Display the register location option. -->
+      @if (pageInFocus() === 'register-location') {
+        <div>></div>
+        <div class="non-clickable">Register Location</div>
       }
 
       <!-- Display the view location option. -->
       @if (pageInFocus() === 'view-location') {
         <div>></div>
         <div class="non-clickable">View Location</div>
-      } @else if (locationId() && pageInFocus() === 'view-device') {
+      } @else if (
+        (locationId() && pageInFocus() === 'view-device') ||
+        (locationId() && pageInFocus() === 'register-device')
+      ) {
         <div>></div>
         <div class="clickable" (click)="viewLocationById()">View Location</div>
+      }
+
+      <!-- Display the register device option. -->
+      @if (pageInFocus() === 'register-device') {
+        <div>></div>
+        <div class="non-clickable">Register Device</div>
       }
 
       <!-- Display the view device option. -->

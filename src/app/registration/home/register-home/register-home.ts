@@ -16,6 +16,7 @@ import {
 import { IUser } from '../../../model/login';
 import { REGISTER_HOME_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 import { REGISTER_HOME_ERROR_MODAL } from '../../../constants/error-constants';
+import { BreadcrumbService } from '../../../services/breadcrumb';
 
 @Component({
   selector: 'register-home',
@@ -39,12 +40,12 @@ export class RegisterHome implements OnInit, OnDestroy {
   private readonly registrationService = inject(RegistrationService);
   private readonly loginService = inject(LoginService);
   private readonly modalService = inject(ModalService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
 
   protected form!: FormGroup;
-  private user: Signal<IUser | null>;
 
   constructor() {
-    this.user = this.loginService.getUserLoginInfo();
+    this.breadcrumbService.updatePageInFocus('register-home');
   }
 
   ngOnInit(): void {
@@ -65,8 +66,10 @@ export class RegisterHome implements OnInit, OnDestroy {
     if (this.form.valid) {
       const homeName = this.form.get('homeName')?.value || '';
 
-      if (this.user()) {
-        this.registerHomeAction(Number(this.user()?.userId), homeName, this.user()?.jwtToken || '');
+      if (homeName) {
+        this.registerHomeAction(homeName);
+      } else {
+        this.modalService.showModalElement(REGISTER_HOME_ERROR_MODAL);
       }
     }
   }
@@ -75,26 +78,34 @@ export class RegisterHome implements OnInit, OnDestroy {
     this.routerService.viewHomescreen();
   }
 
-  private registerHomeAction(userId: number, homeName: string, jwtToken: string): void {
-    const registerHomeRequest: IRegisterGenericEntityRequest = {
-      parentEntityId: userId,
-      name: homeName,
-    };
+  private registerHomeAction(homeName: string): void {
+    const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
+    const userId = user()?.userId;
+    const jwtToken = user()?.jwtToken;
 
-    this.subscriptions.push(
-      this.registrationService.registerHome(registerHomeRequest, jwtToken).subscribe({
-        next: (response: IRegisterGenericEntityResponse) => {
-          if (response) {
-            // The home has been added to the application.
-            // Display a success modal and route the user to the home page component.
-            this.modalService.showModalElement(REGISTER_HOME_SUCCESS_MESSAGE);
-            this.viewHomescreen();
-          }
-        },
-        error: () => {
-          this.modalService.showModalElement(REGISTER_HOME_ERROR_MODAL);
-        },
-      }),
-    );
+    if (userId && jwtToken && homeName) {
+      const registerHomeRequest: IRegisterGenericEntityRequest = {
+        parentEntityId: userId,
+        name: homeName,
+      };
+
+      this.subscriptions.push(
+        this.registrationService.registerHome(registerHomeRequest, jwtToken).subscribe({
+          next: (response: IRegisterGenericEntityResponse) => {
+            if (response) {
+              // The home has been added to the application.
+              // Display a success modal and route the user to the home page component.
+              this.modalService.showModalElement(REGISTER_HOME_SUCCESS_MESSAGE);
+              this.viewHomescreen();
+            }
+          },
+          error: () => {
+            this.modalService.showModalElement(REGISTER_HOME_ERROR_MODAL);
+          },
+        }),
+      );
+    } else {
+      this.modalService.showModalElement(REGISTER_HOME_ERROR_MODAL);
+    }
   }
 }

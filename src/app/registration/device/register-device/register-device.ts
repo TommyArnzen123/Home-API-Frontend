@@ -1,4 +1,4 @@
-import { Component, inject, Signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, Signal, OnInit, OnDestroy, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
@@ -16,7 +16,12 @@ import {
   IRegisterGenericEntityResponse,
 } from '../../../model/registration';
 import { REGISTER_DEVICE_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
-import { REGISTER_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
+import {
+  INVALID_LOCATION_ID_ERROR_MODAL,
+  REGISTER_DEVICE_ERROR_MODAL,
+} from '../../../constants/error-constants';
+import { IModalActions } from '../../../model/modal';
+import { BreadcrumbService } from '../../../services/breadcrumb';
 
 @Component({
   selector: 'register-device',
@@ -41,14 +46,25 @@ export class RegisterDevice implements OnInit, OnDestroy {
   private readonly registrationService = inject(RegistrationService);
   private readonly loginService = inject(LoginService);
   private readonly modalService = inject(ModalService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
 
   protected form!: FormGroup;
-  private user: Signal<IUser | null>;
-  private locationId!: number | null;
+  protected locationId: number | null = null;
 
   constructor() {
-    this.locationId = Number(this.route.snapshot.paramMap.get('locationId'));
-    this.user = this.loginService.getUserLoginInfo();
+    this.breadcrumbService.updatePageInFocus('register-device');
+    const id = Number(this.route.snapshot.paramMap.get('locationId'));
+
+    // Verify the location ID provided in the URL is a valid number.
+    if (isNaN(id)) {
+      this.locationId = null;
+      const modalActions: IModalActions = {
+        primaryAction: () => this.viewHomescreen(),
+      };
+      this.modalService.showModalElement(INVALID_LOCATION_ID_ERROR_MODAL, modalActions);
+    } else {
+      this.locationId = id;
+    }
   }
 
   ngOnInit(): void {
@@ -69,8 +85,8 @@ export class RegisterDevice implements OnInit, OnDestroy {
     if (this.form.valid) {
       const deviceName = this.form.get('deviceName')?.value || '';
 
-      if (this.user()) {
-        this.registerDeviceAction(deviceName, this.user()?.jwtToken || '');
+      if (deviceName) {
+        this.registerDeviceAction(deviceName);
       }
     }
   }
@@ -83,10 +99,17 @@ export class RegisterDevice implements OnInit, OnDestroy {
     }
   }
 
-  private registerDeviceAction(deviceName: string, jwtToken: string): void {
-    if (this.locationId) {
+  private viewHomescreen(): void {
+    this.routerService.viewHomescreen();
+  }
+
+  private registerDeviceAction(deviceName: string): void {
+    const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
+    const jwtToken = user()?.jwtToken;
+
+    if (this.locationId && jwtToken && deviceName) {
       const registerDeviceRequest: IRegisterGenericEntityRequest = {
-        parentEntityId: Number(this.locationId),
+        parentEntityId: this.locationId,
         name: deviceName,
       };
 
@@ -105,6 +128,8 @@ export class RegisterDevice implements OnInit, OnDestroy {
           },
         }),
       );
+    } else {
+      this.modalService.showModalElement(REGISTER_DEVICE_ERROR_MODAL);
     }
   }
 }

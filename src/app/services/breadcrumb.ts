@@ -1,6 +1,13 @@
 import { Injectable, Signal, signal } from '@angular/core';
 
-export type PageInFocus = 'homescreen' | 'view-home' | 'view-location' | 'view-device';
+export type PageInFocus =
+  | 'homescreen'
+  | 'view-home'
+  | 'view-location'
+  | 'view-device'
+  | 'register-home'
+  | 'register-location'
+  | 'register-device';
 
 @Injectable({
   providedIn: 'root',

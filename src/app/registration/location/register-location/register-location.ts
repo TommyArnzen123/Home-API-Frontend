@@ -16,7 +16,12 @@ import {
   IRegisterGenericEntityResponse,
 } from '../../../model/registration';
 import { REGISTER_LOCATION_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
-import { REGISTER_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
+import {
+  INVALID_HOME_ID_ERROR_MODAL,
+  REGISTER_LOCATION_ERROR_MODAL,
+} from '../../../constants/error-constants';
+import { IModalActions } from '../../../model/modal';
+import { BreadcrumbService } from '../../../services/breadcrumb';
 
 @Component({
   selector: 'register-location',
@@ -41,14 +46,24 @@ export class RegisterLocation implements OnInit, OnDestroy {
   private readonly registrationService = inject(RegistrationService);
   private readonly loginService = inject(LoginService);
   private readonly modalService = inject(ModalService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
 
   protected form!: FormGroup;
-  private user: Signal<IUser | null>;
-  private homeId!: number | null;
+  private homeId: number | null;
 
   constructor() {
-    this.homeId = Number(this.route.snapshot.paramMap.get('homeId'));
-    this.user = this.loginService.getUserLoginInfo();
+    this.breadcrumbService.updatePageInFocus('register-location');
+    const id = Number(this.route.snapshot.paramMap.get('homeId'));
+
+    if (isNaN(id)) {
+      this.homeId = null;
+      const modalActions: IModalActions = {
+        primaryAction: () => this.viewHomescreen(),
+      };
+      this.modalService.showModalElement(INVALID_HOME_ID_ERROR_MODAL, modalActions);
+    } else {
+      this.homeId = id;
+    }
   }
 
   ngOnInit(): void {
@@ -69,10 +84,16 @@ export class RegisterLocation implements OnInit, OnDestroy {
     if (this.form.valid) {
       const locationName = this.form.get('locationName')?.value || '';
 
-      if (this.user()) {
-        this.registerLocationAction(locationName, this.user()?.jwtToken || '');
+      if (locationName) {
+        this.registerLocationAction(locationName);
+      } else {
+        this.modalService.showModalElement(REGISTER_LOCATION_ERROR_MODAL);
       }
     }
+  }
+
+  private viewHomescreen(): void {
+    this.routerService.viewHomescreen();
   }
 
   protected viewHomeById(): void {
@@ -83,10 +104,13 @@ export class RegisterLocation implements OnInit, OnDestroy {
     }
   }
 
-  private registerLocationAction(locationName: string, jwtToken: string): void {
-    if (this.homeId) {
+  private registerLocationAction(locationName: string): void {
+    const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
+    const jwtToken = user()?.jwtToken;
+
+    if (this.homeId && jwtToken && locationName) {
       const registerLocationRequest: IRegisterGenericEntityRequest = {
-        parentEntityId: Number(this.homeId),
+        parentEntityId: this.homeId,
         name: locationName,
       };
 
@@ -105,6 +129,8 @@ export class RegisterLocation implements OnInit, OnDestroy {
           },
         }),
       );
+    } else {
+      this.modalService.showModalElement(REGISTER_LOCATION_ERROR_MODAL);
     }
   }
 }

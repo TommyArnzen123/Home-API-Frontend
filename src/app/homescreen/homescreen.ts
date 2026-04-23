@@ -52,7 +52,7 @@ export class Homescreen implements OnInit, OnDestroy {
 
       const getHomescreenInfoRequest: IEntityInfoRequest = {
         id: userId,
-        jwtToken: jwtToken,
+        jwtToken,
       };
 
       // Get the homescreen info.
