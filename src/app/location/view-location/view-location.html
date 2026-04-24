@@ -1,8 +1,8 @@
 <div class="top-row-container">
   @if (locationName) {
-    <h1>{{ locationName }}</h1>
+    <div class="title">{{ locationName }}</div>
   } @else {
-    <h1>Location Name Unavailable</h1>
+    <div class="title">Location Name Unavailable</div>
   }
   <div class="button-container">
     @if (locationId) {

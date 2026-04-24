@@ -1,9 +1,9 @@
 <div class="top-row-container">
   <div>
     @if (deviceInformation && deviceInformation.deviceName) {
-      <h1>{{ deviceInformation.deviceName }}</h1>
+      <div class="title">{{ deviceInformation.deviceName }}</div>
     } @else {
-      <h1>Device Name Unavailable</h1>
+      <div class="title">Device Name Unavailable</div>
     }
   </div>
 
