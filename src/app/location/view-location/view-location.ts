@@ -15,9 +15,9 @@ import { IModalActions } from '../../model/modal';
 import { IDevice, ILocation, IEntityInfoRequest } from '../../model/get-info';
 import { IUser } from '../../model/login';
 import {
-  IDeleteDeviceResponse,
   IDeleteEntityRequest,
   IDeleteLocationResponse,
+  IDeleteDeviceResponse,
 } from '../../model/delete-actions';
 import {
   DELETE_LOCATION_ERROR_MODAL,
@@ -175,7 +175,6 @@ export class ViewLocation implements OnInit, OnDestroy {
         this.deleteService.deleteLocationById(deleteLocationRequest).subscribe({
           next: (response: IDeleteLocationResponse) => {
             this.modalService.showModalElement(DELETE_LOCATION_SUCCESS_MODAL);
-
             this.viewHomeById();
           },
           error: () => {

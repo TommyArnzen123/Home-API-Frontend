@@ -61,5 +61,6 @@ export class BreadcrumbService {
     this.#homeId$.set(null);
     this.#locationId$.set(null);
     this.#deviceId$.set(null);
+    this.#pageInFocus$.set('homescreen');
   }
 }

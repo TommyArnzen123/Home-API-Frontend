@@ -13,7 +13,7 @@ import { IDeleteHomeResponse } from '../model/delete-actions';
 
 @Component({
   selector: 'homescreen',
-  imports: [ItemTotals, HomeCard, MatButton],
+  imports: [MatButton, HomeCard, ItemTotals],
   templateUrl: './homescreen.html',
   styleUrl: './homescreen.scss',
 })

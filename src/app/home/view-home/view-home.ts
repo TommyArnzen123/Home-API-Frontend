@@ -29,7 +29,7 @@ import { DELETE_HOME_CONFIRMATION_MODAL } from '../../constants/dialog-confirmat
 
 @Component({
   selector: 'view-home',
-  imports: [MatButton, MatIcon, ItemTotals, LocationCard],
+  imports: [MatButton, MatIcon, LocationCard, ItemTotals],
   templateUrl: './view-home.html',
   styleUrl: './view-home.scss',
 })
@@ -146,7 +146,6 @@ export class ViewHome implements OnInit, OnDestroy {
         this.deleteService.deleteHomeById(deleteHomeRequest).subscribe({
           next: (response: IDeleteHomeResponse) => {
             this.modalService.showModalElement(DELETE_HOME_SUCCESS_MODAL);
-
             this.viewHomescreen();
           },
           error: () => {

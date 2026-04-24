@@ -11,12 +11,14 @@
         <mat-error>Please enter location name.</mat-error>
       }
       <br />
-      <div class="left-button">
-        <button (click)="viewHomeById()" type="button" matButton>Return to View Home</button>
-      </div>
-      <div class="right-button">
-        <button (click)="register()" type="submit" matButton>Register Location</button>
-      </div>
+      @if (homeId) {
+        <div class="left-button">
+          <button (click)="viewHomeById()" type="button" matButton>Return to View Home</button>
+        </div>
+        <div class="right-button">
+          <button (click)="register()" type="submit" matButton>Register Location</button>
+        </div>
+      }
     </form>
   </mat-card-content>
 </mat-card>

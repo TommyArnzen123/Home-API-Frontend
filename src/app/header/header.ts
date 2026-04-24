@@ -61,6 +61,5 @@ export class Header implements OnInit, OnDestroy {
 
   protected logout(): void {
     this.loginService.logout();
-    this.breadcrumbService.clearService();
   }
 }

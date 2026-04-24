@@ -10,18 +10,18 @@ import { RegistrationService } from '../../../services/registration';
 import { LoginService } from '../../../services/login';
 import { ModalService } from '../../../services/modal';
 import { RouterService } from '../../../services/router';
+import { BreadcrumbService } from '../../../services/breadcrumb';
 import { IUser } from '../../../model/login';
 import {
   IRegisterGenericEntityRequest,
   IRegisterGenericEntityResponse,
 } from '../../../model/registration';
+import { IModalActions } from '../../../model/modal';
 import { REGISTER_LOCATION_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 import {
   INVALID_HOME_ID_ERROR_MODAL,
   REGISTER_LOCATION_ERROR_MODAL,
 } from '../../../constants/error-constants';
-import { IModalActions } from '../../../model/modal';
-import { BreadcrumbService } from '../../../services/breadcrumb';
 
 @Component({
   selector: 'register-location',
@@ -49,7 +49,7 @@ export class RegisterLocation implements OnInit, OnDestroy {
   private readonly breadcrumbService = inject(BreadcrumbService);
 
   protected form!: FormGroup;
-  private homeId: number | null;
+  protected homeId: number | null;
 
   constructor() {
     this.breadcrumbService.updatePageInFocus('register-location');

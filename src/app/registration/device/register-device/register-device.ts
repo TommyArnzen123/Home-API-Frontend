@@ -1,4 +1,4 @@
-import { Component, inject, Signal, OnInit, OnDestroy, signal } from '@angular/core';
+import { Component, inject, Signal, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
@@ -10,18 +10,18 @@ import { RegistrationService } from '../../../services/registration';
 import { LoginService } from '../../../services/login';
 import { ModalService } from '../../../services/modal';
 import { RouterService } from '../../../services/router';
+import { BreadcrumbService } from '../../../services/breadcrumb';
 import { IUser } from '../../../model/login';
 import {
   IRegisterGenericEntityRequest,
   IRegisterGenericEntityResponse,
 } from '../../../model/registration';
+import { IModalActions } from '../../../model/modal';
 import { REGISTER_DEVICE_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 import {
   INVALID_LOCATION_ID_ERROR_MODAL,
   REGISTER_DEVICE_ERROR_MODAL,
 } from '../../../constants/error-constants';
-import { IModalActions } from '../../../model/modal';
-import { BreadcrumbService } from '../../../services/breadcrumb';
 
 @Component({
   selector: 'register-device',

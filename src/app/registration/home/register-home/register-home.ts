@@ -9,6 +9,7 @@ import { RegistrationService } from '../../../services/registration';
 import { LoginService } from '../../../services/login';
 import { ModalService } from '../../../services/modal';
 import { RouterService } from '../../../services/router';
+import { BreadcrumbService } from '../../../services/breadcrumb';
 import {
   IRegisterGenericEntityRequest,
   IRegisterGenericEntityResponse,
@@ -16,7 +17,6 @@ import {
 import { IUser } from '../../../model/login';
 import { REGISTER_HOME_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 import { REGISTER_HOME_ERROR_MODAL } from '../../../constants/error-constants';
-import { BreadcrumbService } from '../../../services/breadcrumb';
 
 @Component({
   selector: 'register-home',
@@ -94,7 +94,7 @@ export class RegisterHome implements OnInit, OnDestroy {
           next: (response: IRegisterGenericEntityResponse) => {
             if (response) {
               // The home has been added to the application.
-              // Display a success modal and route the user to the home page component.
+              // Display a success modal and route the user to the homescreen component.
               this.modalService.showModalElement(REGISTER_HOME_SUCCESS_MESSAGE);
               this.viewHomescreen();
             }
