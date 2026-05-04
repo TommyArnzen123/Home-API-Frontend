@@ -1,6 +1,40 @@
-<mat-card class="location-card" appearance="outlined">
+<mat-card
+  class="location-card"
+  [class.temperature-threshold-healthy]="
+    averageTemperature && this.locationInfo.threshold && !isTemperatureThresholdInViolation
+  "
+  [class.temperature-threshold-violation]="
+    this.locationInfo.threshold && isTemperatureThresholdInViolation
+  "
+  appearance="outlined"
+>
   <mat-card-header>
-    <mat-card-title>{{ locationInfo.locationName }}</mat-card-title>
+    <div class="title-row">
+      <mat-card-title>
+        {{ locationInfo.locationName }}
+      </mat-card-title>
+      @if (this.locationInfo.threshold) {
+        <div>
+          <div class="temperature-threshold-alert-row">
+            @if (isTemperatureThresholdInViolation) {
+              <img
+                class="temperature-threshold-alert-icon"
+                src="alert-location-temperature-icon.svg"
+                alt="Red circle alert icon."
+              />
+              <div>Alert</div>
+            } @else {
+              <img
+                class="temperature-threshold-alert-icon"
+                src="healthy-location-temperature-icon.svg"
+                alt="Green circle alert icon."
+              />
+              <div>Healthy</div>
+            }
+          </div>
+        </div>
+      }
+    </div>
   </mat-card-header>
   <div class="location-card-content">
     @if (averageTemperature) {
@@ -10,9 +44,21 @@
     } @else {
       <div class="temperature default-temperature">-°F</div>
     }
-    <div class="entity">
-      <img src="device-icon.svg" class="entity-icon" alt="Device icon." />
-      <div class="total-items">{{ locationInfo.devices.length }}</div>
+    <div class="right-section">
+      @if (minThreshold || maxThreshold) {
+        <div>
+          @if (minThreshold) {
+            <div>Min Temp: {{ minThreshold }}°F</div>
+          }
+          @if (maxThreshold) {
+            <div>Max Temp: {{ maxThreshold }}°F</div>
+          }
+        </div>
+      }
+      <div class="entity">
+        <img src="device-icon.svg" class="entity-icon" alt="Device icon." />
+        <div class="total-items">{{ locationInfo.devices.length }}</div>
+      </div>
     </div>
   </div>
   <mat-card-actions class="button-container">

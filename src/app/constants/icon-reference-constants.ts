@@ -83,4 +83,22 @@ export const ICON_REFERENCES: IconReference[] = [
     iconPath: 'session-timeout-error-icon.svg',
     altText: 'Blue clock with white hands and bold black outline.',
   },
+  {
+    title: 'Circle SVG Vector',
+    collection: 'Chunk 16px Thick Interface Icons',
+    license: 'PD License',
+    author: 'Noah Jacobus',
+    url: 'https://www.svgrepo.com/svg/535262/circle',
+    iconPath: 'healthy-location-temperature-icon.svg',
+    altText: 'Green circle alert icon.',
+  },
+  {
+    title: 'Circle SVG Vector',
+    collection: 'Chunk 16px Thick Interface Icons',
+    license: 'PD License',
+    author: 'Noah Jacobus',
+    url: 'https://www.svgrepo.com/svg/535262/circle',
+    iconPath: 'alert-location-temperature-icon.svg',
+    altText: 'Red circle alert icon.',
+  },
 ];

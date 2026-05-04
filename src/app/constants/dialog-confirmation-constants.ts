@@ -20,3 +20,10 @@ export const DELETE_DEVICE_CONFIRMATION_MODAL: IModal = {
   primaryText: 'Delete',
   secondaryText: 'Cancel',
 };
+
+export const DELETE_TEMPERATURE_THRESHOLD_CONFIRMATION_MODAL: IModal = {
+  title: 'Confirmation',
+  content: 'Are you sure you want to delete the temperature threshold?',
+  primaryText: 'Delete',
+  secondaryText: 'Cancel',
+};

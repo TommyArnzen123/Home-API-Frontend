@@ -13,6 +13,10 @@ import { ILocation } from '../../../model/get-info';
 import { DELETE_LOCATION_SUCCESS_MODAL } from '../../../constants/delete-constants';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
 import { DELETE_LOCATION_CONFIRMATION_MODAL } from '../../../constants/dialog-confirmation-constants';
+import {
+  isThresholdViolated,
+  setAverageTemperature,
+} from '../../../shared/utility/temperature-utility';
 
 @Component({
   selector: 'location-card',
@@ -28,25 +32,34 @@ export class LocationCard implements OnInit, OnDestroy {
   private readonly modalService = inject(ModalService);
 
   protected averageTemperature: number | null = null;
+  protected minThreshold: number | null = null;
+  protected maxThreshold: number | null = null;
+  protected isTemperatureThresholdInViolation: boolean = false;
 
   @Input({ required: true }) locationInfo!: ILocation;
   @Output() locationDeleted = new EventEmitter<IDeleteLocationResponse>();
 
   ngOnInit(): void {
-    let counter = 0;
-    let temperature: number | null = 0;
+    this.minThreshold =
+      this.locationInfo.threshold && this.locationInfo.threshold.minimumTemperature
+        ? this.locationInfo.threshold.minimumTemperature
+        : null;
+    this.maxThreshold =
+      this.locationInfo.threshold && this.locationInfo.threshold.maximumTemperature
+        ? this.locationInfo.threshold.maximumTemperature
+        : null;
 
-    this.locationInfo.devices.forEach((device) => {
-      if (device.temperature) {
-        counter++;
-        temperature = temperature
-          ? temperature + device.temperature.temperature
-          : device.temperature.temperature;
-      }
-    });
+    this.averageTemperature = setAverageTemperature(this.locationInfo.devices);
+    this.setThresholdViolationStatus();
+  }
 
-    if (counter > 0) {
-      this.averageTemperature = temperature / counter;
+  setThresholdViolationStatus() {
+    if (this.averageTemperature && this.locationInfo.threshold) {
+      this.isTemperatureThresholdInViolation = isThresholdViolated(
+        this.averageTemperature,
+        this.locationInfo.threshold.minimumTemperature,
+        this.locationInfo.threshold.maximumTemperature,
+      );
     }
   }
 

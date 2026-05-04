@@ -17,7 +17,7 @@ import {
   IRegisterGenericEntityResponse,
 } from '../../../model/registration';
 import { IModalActions } from '../../../model/modal';
-import { REGISTER_DEVICE_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
+import { REGISTER_DEVICE_SUCCESS_MODAL } from '../../../constants/success-constants';
 import {
   INVALID_LOCATION_ID_ERROR_MODAL,
   REGISTER_DEVICE_ERROR_MODAL,
@@ -119,7 +119,7 @@ export class RegisterDevice implements OnInit, OnDestroy {
             if (response) {
               // The device has been added to the application.
               // Display a modal message and route the user to the view location component.
-              this.modalService.showModalElement(REGISTER_DEVICE_SUCCESS_MESSAGE);
+              this.modalService.showModalElement(REGISTER_DEVICE_SUCCESS_MODAL);
               this.viewLocationById();
             }
           },

@@ -9,6 +9,15 @@
       <button class="button-display" matButton="outlined" (click)="deleteLocationConfirmation()">
         <mat-icon>delete</mat-icon>Delete Location
       </button>
+      @if (!temperatureThreshold()) {
+        <button
+          class="button-display"
+          matButton="filled"
+          (click)="displayTemperatureThresholdModal()"
+        >
+          Set Temperature Threshold
+        </button>
+      }
       <button class="button-display" matButton="filled" (click)="viewRegisterDevicePage()">
         Register New Device
       </button>
@@ -18,23 +27,34 @@
 
 <div class="body-content-container">
   <div class="temperature-container">
-    @if (totalDevices > 0 && averageTemperature) {
-      <p class="current-average-location-temperature">
-        {{ averageTemperature | number: '1.2-2' }}°F
-      </p>
-    } @else {
-      <div class="no-current-average-location-temperature">
-        <img src="temperature-icon.svg" class="icon" alt="Temperature icon." />
-        @if (totalDevices > 0) {
-          <div class="no-temperature-message-top-line">
-            There have been no temperature readings in the past 10 minutes for this location.
-          </div>
-          <div>Please ensure your devices are on and functioning.</div>
-        } @else {
-          <div>Please register a device to begin recording temperatures.</div>
-        }
+    @if (temperatureThreshold()) {
+      <div>
+        <temperature-threshold-card
+          [averageTemperature]="averageTemperature"
+          [temperatureThreshold]="temperatureThreshold()"
+          (thresholdUpdated)="thresholdUpdated($event)"
+        />
       </div>
     }
+    <div>
+      @if (totalDevices > 0 && (averageTemperature || averageTemperature === 0)) {
+        <p class="current-average-location-temperature">
+          {{ averageTemperature | number: '1.2-2' }}°F
+        </p>
+      } @else {
+        <div class="no-current-average-location-temperature">
+          <img src="temperature-icon.svg" class="icon" alt="Temperature icon." />
+          @if (totalDevices > 0) {
+            <div class="no-temperature-message-top-line">
+              There have been no temperature readings in the past 10 minutes for this location.
+            </div>
+            <div>Please ensure your devices are on and functioning.</div>
+          } @else {
+            <div>Please register a device to begin recording temperatures.</div>
+          }
+        </div>
+      }
+    </div>
   </div>
   <div class="right-panel">
     <h2>Devices [{{ totalDevices }}]</h2>

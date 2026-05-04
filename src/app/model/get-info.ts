@@ -1,3 +1,5 @@
+import { ITemperatureThreshold } from './temperature-threshold';
+
 export interface IUser {
   id: number;
   firstName: string;
@@ -19,6 +21,7 @@ export interface ILocation {
   locationId: number;
   locationName: string;
   devices: IDevice[];
+  threshold: ITemperatureThreshold;
 }
 
 export interface IDevice {

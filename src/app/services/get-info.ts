@@ -9,21 +9,22 @@ import {
   IViewHomeInfoResponse,
 } from '../model/get-info';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GetInfoService {
-  private getInfoRoot = '/getInfo';
-  private getHomeScreenInfoPath = '/homeScreenInfo';
-  private getViewHomeInfoPath = '/viewHomeInfo';
-  private getViewLocationInfoPath = '/viewLocationInfo';
-  private getInformationByDeviceCurrentDay = '/informationByDeviceCurrentDay';
+  private readonly getInfoRoot = '/getInfo';
+  private readonly getHomeScreenInfoPath = '/homeScreenInfo';
+  private readonly getViewHomeInfoPath = '/viewHomeInfo';
+  private readonly getViewLocationInfoPath = '/viewLocationInfo';
+  private readonly getInformationByDeviceCurrentDay = '/informationByDeviceCurrentDay';
 
   private readonly httpClient = inject(HttpClient);
   private readonly environmentService = inject(EnvironmentService);
 
-  getHomescreenInfo(request: IEntityInfoRequest) {
+  getHomescreenInfo(request: IEntityInfoRequest): Observable<IHomescreenInfoResponse> {
     return this.httpClient.get<IHomescreenInfoResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.getInfoRoot +
@@ -37,7 +38,7 @@ export class GetInfoService {
     );
   }
 
-  getViewHomeInfo(request: IEntityInfoRequest) {
+  getViewHomeInfo(request: IEntityInfoRequest): Observable<IViewHomeInfoResponse> {
     return this.httpClient.get<IViewHomeInfoResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.getInfoRoot +
@@ -51,7 +52,7 @@ export class GetInfoService {
     );
   }
 
-  getViewLocationInfo(request: IEntityInfoRequest) {
+  getViewLocationInfo(request: IEntityInfoRequest): Observable<ILocation> {
     return this.httpClient.get<ILocation>(
       this.environmentService.getEnvironment().backendUrl +
         this.getInfoRoot +
@@ -65,7 +66,7 @@ export class GetInfoService {
     );
   }
 
-  getViewDeviceInformation(request: IEntityInfoRequest) {
+  getViewDeviceInformation(request: IEntityInfoRequest): Observable<IDeviceInformationCurrentDay> {
     return this.httpClient.get<IDeviceInformationCurrentDay>(
       this.environmentService.getEnvironment().backendUrl +
         this.getInfoRoot +

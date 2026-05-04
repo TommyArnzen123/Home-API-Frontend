@@ -1,0 +1,52 @@
+.threshold-card {
+  width: fit-content;
+
+  .title-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    gap: 30px;
+
+    .temperature-threshold-alert-row {
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+      align-items: center;
+      font-size: 25px;
+
+      .temperature-threshold-alert-icon {
+        width: 25px;
+        height: 25px;
+      }
+    }
+  }
+
+  .threshold-card-content {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+.temperature-threshold-violation {
+  background-color: #fad5cf;
+}
+
+.temperature-threshold-healthy {
+  background-color: #cffada;
+}

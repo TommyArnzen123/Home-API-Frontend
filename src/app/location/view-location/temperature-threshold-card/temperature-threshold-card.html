@@ -1,0 +1,49 @@
+<mat-card
+  class="threshold-card"
+  [class.temperature-threshold-healthy]="averageTemperature && !isTemperatureThresholdInViolation"
+  [class.temperature-threshold-violation]="averageTemperature && isTemperatureThresholdInViolation"
+  appearance="outlined"
+>
+  <mat-card-header>
+    <div class="title-row">
+      <mat-card-title>Temperature Threshold</mat-card-title>
+      <div>
+        <div class="temperature-threshold-alert-row">
+          @if (isTemperatureThresholdInViolation) {
+            <img
+              class="temperature-threshold-alert-icon"
+              src="alert-location-temperature-icon.svg"
+              alt="Red circle alert icon."
+            />
+            <div>Alert</div>
+          } @else {
+            <img
+              class="temperature-threshold-alert-icon"
+              src="healthy-location-temperature-icon.svg"
+              alt="Green circle alert icon."
+            />
+            <div>Healthy</div>
+          }
+        </div>
+      </div>
+    </div>
+  </mat-card-header>
+  <div class="threshold-card-content">
+    @if (minTemperature) {
+      <div>Min Temp: {{ minTemperature | number: '1.2-2' }}°F</div>
+    }
+    @if (maxTemperature) {
+      <div>Max Temp: {{ maxTemperature | number: '1.2-2' }}°F</div>
+    }
+  </div>
+  <mat-card-actions>
+    <div class="button-container">
+      <button matButton="filled" (click)="displayTemperatureThresholdModal()">
+        Update Threshold
+      </button>
+      <button matButton="outlined" (click)="deleteTemperatureThresholdConfirmation()">
+        <mat-icon>delete</mat-icon>Delete Threshold
+      </button>
+    </div>
+  </mat-card-actions>
+</mat-card>

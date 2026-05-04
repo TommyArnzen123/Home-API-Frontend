@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>{{ title }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field>
+      <input
+        type="text"
+        matInput
+        placeholder="Minimum Temperature"
+        formControlName="minimumTemperature"
+      />
+      @if (
+        form.get('minimumTemperature')?.touched &&
+        form.get('minimumTemperature')?.hasError('numberViolation')
+      ) {
+        <mat-error>Please enter a valid number.</mat-error>
+      }
+    </mat-form-field>
+    <br />
+    <br />
+    <mat-form-field>
+      <input
+        type="text"
+        matInput
+        placeholder="Maximum Temperature"
+        formControlName="maximumTemperature"
+      />
+      @if (
+        form.get('maximumTemperature')?.touched &&
+        form.get('maximumTemperature')?.hasError('numberViolation')
+      ) {
+        <mat-error>Please enter a valid number.</mat-error>
+      }
+    </mat-form-field>
+    <br />
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button matButton="outlined" (click)="cancelAction()">Cancel</button>
+  <button matButton="filled" (click)="primaryAction()">{{ primaryButtonText }}</button>
+</mat-dialog-actions>

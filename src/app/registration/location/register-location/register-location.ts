@@ -17,7 +17,7 @@ import {
   IRegisterGenericEntityResponse,
 } from '../../../model/registration';
 import { IModalActions } from '../../../model/modal';
-import { REGISTER_LOCATION_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
+import { REGISTER_LOCATION_SUCCESS_MODAL } from '../../../constants/success-constants';
 import {
   INVALID_HOME_ID_ERROR_MODAL,
   REGISTER_LOCATION_ERROR_MODAL,
@@ -120,7 +120,7 @@ export class RegisterLocation implements OnInit, OnDestroy {
             if (response) {
               // The location has been added to the application.
               // Display a modal message and route the user to the view home component.
-              this.modalService.showModalElement(REGISTER_LOCATION_SUCCESS_MESSAGE);
+              this.modalService.showModalElement(REGISTER_LOCATION_SUCCESS_MODAL);
               this.viewHomeById();
             }
           },
