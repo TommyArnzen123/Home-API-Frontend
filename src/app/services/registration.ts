@@ -50,7 +50,6 @@ export class RegistrationService {
 
   registerLocation(
     registerLocationRequest: IRegisterGenericEntityRequest,
-    jwtToken: string,
   ): Observable<IRegisterGenericEntityResponse> {
     return this.httpClient.post<IRegisterGenericEntityResponse>(
       this.environmentService.getEnvironment().backendUrl +

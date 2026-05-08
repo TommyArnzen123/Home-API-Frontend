@@ -12,5 +12,5 @@ export interface IRegisterGenericEntityRequest {
 }
 
 export interface IRegisterGenericEntityResponse {
-  message: String;
+  message: string;
 }

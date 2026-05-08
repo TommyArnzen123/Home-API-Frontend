@@ -29,10 +29,7 @@
   <div class="temperature-container">
     @if (locationInfo && locationInfo.threshold) {
       <div>
-        <temperature-threshold-card
-          [averageTemperature]="averageTemperature"
-          [temperatureThreshold]="locationInfo.threshold"
-        />
+        <temperature-threshold-card />
       </div>
     }
     <div>

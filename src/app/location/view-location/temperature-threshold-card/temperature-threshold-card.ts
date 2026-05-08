@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, Input, OnDestroy } from '@angular/core';
+import { Component, effect, inject, OnDestroy } from '@angular/core';
 import { MatCard, MatCardActions, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { DecimalPipe } from '@angular/common';
 import { ITemperatureThreshold } from '../../../model/temperature-threshold';
@@ -10,7 +10,6 @@ import {
   TemperatureThresholdModalFlow,
 } from '../temperature-threshold-modal/temperature-threshold-modal';
 import { MatDialog } from '@angular/material/dialog';
-import { LoginService } from '../../../services/login';
 import { ModalService } from '../../../services/modal';
 import {
   DELETE_TEMPERATURE_THRESHOLD_ERROR_MODAL,
@@ -33,13 +32,11 @@ export class TemperatureThresholdCard implements OnDestroy {
   private subscriptions: Subscription[] = [];
   private readonly viewLocationStore = inject(ViewLocationStore);
   private readonly modal = inject(MatDialog);
-  private readonly loginService = inject(LoginService);
   private readonly modalService = inject(ModalService);
 
-  @Input({ required: true }) averageTemperature!: number | null;
-  temperatureThreshold = input.required<ITemperatureThreshold | null>();
-  protected minTemperature: number | null | undefined = null;
-  protected maxTemperature: number | null | undefined = null;
+  protected averageTemperature: number | null = null;
+  protected minTemperature: number | undefined = undefined;
+  protected maxTemperature: number | undefined = undefined;
   protected isTemperatureThresholdInViolation: boolean = false;
 
   constructor() {
@@ -50,9 +47,11 @@ export class TemperatureThresholdCard implements OnDestroy {
 
   private setGeneralEffects(): void {
     effect(() => {
-      const threshold: ITemperatureThreshold | null = this.temperatureThreshold();
-      this.minTemperature = threshold?.minimumTemperature;
-      this.maxTemperature = threshold?.maximumTemperature;
+      const threshold: ITemperatureThreshold | null | undefined =
+        this.viewLocationStore.locationInfo()?.threshold;
+      this.averageTemperature = this.viewLocationStore.averageTemperature();
+      this.minTemperature = threshold?.minimumTemperature ?? undefined;
+      this.maxTemperature = threshold?.maximumTemperature ?? undefined;
       this.setThresholdViolationStatus();
     });
   }

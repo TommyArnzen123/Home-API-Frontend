@@ -7,8 +7,15 @@ import { ILocation, IViewHomeInfoResponse } from '../../model/get-info';
 import { GetInfoService } from '../../services/get-info';
 import { DeleteService } from '../../services/delete';
 import { IDeleteLocationResponse } from '../../model/delete-actions';
+import { IRegisterGenericEntityRequest } from '../../model/registration';
+import { RegistrationService } from '../../services/registration';
 
-export type ViewHomeActions = 'get-view-home-info' | 'delete-home' | 'delete-location' | null;
+export type ViewHomeActions =
+  | 'get-view-home-info'
+  | 'delete-home'
+  | 'delete-location'
+  | 'register-location'
+  | null;
 
 interface HomescreenState {
   homeId: number | null;
@@ -35,6 +42,7 @@ export const ViewHomeStore = signalStore(
   withState(initialState),
   withMethods((store) => {
     const getInfoService = inject(GetInfoService);
+    const registrationService = inject(RegistrationService);
     const deleteService = inject(DeleteService);
 
     return {
@@ -126,6 +134,28 @@ export const ViewHomeStore = signalStore(
               }),
             ),
           ),
+        ),
+      ),
+
+      registerLocation: rxMethod<IRegisterGenericEntityRequest>(
+        pipe(
+          tap(() => patchState(store, { successNotification: null, errorNotification: null })),
+          switchMap((request: IRegisterGenericEntityRequest) => {
+            return registrationService
+              .registerLocation({ parentEntityId: request.parentEntityId, name: request.name })
+              .pipe(
+                tapResponse({
+                  next: () =>
+                    patchState(store, {
+                      successNotification: 'register-location' as ViewHomeActions,
+                    }),
+                  error: () =>
+                    patchState(store, {
+                      errorNotification: 'register-location' as ViewHomeActions,
+                    }),
+                }),
+              );
+          }),
         ),
       ),
 

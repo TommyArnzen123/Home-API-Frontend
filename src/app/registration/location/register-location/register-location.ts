@@ -1,4 +1,4 @@
-import { Component, inject, Signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, Signal, OnInit, OnDestroy, effect } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
@@ -22,6 +22,7 @@ import {
   INVALID_HOME_ID_ERROR_MODAL,
   REGISTER_LOCATION_ERROR_MODAL,
 } from '../../../constants/error-constants';
+import { ViewHomeActions, ViewHomeStore } from '../../../home/view-home/view-home.store';
 
 @Component({
   selector: 'register-location',
@@ -41,6 +42,8 @@ import {
 export class RegisterLocation implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
+  private readonly viewHomeStore = inject(ViewHomeStore);
+
   private readonly route = inject(ActivatedRoute);
   private readonly routerService = inject(RouterService);
   private readonly registrationService = inject(RegistrationService);
@@ -49,7 +52,7 @@ export class RegisterLocation implements OnInit, OnDestroy {
   private readonly breadcrumbService = inject(BreadcrumbService);
 
   protected form!: FormGroup;
-  protected homeId: number | null;
+  protected homeId: number | null = null;
 
   constructor() {
     this.breadcrumbService.updatePageInFocus('register-location');
@@ -63,12 +66,36 @@ export class RegisterLocation implements OnInit, OnDestroy {
       this.modalService.showModalElement(INVALID_HOME_ID_ERROR_MODAL, modalActions);
     } else {
       this.homeId = id;
+      this.viewHomeStore.resetNotificationState(); // Prevent routing from previous success notification.
+      this.setSuccessEffects();
+      this.setErrorEffects();
     }
   }
 
   ngOnInit(): void {
     this.form = new FormGroup({
       locationName: new FormControl('', [Validators.required]),
+    });
+  }
+
+  private setSuccessEffects(): void {
+    effect(() => {
+      const success: ViewHomeActions = this.viewHomeStore.successNotification();
+
+      if (success === 'register-location') {
+        this.modalService.showModalElement(REGISTER_LOCATION_SUCCESS_MODAL);
+        this.viewHomeById();
+      }
+    });
+  }
+
+  private setErrorEffects(): void {
+    effect(() => {
+      const error: ViewHomeActions = this.viewHomeStore.errorNotification();
+
+      if (error === 'register-location') {
+        this.modalService.showModalElement(REGISTER_LOCATION_ERROR_MODAL);
+      }
     });
   }
 
@@ -84,8 +111,8 @@ export class RegisterLocation implements OnInit, OnDestroy {
     if (this.form.valid) {
       const locationName = this.form.get('locationName')?.value || '';
 
-      if (locationName) {
-        this.registerLocationAction(locationName);
+      if (this.homeId && locationName) {
+        this.viewHomeStore.registerLocation({ parentEntityId: this.homeId, name: locationName });
       } else {
         this.modalService.showModalElement(REGISTER_LOCATION_ERROR_MODAL);
       }
@@ -101,36 +128,6 @@ export class RegisterLocation implements OnInit, OnDestroy {
 
     if (id !== null) {
       this.routerService.viewHomeById(id);
-    }
-  }
-
-  private registerLocationAction(locationName: string): void {
-    const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
-    const jwtToken = user()?.jwtToken;
-
-    if (this.homeId && jwtToken && locationName) {
-      const registerLocationRequest: IRegisterGenericEntityRequest = {
-        parentEntityId: this.homeId,
-        name: locationName,
-      };
-
-      this.subscriptions.push(
-        this.registrationService.registerLocation(registerLocationRequest, jwtToken).subscribe({
-          next: (response: IRegisterGenericEntityResponse) => {
-            if (response) {
-              // The location has been added to the application.
-              // Display a modal message and route the user to the view home component.
-              this.modalService.showModalElement(REGISTER_LOCATION_SUCCESS_MODAL);
-              this.viewHomeById();
-            }
-          },
-          error: () => {
-            this.modalService.showModalElement(REGISTER_LOCATION_ERROR_MODAL);
-          },
-        }),
-      );
-    } else {
-      this.modalService.showModalElement(REGISTER_LOCATION_ERROR_MODAL);
     }
   }
 }

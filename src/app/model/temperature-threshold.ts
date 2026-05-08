@@ -5,10 +5,6 @@ export interface ITemperatureThreshold {
   locationId: number;
 }
 
-// export interface ITemperatureThresholdRequest extends ITemperatureThreshold {
-//   jwtToken: string;
-// }
-
 export interface IDeleteTemperatureThresholdRequest {
   thresholdId: number;
   jwtToken: string;

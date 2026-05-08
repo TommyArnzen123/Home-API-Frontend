@@ -1,25 +1,13 @@
-import {
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  Output,
-  OnInit,
-  OnDestroy,
-  effect,
-} from '@angular/core';
+import { Component, inject, Input, OnInit, OnDestroy, effect } from '@angular/core';
 import { MatCard, MatCardActions, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { DecimalPipe } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { DeleteService } from '../../../services/delete';
 import { ModalService } from '../../../services/modal';
 import { RouterService } from '../../../services/router';
-import { IDeleteEntityRequest, IDeleteLocationResponse } from '../../../model/delete-actions';
 import { IModalActions } from '../../../model/modal';
 import { ILocation } from '../../../model/get-info';
-import { DELETE_LOCATION_SUCCESS_MODAL } from '../../../constants/delete-constants';
 import { DELETE_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
 import { DELETE_LOCATION_CONFIRMATION_MODAL } from '../../../constants/dialog-confirmation-constants';
 import {

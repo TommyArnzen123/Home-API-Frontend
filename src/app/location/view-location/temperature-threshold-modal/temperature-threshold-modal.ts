@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import {
   MatDialogTitle,
   MatDialogContent,
@@ -16,7 +16,6 @@ import {
   ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
-import { ModalService } from '../../../services/modal';
 import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 
@@ -50,8 +49,6 @@ interface ITemperatureThresholdModal extends ITemperatureThresholdModalLimits {
 })
 export class TemperatureThresholdModal implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
-
-  private readonly modalService = inject(ModalService);
 
   protected flow: TemperatureThresholdModalFlow = 'add-temperature-threshold';
   protected title: string = 'Add Temperature Threshold';
