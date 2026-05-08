@@ -1,4 +1,4 @@
-import { Component, inject, Signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, effect } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
@@ -6,22 +6,19 @@ import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Subscription } from 'rxjs';
-import { RegistrationService } from '../../../services/registration';
-import { LoginService } from '../../../services/login';
 import { ModalService } from '../../../services/modal';
 import { RouterService } from '../../../services/router';
 import { BreadcrumbService } from '../../../services/breadcrumb';
-import { IUser } from '../../../model/login';
-import {
-  IRegisterGenericEntityRequest,
-  IRegisterGenericEntityResponse,
-} from '../../../model/registration';
 import { IModalActions } from '../../../model/modal';
 import { REGISTER_DEVICE_SUCCESS_MODAL } from '../../../constants/success-constants';
 import {
   INVALID_LOCATION_ID_ERROR_MODAL,
   REGISTER_DEVICE_ERROR_MODAL,
 } from '../../../constants/error-constants';
+import {
+  ViewLocationActions,
+  ViewLocationStore,
+} from '../../../location/view-location/view-location.store';
 
 @Component({
   selector: 'register-device',
@@ -41,10 +38,10 @@ import {
 export class RegisterDevice implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
+  private readonly viewLocationStore = inject(ViewLocationStore);
+
   private readonly route = inject(ActivatedRoute);
   private readonly routerService = inject(RouterService);
-  private readonly registrationService = inject(RegistrationService);
-  private readonly loginService = inject(LoginService);
   private readonly modalService = inject(ModalService);
   private readonly breadcrumbService = inject(BreadcrumbService);
 
@@ -64,12 +61,36 @@ export class RegisterDevice implements OnInit, OnDestroy {
       this.modalService.showModalElement(INVALID_LOCATION_ID_ERROR_MODAL, modalActions);
     } else {
       this.locationId = id;
+      this.viewLocationStore.resetNotificationState(); // Prevent routing from previous success notification.
+      this.setSuccessEffects();
+      this.setErrorEffects();
     }
   }
 
   ngOnInit(): void {
     this.form = new FormGroup({
       deviceName: new FormControl('', [Validators.required]),
+    });
+  }
+
+  private setSuccessEffects(): void {
+    effect(() => {
+      const success: ViewLocationActions = this.viewLocationStore.successNotification();
+
+      if (success === 'register-device') {
+        this.modalService.showModalElement(REGISTER_DEVICE_SUCCESS_MODAL);
+        this.viewLocationById();
+      }
+    });
+  }
+
+  private setErrorEffects(): void {
+    effect(() => {
+      const error: ViewLocationActions = this.viewLocationStore.errorNotification();
+
+      if (error === 'register-device') {
+        this.modalService.showModalElement(REGISTER_DEVICE_ERROR_MODAL);
+      }
     });
   }
 
@@ -85,8 +106,11 @@ export class RegisterDevice implements OnInit, OnDestroy {
     if (this.form.valid) {
       const deviceName = this.form.get('deviceName')?.value || '';
 
-      if (deviceName) {
-        this.registerDeviceAction(deviceName);
+      if (this.locationId && deviceName) {
+        this.viewLocationStore.registerDevice({
+          parentEntityId: this.locationId,
+          name: deviceName,
+        });
       }
     }
   }
@@ -101,35 +125,5 @@ export class RegisterDevice implements OnInit, OnDestroy {
 
   private viewHomescreen(): void {
     this.routerService.viewHomescreen();
-  }
-
-  private registerDeviceAction(deviceName: string): void {
-    const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
-    const jwtToken = user()?.jwtToken;
-
-    if (this.locationId && jwtToken && deviceName) {
-      const registerDeviceRequest: IRegisterGenericEntityRequest = {
-        parentEntityId: this.locationId,
-        name: deviceName,
-      };
-
-      this.subscriptions.push(
-        this.registrationService.registerDevice(registerDeviceRequest, jwtToken).subscribe({
-          next: (response: IRegisterGenericEntityResponse) => {
-            if (response) {
-              // The device has been added to the application.
-              // Display a modal message and route the user to the view location component.
-              this.modalService.showModalElement(REGISTER_DEVICE_SUCCESS_MODAL);
-              this.viewLocationById();
-            }
-          },
-          error: () => {
-            this.modalService.showModalElement(REGISTER_DEVICE_ERROR_MODAL);
-          },
-        }),
-      );
-    } else {
-      this.modalService.showModalElement(REGISTER_DEVICE_ERROR_MODAL);
-    }
   }
 }

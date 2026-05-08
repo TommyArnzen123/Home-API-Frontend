@@ -9,10 +9,10 @@
   <div class="home-container">
     <h1>Your Homes</h1>
     <div class="home-items">
-      @if (homeInfo.length > 0) {
+      @if (homeInfo && homeInfo.length > 0) {
         @for (home of homeInfo; track home.homeId) {
           <div class="home-item">
-            <home-card [homeInfo]="home" (homeDeleted)="homeDeletedAction($event)" />
+            <home-card [homeInfo]="home" />
           </div>
         }
       } @else {

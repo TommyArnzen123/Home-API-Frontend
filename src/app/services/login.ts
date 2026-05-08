@@ -44,6 +44,10 @@ export class LoginService {
     return this.userLoginInfo;
   }
 
+  getJwtToken(): string | undefined {
+    return this.userLoginInfo()?.jwtToken;
+  }
+
   private updateUserLoginInfo(userInfo: IUser | null): void {
     let tempUserInfo: IUser | null = userInfo;
     if (userInfo) {

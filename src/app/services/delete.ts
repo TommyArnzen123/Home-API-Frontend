@@ -8,6 +8,7 @@ import {
   IDeleteLocationResponse,
 } from '../model/delete-actions';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,7 @@ export class DeleteService {
   private readonly httpClient = inject(HttpClient);
   private readonly environmentService = inject(EnvironmentService);
 
-  deleteHomeById(request: IDeleteEntityRequest) {
+  deleteHomeById(request: IDeleteEntityRequest): Observable<IDeleteHomeResponse> {
     return this.httpClient.delete<IDeleteHomeResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.deleteRoot +
@@ -32,7 +33,7 @@ export class DeleteService {
     );
   }
 
-  deleteLocationById(request: IDeleteEntityRequest) {
+  deleteLocationById(request: IDeleteEntityRequest): Observable<IDeleteLocationResponse> {
     return this.httpClient.delete<IDeleteLocationResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.deleteRoot +
@@ -43,7 +44,7 @@ export class DeleteService {
     );
   }
 
-  deleteDeviceById(request: IDeleteEntityRequest) {
+  deleteDeviceById(request: IDeleteEntityRequest): Observable<IDeleteDeviceResponse> {
     return this.httpClient.delete<IDeleteDeviceResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.deleteRoot +

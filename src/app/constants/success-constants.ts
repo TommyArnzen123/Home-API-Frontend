@@ -23,9 +23,11 @@ export const REGISTER_DEVICE_SUCCESS_MODAL: IModal = {
 export const ADD_TEMPERATURE_THRESHOLD_SUCCESS_MODAL: IModal = {
   title: 'Threshold Added',
   content: 'The temperature threshold has been added.',
+  disableClose: true,
 };
 
 export const UPDATE_TEMPERATURE_THRESHOLD_SUCCESS_MODAL: IModal = {
   title: 'Threshold Updated',
   content: 'The temperature threshold has been updated.',
+  disableClose: true,
 };

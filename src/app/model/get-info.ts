@@ -21,7 +21,7 @@ export interface ILocation {
   locationId: number;
   locationName: string;
   devices: IDevice[];
-  threshold: ITemperatureThreshold;
+  threshold: ITemperatureThreshold | null;
 }
 
 export interface IDevice {
@@ -56,7 +56,6 @@ export interface IDeviceInformationCurrentDay {
 
 export interface IEntityInfoRequest {
   id: number;
-  jwtToken: string;
 }
 
 export interface IHomescreenInfoResponse {

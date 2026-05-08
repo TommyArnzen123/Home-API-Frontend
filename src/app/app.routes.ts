@@ -31,7 +31,7 @@ import {
 export const routes: Routes = [
   {
     path: ROOT_ROUTE,
-    canActivate: [isUserAuthenticated],
+    canActivateChild: [isUserAuthenticated],
     children: [
       { path: ROOT_ROUTE, redirectTo: HOMESCREEN_ROUTE, pathMatch: 'full' },
       { path: HOMESCREEN_ROUTE, component: Homescreen },

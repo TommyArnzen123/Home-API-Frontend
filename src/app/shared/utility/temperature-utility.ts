@@ -26,8 +26,8 @@ export function setAverageTemperature(devices: IDevice[]): number | null {
 // Check to see if the average temperature is outside the threshold limits.
 export function isThresholdViolated(
   averageTemperature: number,
-  minThreshold: number | undefined,
-  maxThreshold: number | undefined,
+  minThreshold: number | null | undefined,
+  maxThreshold: number | null | undefined,
 ): boolean {
   if (
     (minThreshold && averageTemperature < minThreshold) ||

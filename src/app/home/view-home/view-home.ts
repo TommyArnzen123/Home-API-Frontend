@@ -1,31 +1,26 @@
-import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, effect } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
-import { GetInfoService } from '../../services/get-info';
-import { LoginService } from '../../services/login';
-import { DeleteService } from '../../services/delete';
 import { ModalService } from '../../services/modal';
 import { BreadcrumbService } from '../../services/breadcrumb';
 import { RouterService } from '../../services/router';
 import { ItemTotals } from '../../item-totals/item-totals';
 import { LocationCard } from './location-card/location-card';
-import { ILocation, IEntityInfoRequest, IViewHomeInfoResponse } from '../../model/get-info';
-import { IUser } from '../../model/login';
-import {
-  IDeleteEntityRequest,
-  IDeleteHomeResponse,
-  IDeleteLocationResponse,
-} from '../../model/delete-actions';
+import { ILocation } from '../../model/get-info';
 import { IModalActions } from '../../model/modal';
-import { DELETE_HOME_SUCCESS_MODAL } from '../../constants/delete-constants';
+import {
+  DELETE_HOME_SUCCESS_MODAL,
+  DELETE_LOCATION_SUCCESS_MODAL,
+} from '../../constants/delete-constants';
 import {
   INVALID_HOME_ID_ERROR_MODAL,
   DELETE_HOME_ERROR_MODAL,
   VIEW_HOME_GET_INFO_ERROR_MODAL,
 } from '../../constants/error-constants';
 import { DELETE_HOME_CONFIRMATION_MODAL } from '../../constants/dialog-confirmation-constants';
+import { ViewHomeActions, ViewHomeStore } from './view-home.store';
 
 @Component({
   selector: 'view-home',
@@ -36,11 +31,10 @@ import { DELETE_HOME_CONFIRMATION_MODAL } from '../../constants/dialog-confirmat
 export class ViewHome implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
+  private readonly viewHomeStore = inject(ViewHomeStore);
+
   private readonly route = inject(ActivatedRoute);
   private readonly routerService = inject(RouterService);
-  private readonly loginService = inject(LoginService);
-  private readonly getInfoService = inject(GetInfoService);
-  private readonly deleteService = inject(DeleteService);
   private readonly modalService = inject(ModalService);
   private readonly breadcrumbService = inject(BreadcrumbService);
 
@@ -50,65 +44,84 @@ export class ViewHome implements OnInit, OnDestroy {
   protected totalDevices: number = 0;
 
   constructor() {
-    const id = Number(this.route.snapshot.paramMap.get('homeId'));
-
-    if (isNaN(id)) {
-      // If the value provided for the homeId is not a number, route the user to the
-      // homescreen. No home data can be received if a valid home ID is not provided.
-      const viewHomeInvalidHomeIDErrorActions: IModalActions = {
-        primaryAction: () => this.viewHomescreen(),
-      };
-      this.modalService.showModalElement(
-        INVALID_HOME_ID_ERROR_MODAL,
-        viewHomeInvalidHomeIDErrorActions,
-      );
-      this.homeId = null;
-    } else {
-      this.homeId = id;
-      this.breadcrumbService.updateHomeId(this.homeId);
-      this.breadcrumbService.updatePageInFocus('view-home');
-    }
+    this.setSuccessEffects();
+    this.setErrorEffects();
+    this.setGeneralEffects();
   }
 
   ngOnInit(): void {
-    const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
-    const jwtToken = user()?.jwtToken || undefined;
+    const id = Number(this.route.snapshot.paramMap.get('homeId'));
 
-    if (this.isIUser(user()) && jwtToken) {
-      if (this.homeId) {
-        const getViewHomeInfoRequest: IEntityInfoRequest = {
-          id: this.homeId,
-          jwtToken,
+    if (isNaN(id)) {
+      this.displayInvalidHomeIdError();
+    } else {
+      this.breadcrumbService.updateHomeId(id);
+      this.breadcrumbService.updatePageInFocus('view-home');
+    }
+
+    this.viewHomeStore.reset();
+    this.viewHomeStore.getHomeInfo(id); // Get home info.
+  }
+
+  private displayInvalidHomeIdError(): void {
+    // If the value provided for the homeId is not a number, route the user to the
+    // homescreen. No home data can be received if a valid home ID is not provided.
+    const viewHomeInvalidHomeIDErrorActions: IModalActions = {
+      primaryAction: () => this.viewHomescreen(),
+    };
+    this.modalService.showModalElement(
+      INVALID_HOME_ID_ERROR_MODAL,
+      viewHomeInvalidHomeIDErrorActions,
+    );
+  }
+
+  private setGeneralEffects(): void {
+    // Get the home info as it is updated over time.
+    effect(() => {
+      this.homeId = this.viewHomeStore.homeId();
+      this.homeName = this.viewHomeStore.homeName();
+      this.locations = this.viewHomeStore.locations();
+      this.totalDevices = this.viewHomeStore.totalDevices();
+    });
+  }
+
+  private setSuccessEffects(): void {
+    const modalActions: IModalActions = {
+      primaryAction: () => this.viewHomeStore.resetNotificationState(),
+    };
+
+    effect(() => {
+      const success: ViewHomeActions = this.viewHomeStore.successNotification();
+
+      if (success === 'delete-home') {
+        this.modalService.showModalElement(DELETE_HOME_SUCCESS_MODAL, modalActions);
+        this.viewHomescreen();
+      }
+
+      if (success === 'delete-location') {
+        this.modalService.showModalElement(DELETE_LOCATION_SUCCESS_MODAL, modalActions);
+      }
+    });
+  }
+
+  private setErrorEffects(): void {
+    effect(() => {
+      const error: ViewHomeActions = this.viewHomeStore.errorNotification();
+
+      if (error === 'get-view-home-info') {
+        const viewHomeGetInfoErrorActions: IModalActions = {
+          primaryAction: () => this.viewHomescreen(),
         };
-
-        // Get the home info.
-        this.subscriptions.push(
-          this.getInfoService.getViewHomeInfo(getViewHomeInfoRequest).subscribe({
-            next: (response: IViewHomeInfoResponse) => {
-              this.homeName = response.homeName;
-              this.locations = response.locations;
-
-              response.locations.forEach((location) => {
-                this.totalDevices += location.devices.length;
-              });
-            },
-            error: () => {
-              // If there is an error getting information for the view home page, display an error
-              // message modal and route the user back to the homescreen route.
-              const viewHomeGetInfoErrorActions: IModalActions = {
-                primaryAction: () => this.viewHomescreen(),
-              };
-              this.modalService.showModalElement(
-                VIEW_HOME_GET_INFO_ERROR_MODAL,
-                viewHomeGetInfoErrorActions,
-              );
-            },
-          }),
+        this.modalService.showModalElement(
+          VIEW_HOME_GET_INFO_ERROR_MODAL,
+          viewHomeGetInfoErrorActions,
         );
       }
-    } else {
-      this.loginService.logout();
-    }
+
+      if (error === 'delete-home') {
+        this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -127,47 +140,12 @@ export class ViewHome implements OnInit, OnDestroy {
 
   protected deleteHomeConfirmation(): void {
     const deleteHomeConfirmationActions: IModalActions = {
-      primaryAction: () => this.deleteHome(),
+      primaryAction: () => this.viewHomeStore.deleteHome(),
     };
 
     this.modalService.showModalElement(
       DELETE_HOME_CONFIRMATION_MODAL,
       deleteHomeConfirmationActions,
     );
-  }
-
-  private deleteHome(): void {
-    if (this.homeId) {
-      const deleteHomeRequest: IDeleteEntityRequest = {
-        id: this.homeId,
-      };
-
-      this.subscriptions.push(
-        this.deleteService.deleteHomeById(deleteHomeRequest).subscribe({
-          next: (response: IDeleteHomeResponse) => {
-            this.modalService.showModalElement(DELETE_HOME_SUCCESS_MODAL);
-            this.viewHomescreen();
-          },
-          error: () => {
-            this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);
-          },
-        }),
-      );
-    } else {
-      this.modalService.showModalElement(DELETE_HOME_ERROR_MODAL);
-    }
-  }
-
-  protected locationDeletedAction(deleteLocationResponse: IDeleteLocationResponse): void {
-    this.totalDevices = this.totalDevices - deleteLocationResponse.numDevices;
-
-    // Remove the deleted location from the registered locations list.
-    this.locations = this.locations.filter(
-      (location) => location.locationId !== deleteLocationResponse.locationId,
-    );
-  }
-
-  private isIUser(value: IUser | null): value is IUser {
-    return this.loginService.isIUser(value);
   }
 }

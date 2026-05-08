@@ -23,10 +23,7 @@
       @if (locations.length > 0) {
         @for (location of locations; track location.locationId) {
           <div class="location-item">
-            <location-card
-              [locationInfo]="location"
-              (locationDeleted)="locationDeletedAction($event)"
-            />
+            <location-card [locationInfo]="location" />
           </div>
         }
       } @else {

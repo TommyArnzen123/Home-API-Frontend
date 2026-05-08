@@ -32,7 +32,6 @@ export class GetInfoService {
         '/' +
         request.id,
       {
-        headers: this.generateHeaderWithBearerToken(request.jwtToken),
         context: new HttpContext().set(LoadingContextToken, 'Getting home screen info'),
       },
     );
@@ -46,7 +45,6 @@ export class GetInfoService {
         '/' +
         request.id,
       {
-        headers: this.generateHeaderWithBearerToken(request.jwtToken),
         context: new HttpContext().set(LoadingContextToken, 'Getting home info'),
       },
     );
@@ -60,7 +58,6 @@ export class GetInfoService {
         '/' +
         request.id,
       {
-        headers: this.generateHeaderWithBearerToken(request.jwtToken),
         context: new HttpContext().set(LoadingContextToken, 'Getting location info'),
       },
     );
@@ -74,15 +71,8 @@ export class GetInfoService {
         '/' +
         request.id,
       {
-        headers: this.generateHeaderWithBearerToken(request.jwtToken),
         context: new HttpContext().set(LoadingContextToken, 'Getting device info'),
       },
     );
-  }
-
-  generateHeaderWithBearerToken(jwtToken: string): HttpHeaders {
-    return new HttpHeaders({
-      Authorization: `Bearer ${jwtToken}`,
-    });
   }
 }

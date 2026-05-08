@@ -98,16 +98,14 @@ export class ViewDevice implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
-    const jwtToken = user()?.jwtToken || undefined;
 
-    if (this.isIUser(user()) && jwtToken) {
+    if (this.isIUser(user())) {
       const locationIdSignal: Signal<number | null> = this.breadcrumbService.getLocationId();
       this.locationId = locationIdSignal();
 
       if (this.deviceId) {
         const getViewDeviceInfoRequest: IEntityInfoRequest = {
           id: this.deviceId,
-          jwtToken,
         };
 
         this.subscriptions.push(

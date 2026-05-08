@@ -123,6 +123,7 @@ export const DELETE_DEVICE_ERROR_MODAL: IModal = {
   title: 'Something Went Wrong...',
   content: DELETE_DEVICE_ERROR.message,
   footer: 'Error Code: ' + DELETE_DEVICE_ERROR.errorCode,
+  disableClose: true,
 };
 
 export const INVALID_HOME_ID_ERROR_MODAL: IModal = {

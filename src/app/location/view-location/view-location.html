@@ -1,15 +1,15 @@
 <div class="top-row-container">
-  @if (locationName) {
-    <div class="title">{{ locationName }}</div>
+  @if (locationInfo && locationInfo.locationName) {
+    <div class="title">{{ locationInfo.locationName }}</div>
   } @else {
     <div class="title">Location Name Unavailable</div>
   }
   <div class="button-container">
-    @if (locationId) {
+    @if (locationInfo) {
       <button class="button-display" matButton="outlined" (click)="deleteLocationConfirmation()">
         <mat-icon>delete</mat-icon>Delete Location
       </button>
-      @if (!temperatureThreshold()) {
+      @if (!locationInfo.threshold) {
         <button
           class="button-display"
           matButton="filled"
@@ -27,24 +27,27 @@
 
 <div class="body-content-container">
   <div class="temperature-container">
-    @if (temperatureThreshold()) {
+    @if (locationInfo && locationInfo.threshold) {
       <div>
         <temperature-threshold-card
           [averageTemperature]="averageTemperature"
-          [temperatureThreshold]="temperatureThreshold()"
-          (thresholdUpdated)="thresholdUpdated($event)"
+          [temperatureThreshold]="locationInfo.threshold"
         />
       </div>
     }
     <div>
-      @if (totalDevices > 0 && (averageTemperature || averageTemperature === 0)) {
+      @if (
+        locationInfo &&
+        locationInfo.devices.length > 0 &&
+        (averageTemperature || averageTemperature === 0)
+      ) {
         <p class="current-average-location-temperature">
           {{ averageTemperature | number: '1.2-2' }}°F
         </p>
       } @else {
         <div class="no-current-average-location-temperature">
           <img src="temperature-icon.svg" class="icon" alt="Temperature icon." />
-          @if (totalDevices > 0) {
+          @if (locationInfo && locationInfo.devices.length > 0) {
             <div class="no-temperature-message-top-line">
               There have been no temperature readings in the past 10 minutes for this location.
             </div>
@@ -57,12 +60,16 @@
     </div>
   </div>
   <div class="right-panel">
-    <h2>Devices [{{ totalDevices }}]</h2>
+    @if (locationInfo && locationInfo.devices) {
+      <h2>Devices [{{ locationInfo.devices.length }}]</h2>
+    } @else {
+      <h2>Devices [0]</h2>
+    }
     <div class="devices-container">
       <div class="device-items">
-        @if (devices.length > 0) {
-          @for (device of devices; track device.deviceId) {
-            <device-card [deviceInfo]="device" (deviceDeleted)="deviceDeletedAction($event)" />
+        @if (locationInfo && locationInfo.devices && locationInfo.devices.length > 0) {
+          @for (device of locationInfo.devices; track device.deviceId) {
+            <device-card [deviceInfo]="device" />
           }
         } @else {
           <div class="no-devices-registered-container">

@@ -1,4 +1,13 @@
-import { Component, EventEmitter, inject, Input, Output, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  OnInit,
+  OnDestroy,
+  effect,
+} from '@angular/core';
 import { MatCard, MatCardActions, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -17,6 +26,7 @@ import {
   isThresholdViolated,
   setAverageTemperature,
 } from '../../../shared/utility/temperature-utility';
+import { ViewHomeActions, ViewHomeStore } from '../view-home.store';
 
 @Component({
   selector: 'location-card',
@@ -27,8 +37,9 @@ import {
 export class LocationCard implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
+  private readonly viewHomeStore = inject(ViewHomeStore);
+
   private readonly routerService = inject(RouterService);
-  private readonly deleteService = inject(DeleteService);
   private readonly modalService = inject(ModalService);
 
   protected averageTemperature: number | null = null;
@@ -37,7 +48,24 @@ export class LocationCard implements OnInit, OnDestroy {
   protected isTemperatureThresholdInViolation: boolean = false;
 
   @Input({ required: true }) locationInfo!: ILocation;
-  @Output() locationDeleted = new EventEmitter<IDeleteLocationResponse>();
+
+  constructor() {
+    this.setErrorEffects();
+  }
+
+  private setErrorEffects(): void {
+    const modalActions: IModalActions = {
+      primaryAction: () => this.viewHomeStore.resetNotificationState(),
+    };
+
+    effect(() => {
+      const error: ViewHomeActions = this.viewHomeStore.errorNotification();
+
+      if (error === 'delete-location') {
+        this.modalService.showModalElement(DELETE_LOCATION_ERROR_MODAL, modalActions);
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.minThreshold =
@@ -86,21 +114,7 @@ export class LocationCard implements OnInit, OnDestroy {
 
   private deleteLocation(): void {
     if (this.locationInfo && this.locationInfo.locationId) {
-      const deleteLocationRequest: IDeleteEntityRequest = {
-        id: this.locationInfo.locationId,
-      };
-
-      this.subscriptions.push(
-        this.deleteService.deleteLocationById(deleteLocationRequest).subscribe({
-          next: (response: IDeleteLocationResponse) => {
-            this.modalService.showModalElement(DELETE_LOCATION_SUCCESS_MODAL);
-            this.locationDeleted.emit(response);
-          },
-          error: () => {
-            this.modalService.showModalElement(DELETE_LOCATION_ERROR_MODAL);
-          },
-        }),
-      );
+      this.viewHomeStore.deleteLocation(this.locationInfo.locationId);
     } else {
       this.modalService.showModalElement(DELETE_LOCATION_ERROR_MODAL);
     }
