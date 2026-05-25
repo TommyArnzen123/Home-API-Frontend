@@ -1,15 +1,17 @@
-import { IDevice } from '../../model/get-info';
+import { IDeviceSummary } from '../../model/get-info';
+import { DeviceData } from '../../store/entity.store';
 
-export function setAverageTemperature(devices: IDevice[]): number | null {
+// Check usage - Can possibly be deleted.
+export function setAverageTemperature(devices: DeviceData[]): number | null {
   let counter = 0;
   let temperature: number | null = null;
 
   devices.forEach((device) => {
-    if (device.temperature) {
+    if (device.summary.temperature) {
       counter++;
       temperature = temperature
-        ? temperature + device.temperature.temperature
-        : device.temperature.temperature;
+        ? temperature + device.summary.temperature.temperature
+        : device.summary.temperature.temperature;
     }
   });
 

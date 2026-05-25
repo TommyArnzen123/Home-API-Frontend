@@ -1,19 +1,21 @@
 <mat-card
   class="location-card"
   [class.temperature-threshold-healthy]="
-    averageTemperature && this.locationInfo.threshold && !isTemperatureThresholdInViolation
+    locationInfo.summary.averageTemperature &&
+    locationInfo.summary.threshold &&
+    !isTemperatureThresholdInViolation
   "
   [class.temperature-threshold-violation]="
-    this.locationInfo.threshold && isTemperatureThresholdInViolation
+    locationInfo.summary.threshold && isTemperatureThresholdInViolation
   "
   appearance="outlined"
 >
   <mat-card-header>
     <div class="title-row">
       <mat-card-title>
-        {{ locationInfo.locationName }}
+        {{ locationInfo.summary.locationName }}
       </mat-card-title>
-      @if (this.locationInfo.threshold) {
+      @if (locationInfo.summary.threshold) {
         <div>
           <div class="temperature-threshold-alert-row">
             @if (isTemperatureThresholdInViolation) {
@@ -37,7 +39,7 @@
     </div>
   </mat-card-header>
   <div class="location-card-content">
-    @if (averageTemperature) {
+    @if (locationInfo.summary.averageTemperature) {
       <div class="temperature average-temperature">
         {{ averageTemperature | number: '1.2-2' }}°F
       </div>
@@ -57,12 +59,12 @@
       }
       <div class="entity">
         <img src="device-icon.svg" class="entity-icon" alt="Device icon." />
-        <div class="total-items">{{ locationInfo.devices.length }}</div>
+        <div class="total-items">{{ locationInfo.summary.numDevices }}</div>
       </div>
     </div>
   </div>
   <mat-card-actions class="button-container">
-    @if (this.locationInfo && this.locationInfo.locationId) {
+    @if (this.locationInfo && this.locationInfo.entityId) {
       <button matButton="outlined" (click)="viewLocationById()">View</button>
       <button matButton="filled" (click)="deleteLocationConfirmation()">
         <mat-icon>delete</mat-icon>Delete

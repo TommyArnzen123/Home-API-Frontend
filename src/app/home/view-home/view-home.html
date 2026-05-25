@@ -1,11 +1,11 @@
 <div class="top-row-container">
-  @if (homeName) {
-    <div class="title">{{ homeName }}</div>
+  @if (homeName()) {
+    <div class="title">{{ homeName() }}</div>
   } @else {
     <div class="title">Home Name Unavailable</div>
   }
   <div class="button-container">
-    @if (homeId) {
+    @if (homeId()) {
       <button class="button-display" matButton="outlined" (click)="deleteHomeConfirmation()">
         <mat-icon>delete</mat-icon>Delete Home
       </button>
@@ -20,13 +20,10 @@
   <div class="locations-container">
     <h1>Locations</h1>
     <div class="location-items">
-      @if (locations.length > 0) {
-        @for (location of locations; track location.locationId) {
+      @if (locationInfo().length > 0) {
+        @for (location of locationInfo(); track location.entityId) {
           <div class="location-item">
-            <location-card
-              [locationInfo]="location"
-              (locationDeleted)="locationDeletedAction($event)"
-            />
+            <location-card [locationInfo]="location" />
           </div>
         }
       } @else {
@@ -45,7 +42,7 @@
       <item-totals
         [displayTotalHomes]="false"
         [displayTotalLocations]="true"
-        [totalLocations]="locations.length"
+        [totalLocations]="locationInfo().length"
         [displayTotalDevices]="true"
         [totalDevices]="totalDevices"
       />

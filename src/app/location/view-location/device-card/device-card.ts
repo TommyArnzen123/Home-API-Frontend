@@ -1,18 +1,13 @@
-import { Component, EventEmitter, inject, Input, Output, OnDestroy } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { MatCard, MatCardActions, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { DecimalPipe } from '@angular/common';
-import { Subscription } from 'rxjs';
-import { DeleteService } from '../../../services/delete';
 import { ModalService } from '../../../services/modal';
 import { RouterService } from '../../../services/router';
-import { IDeleteEntityRequest, IDeleteDeviceResponse } from '../../../model/delete-actions';
 import { IModalActions } from '../../../model/modal';
-import { IDevice } from '../../../model/get-info';
-import { DELETE_DEVICE_SUCCESS_MODAL } from '../../../constants/delete-constants';
-import { DELETE_DEVICE_ERROR_MODAL } from '../../../constants/error-constants';
 import { DELETE_DEVICE_CONFIRMATION_MODAL } from '../../../constants/dialog-confirmation-constants';
+import { DeviceData, EntityStore } from '../../../store/entity.store';
 
 @Component({
   selector: 'device-card',
@@ -20,56 +15,29 @@ import { DELETE_DEVICE_CONFIRMATION_MODAL } from '../../../constants/dialog-conf
   templateUrl: './device-card.html',
   styleUrl: './device-card.scss',
 })
-export class DeviceCard implements OnDestroy {
-  private subscriptions: Subscription[] = [];
-
+export class DeviceCard {
+  private readonly entityStore = inject(EntityStore);
   private readonly routerService = inject(RouterService);
-  private readonly deleteService = inject(DeleteService);
   private readonly modalService = inject(ModalService);
 
-  @Input({ required: true }) deviceInfo!: IDevice;
-  @Output() deviceDeleted = new EventEmitter<IDeleteDeviceResponse>();
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
-  }
+  @Input({ required: true }) deviceInfo!: DeviceData;
 
   protected viewDeviceById(): void {
-    if (this.deviceInfo && this.deviceInfo.deviceId) {
-      this.routerService.viewDeviceById(this.deviceInfo.deviceId);
+    if (this.deviceInfo && this.deviceInfo.entityId) {
+      this.routerService.viewDeviceById(this.deviceInfo.entityId);
     }
   }
 
   protected deleteDeviceConfirmation(): void {
-    const deleteDeviceConfirmationActions: IModalActions = {
-      primaryAction: () => this.deleteDevice(),
-    };
-
-    this.modalService.showModalElement(
-      DELETE_DEVICE_CONFIRMATION_MODAL,
-      deleteDeviceConfirmationActions,
-    );
-  }
-
-  private deleteDevice(): void {
-    if (this.deviceInfo && this.deviceInfo.deviceId) {
-      const deleteDeviceRequest: IDeleteEntityRequest = {
-        id: this.deviceInfo.deviceId,
+    if (this.deviceInfo && this.deviceInfo.entityId) {
+      const deleteDeviceConfirmationActions: IModalActions = {
+        primaryAction: () => this.entityStore.deleteDevice(this.deviceInfo.entityId),
       };
 
-      this.subscriptions.push(
-        this.deleteService.deleteDeviceById(deleteDeviceRequest).subscribe({
-          next: (response: IDeleteDeviceResponse) => {
-            this.modalService.showModalElement(DELETE_DEVICE_SUCCESS_MODAL);
-            this.deviceDeleted.emit(response);
-          },
-          error: () => {
-            this.modalService.showModalElement(DELETE_DEVICE_ERROR_MODAL);
-          },
-        }),
+      this.modalService.showModalElement(
+        DELETE_DEVICE_CONFIRMATION_MODAL,
+        deleteDeviceConfirmationActions,
       );
-    } else {
-      this.modalService.showModalElement(DELETE_DEVICE_ERROR_MODAL);
     }
   }
 }

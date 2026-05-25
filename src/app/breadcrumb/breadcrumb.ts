@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, Signal, effect } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BreadcrumbService, PageInFocus } from '../services/breadcrumb';

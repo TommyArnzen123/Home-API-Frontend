@@ -107,7 +107,6 @@ export class ViewDevice implements OnInit, OnDestroy {
       if (this.deviceId) {
         const getViewDeviceInfoRequest: IEntityInfoRequest = {
           id: this.deviceId,
-          jwtToken,
         };
 
         this.subscriptions.push(

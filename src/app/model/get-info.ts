@@ -1,3 +1,4 @@
+import { IBreadcrumb } from '../store/entity.store';
 import { ITemperatureThreshold } from './temperature-threshold';
 
 export interface IUser {
@@ -14,21 +15,6 @@ export interface IHome {
   homeName: string;
   totalLocations: number;
   totalDevices: number;
-}
-
-export interface ILocation {
-  homeId: number;
-  locationId: number;
-  locationName: string;
-  devices: IDevice[];
-  threshold: ITemperatureThreshold;
-}
-
-export interface IDevice {
-  locationId: number;
-  deviceId: number;
-  deviceName: string;
-  temperature: ITemperature;
 }
 
 export interface ITemperature {
@@ -56,16 +42,43 @@ export interface IDeviceInformationCurrentDay {
 
 export interface IEntityInfoRequest {
   id: number;
-  jwtToken: string;
 }
 
-export interface IHomescreenInfoResponse {
+export interface IHomescreenInfoResponse extends EntityPath {
   userId: number;
   homes: IHome[];
 }
 
-export interface IViewHomeInfoResponse {
+export interface IViewHomeInfoResponse extends EntityPath {
   homeId: number;
   homeName: string;
-  locations: ILocation[];
+  locations: ILocationSummary[];
+}
+
+export interface EntityPath {
+  entityPath: IBreadcrumb[];
+}
+
+export interface ILocationSummary {
+  homeId: number;
+  locationId: number;
+  locationName: string;
+  numDevices: number;
+  averageTemperature: number;
+  threshold: ITemperatureThreshold;
+}
+
+export interface IViewLocationInfoResponse extends EntityPath {
+  homeId: number;
+  locationId: number;
+  locationName: string;
+  devices: IDeviceSummary[];
+  threshold: ITemperatureThreshold;
+}
+
+export interface IDeviceSummary {
+  locationId: number;
+  deviceId: number;
+  deviceName: string;
+  temperature: ITemperature;
 }

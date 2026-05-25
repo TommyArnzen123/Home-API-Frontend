@@ -1,12 +1,12 @@
-import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { EnvironmentService } from './environment';
 import {
   IEntityInfoRequest,
   IDeviceInformationCurrentDay,
   IHomescreenInfoResponse,
-  ILocation,
   IViewHomeInfoResponse,
+  IViewLocationInfoResponse,
 } from '../model/get-info';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';
 import { Observable } from 'rxjs';
@@ -32,7 +32,6 @@ export class GetInfoService {
         '/' +
         request.id,
       {
-        headers: this.generateHeaderWithBearerToken(request.jwtToken),
         context: new HttpContext().set(LoadingContextToken, 'Getting home screen info'),
       },
     );
@@ -46,21 +45,19 @@ export class GetInfoService {
         '/' +
         request.id,
       {
-        headers: this.generateHeaderWithBearerToken(request.jwtToken),
         context: new HttpContext().set(LoadingContextToken, 'Getting home info'),
       },
     );
   }
 
-  getViewLocationInfo(request: IEntityInfoRequest): Observable<ILocation> {
-    return this.httpClient.get<ILocation>(
+  getViewLocationInfo(request: IEntityInfoRequest): Observable<IViewLocationInfoResponse> {
+    return this.httpClient.get<IViewLocationInfoResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.getInfoRoot +
         this.getViewLocationInfoPath +
         '/' +
         request.id,
       {
-        headers: this.generateHeaderWithBearerToken(request.jwtToken),
         context: new HttpContext().set(LoadingContextToken, 'Getting location info'),
       },
     );
@@ -74,15 +71,8 @@ export class GetInfoService {
         '/' +
         request.id,
       {
-        headers: this.generateHeaderWithBearerToken(request.jwtToken),
         context: new HttpContext().set(LoadingContextToken, 'Getting device info'),
       },
     );
-  }
-
-  generateHeaderWithBearerToken(jwtToken: string): HttpHeaders {
-    return new HttpHeaders({
-      Authorization: `Bearer ${jwtToken}`,
-    });
   }
 }

@@ -1,22 +1,14 @@
-import { Component, EventEmitter, inject, Input, Output, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { MatCard, MatCardActions, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { DecimalPipe } from '@angular/common';
-import { Subscription } from 'rxjs';
-import { DeleteService } from '../../../services/delete';
 import { ModalService } from '../../../services/modal';
 import { RouterService } from '../../../services/router';
-import { IDeleteEntityRequest, IDeleteLocationResponse } from '../../../model/delete-actions';
 import { IModalActions } from '../../../model/modal';
-import { ILocation } from '../../../model/get-info';
-import { DELETE_LOCATION_SUCCESS_MODAL } from '../../../constants/delete-constants';
-import { DELETE_LOCATION_ERROR_MODAL } from '../../../constants/error-constants';
 import { DELETE_LOCATION_CONFIRMATION_MODAL } from '../../../constants/dialog-confirmation-constants';
-import {
-  isThresholdViolated,
-  setAverageTemperature,
-} from '../../../shared/utility/temperature-utility';
+import { isThresholdViolated } from '../../../shared/utility/temperature-utility';
+import { EntityStore, LocationData } from '../../../store/entity.store';
 
 @Component({
   selector: 'location-card',
@@ -24,11 +16,10 @@ import {
   templateUrl: './location-card.html',
   styleUrl: './location-card.scss',
 })
-export class LocationCard implements OnInit, OnDestroy {
-  private subscriptions: Subscription[] = [];
+export class LocationCard implements OnInit {
+  private readonly entityStore = inject(EntityStore);
 
   private readonly routerService = inject(RouterService);
-  private readonly deleteService = inject(DeleteService);
   private readonly modalService = inject(ModalService);
 
   protected averageTemperature: number | null = null;
@@ -36,73 +27,46 @@ export class LocationCard implements OnInit, OnDestroy {
   protected maxThreshold: number | null = null;
   protected isTemperatureThresholdInViolation: boolean = false;
 
-  @Input({ required: true }) locationInfo!: ILocation;
-  @Output() locationDeleted = new EventEmitter<IDeleteLocationResponse>();
+  @Input({ required: true }) locationInfo!: LocationData;
 
   ngOnInit(): void {
     this.minThreshold =
-      this.locationInfo.threshold && this.locationInfo.threshold.minimumTemperature
-        ? this.locationInfo.threshold.minimumTemperature
+      this.locationInfo.summary.threshold && this.locationInfo.summary.threshold.minimumTemperature
+        ? this.locationInfo.summary.threshold.minimumTemperature
         : null;
     this.maxThreshold =
-      this.locationInfo.threshold && this.locationInfo.threshold.maximumTemperature
-        ? this.locationInfo.threshold.maximumTemperature
+      this.locationInfo.summary.threshold && this.locationInfo.summary.threshold.maximumTemperature
+        ? this.locationInfo.summary.threshold.maximumTemperature
         : null;
 
-    this.averageTemperature = setAverageTemperature(this.locationInfo.devices);
+    this.averageTemperature = this.locationInfo.summary.averageTemperature;
     this.setThresholdViolationStatus();
   }
 
   setThresholdViolationStatus() {
-    if (this.averageTemperature && this.locationInfo.threshold) {
+    if (this.averageTemperature && this.locationInfo.summary.threshold) {
       this.isTemperatureThresholdInViolation = isThresholdViolated(
         this.averageTemperature,
-        this.locationInfo.threshold.minimumTemperature,
-        this.locationInfo.threshold.maximumTemperature,
+        this.locationInfo.summary.threshold.minimumTemperature,
+        this.locationInfo.summary.threshold.maximumTemperature,
       );
     }
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
-  }
-
   protected viewLocationById(): void {
-    if (this.locationInfo && this.locationInfo.locationId) {
-      this.routerService.viewLocationById(this.locationInfo.locationId);
+    if (this.locationInfo && this.locationInfo.entityId) {
+      this.routerService.viewLocationById(this.locationInfo.entityId);
     }
   }
 
   protected deleteLocationConfirmation(): void {
     const deleteLocationConfirmationActions: IModalActions = {
-      primaryAction: () => this.deleteLocation(),
+      primaryAction: () => this.entityStore.deleteLocation(this.locationInfo.entityId),
     };
 
     this.modalService.showModalElement(
       DELETE_LOCATION_CONFIRMATION_MODAL,
       deleteLocationConfirmationActions,
     );
-  }
-
-  private deleteLocation(): void {
-    if (this.locationInfo && this.locationInfo.locationId) {
-      const deleteLocationRequest: IDeleteEntityRequest = {
-        id: this.locationInfo.locationId,
-      };
-
-      this.subscriptions.push(
-        this.deleteService.deleteLocationById(deleteLocationRequest).subscribe({
-          next: (response: IDeleteLocationResponse) => {
-            this.modalService.showModalElement(DELETE_LOCATION_SUCCESS_MODAL);
-            this.locationDeleted.emit(response);
-          },
-          error: () => {
-            this.modalService.showModalElement(DELETE_LOCATION_ERROR_MODAL);
-          },
-        }),
-      );
-    } else {
-      this.modalService.showModalElement(DELETE_LOCATION_ERROR_MODAL);
-    }
   }
 }

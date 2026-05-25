@@ -1,45 +1,33 @@
-import { Component, inject, Signal, OnInit, OnDestroy, signal } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  OnDestroy,
+  signal,
+  effect,
+  computed,
+  Signal,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { DecimalPipe } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { GetInfoService } from '../../services/get-info';
-import { DeleteService } from '../../services/delete';
 import { ModalService } from '../../services/modal';
-import { LoginService } from '../../services/login';
 import { BreadcrumbService } from '../../services/breadcrumb';
 import { RouterService } from '../../services/router';
 import { TemperatureThresholdCard } from './temperature-threshold-card/temperature-threshold-card';
 import { DeviceCard } from './device-card/device-card';
 import { IModalActions } from '../../model/modal';
-import { IDevice, ILocation, IEntityInfoRequest } from '../../model/get-info';
-import { IUser } from '../../model/login';
-import {
-  IDeleteEntityRequest,
-  IDeleteLocationResponse,
-  IDeleteDeviceResponse,
-} from '../../model/delete-actions';
-import {
-  DELETE_LOCATION_ERROR_MODAL,
-  VIEW_LOCATION_GET_INFO_ERROR_MODAL,
-  INVALID_LOCATION_ID_ERROR_MODAL,
-  ADD_TEMPERATURE_THRESHOLD_ERROR_MODAL,
-} from '../../constants/error-constants';
-import { DELETE_LOCATION_SUCCESS_MODAL } from '../../constants/delete-constants';
+import { INVALID_LOCATION_ID_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_LOCATION_CONFIRMATION_MODAL } from '../../constants/dialog-confirmation-constants';
-import { TemperatureThresholdService } from '../../services/temperature-threshold';
-import {
-  ITemperatureThreshold,
-  ITemperatureThresholdRequest,
-} from '../../model/temperature-threshold';
 import { MatDialog } from '@angular/material/dialog';
 import {
   ITemperatureThresholdModalLimits,
   TemperatureThresholdModal,
   TemperatureThresholdModalFlow,
 } from './temperature-threshold-modal/temperature-threshold-modal';
-import { ADD_TEMPERATURE_THRESHOLD_SUCCESS_MODAL } from '../../constants/success-constants';
+import { DeviceData, EntityActions, EntityStore } from '../../store/entity.store';
 import { setAverageTemperature } from '../../shared/utility/temperature-utility';
 
 @Component({
@@ -51,28 +39,35 @@ import { setAverageTemperature } from '../../shared/utility/temperature-utility'
 export class ViewLocation implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
-  private user: Signal<IUser | null>;
+  private entityStore = inject(EntityStore);
 
   private readonly route = inject(ActivatedRoute);
   private readonly routerService = inject(RouterService);
-  private readonly loginService = inject(LoginService);
-  private readonly getInfoService = inject(GetInfoService);
-  private readonly deleteService = inject(DeleteService);
   private readonly modalService = inject(ModalService);
   private readonly breadcrumbService = inject(BreadcrumbService);
   private readonly modal = inject(MatDialog);
-  private readonly temperatureThresholdService = inject(TemperatureThresholdService);
 
-  protected locationId: number | null = null;
-  protected locationName: string | null = null;
+  protected locationId = signal<number | null>(null);
+  protected averageTemperature = computed(() => setAverageTemperature(this.deviceInfo()));
+  protected temperatureThreshold = computed(() => this.locationInfo()?.details?.threshold);
+
+  protected locationInfo = computed(() => {
+    const locationId = this.locationId();
+
+    if (!locationId) {
+      return null;
+    } else {
+      return this.entityStore.locations()[locationId];
+    }
+  });
+  protected locationName = computed(() => this.locationInfo()?.details?.locationName);
   private homeId: number | null = null;
-  protected devices: IDevice[] = [];
-  protected totalDevices: number = 0;
-  protected averageTemperature: number | null = null;
-  protected temperatureThreshold = signal<ITemperatureThreshold | null>(null);
+
+  protected readonly deviceInfo: Signal<DeviceData[]> = computed(() =>
+    Object.values(this.entityStore.devices()),
+  );
 
   constructor() {
-    this.user = this.loginService.getUserLoginInfo();
     const id = Number(this.route.snapshot.paramMap.get('locationId'));
 
     if (isNaN(id)) {
@@ -85,55 +80,42 @@ export class ViewLocation implements OnInit, OnDestroy {
         INVALID_LOCATION_ID_ERROR_MODAL,
         viewLocationInvalidLocationIDErrorActions,
       );
-      this.locationId = null;
+      this.locationId.set(null);
     } else {
-      this.locationId = id;
-      this.breadcrumbService.updateLocationId(this.locationId);
+      this.locationId.set(id);
+      this.breadcrumbService.updateLocationId(this.locationId());
       this.breadcrumbService.updatePageInFocus('view-location');
+
+      this.setSuccessEffects();
+      this.setErrorEffects();
     }
   }
 
-  ngOnInit(): void {
-    const jwtToken = this.user()?.jwtToken || undefined;
+  private setSuccessEffects(): void {
+    effect(() => {
+      const success: EntityActions = this.entityStore.successNotification();
 
-    if (this.isIUser(this.user()) && jwtToken) {
-      const homeIdSignal: Signal<number | null> = this.breadcrumbService.getHomeId();
-      this.homeId = homeIdSignal();
-
-      if (this.locationId) {
-        const getViewLocationInfoRequest: IEntityInfoRequest = {
-          id: this.locationId,
-          jwtToken,
-        };
-
-        // Get the location info.
-        this.subscriptions.push(
-          this.getInfoService.getViewLocationInfo(getViewLocationInfoRequest).subscribe({
-            next: (response: ILocation) => {
-              this.homeId = response.homeId;
-              this.breadcrumbService.updateHomeId(response.homeId);
-              this.locationName = response.locationName;
-              this.devices = response.devices;
-              this.totalDevices = response.devices.length;
-              this.averageTemperature = setAverageTemperature(response.devices);
-              this.temperatureThreshold.set(response.threshold);
-            },
-            error: () => {
-              // If there is an error getting information for the view location page, display an error
-              // message modal and route the user back to the view home route.
-              const viewLocationGetInfoErrorActions: IModalActions = {
-                primaryAction: () => this.viewHomeById(),
-              };
-              this.modalService.showModalElement(
-                VIEW_LOCATION_GET_INFO_ERROR_MODAL,
-                viewLocationGetInfoErrorActions,
-              );
-            },
-          }),
-        );
+      if (success === 'delete-location') {
+        this.viewHomeById(); // Route the user to the view home component.
       }
-    } else {
-      this.loginService.logout();
+    });
+  }
+
+  private setErrorEffects(): void {
+    effect(() => {
+      const error: EntityActions = this.entityStore.errorNotification();
+
+      if (error === 'get-view-location-info') {
+        this.viewHomeById();
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    const locationId = this.locationId();
+    if (locationId) {
+      this.entityStore.setSelectedEntity({ type: 'LOCATION', id: locationId });
+      this.entityStore.getViewLocationInfo(locationId);
     }
   }
 
@@ -142,13 +124,14 @@ export class ViewLocation implements OnInit, OnDestroy {
   }
 
   protected viewRegisterDevicePage(): void {
-    if (this.locationId !== null) {
-      this.routerService.viewRegisterDevicePage(this.locationId);
+    const locationId = this.locationId();
+    if (locationId !== null) {
+      this.routerService.viewRegisterDevicePage(locationId);
     }
   }
 
   private viewHomeById(): void {
-    if (this.homeId !== null) {
+    if (this.homeId) {
       this.routerService.viewHomeById(this.homeId);
     } else {
       // The home ID value is not set, route to the homescreen.
@@ -161,51 +144,23 @@ export class ViewLocation implements OnInit, OnDestroy {
   }
 
   protected deleteLocationConfirmation(): void {
-    const deleteLocationConfirmationActions: IModalActions = {
-      primaryAction: () => this.deleteLocation(),
-    };
-
-    this.modalService.showModalElement(
-      DELETE_LOCATION_CONFIRMATION_MODAL,
-      deleteLocationConfirmationActions,
-    );
-  }
-
-  private deleteLocation(): void {
-    if (this.locationId) {
-      const deleteLocationRequest: IDeleteEntityRequest = {
-        id: this.locationId,
+    const locationId = this.locationId();
+    if (locationId) {
+      const deleteLocationConfirmationActions: IModalActions = {
+        primaryAction: () => {
+          this.homeId = this.locationInfo()?.parentId ?? null;
+          this.entityStore.deleteLocation(locationId);
+        },
       };
 
-      this.subscriptions.push(
-        this.deleteService.deleteLocationById(deleteLocationRequest).subscribe({
-          next: (response: IDeleteLocationResponse) => {
-            this.modalService.showModalElement(DELETE_LOCATION_SUCCESS_MODAL);
-            this.viewHomeById();
-          },
-          error: () => {
-            this.modalService.showModalElement(DELETE_LOCATION_ERROR_MODAL);
-          },
-        }),
+      this.modalService.showModalElement(
+        DELETE_LOCATION_CONFIRMATION_MODAL,
+        deleteLocationConfirmationActions,
       );
-    } else {
-      this.modalService.showModalElement(DELETE_LOCATION_ERROR_MODAL);
     }
   }
 
-  protected deviceDeletedAction(deleteDeviceResponse: IDeleteDeviceResponse): void {
-    this.totalDevices = this.totalDevices - 1;
-
-    // Remove the deleted device from the registered devices list.
-    this.devices = this.devices.filter(
-      (device) => device.deviceId !== deleteDeviceResponse.deviceId,
-    );
-
-    setAverageTemperature(this.devices);
-  }
-
   protected displayTemperatureThresholdModal(): void {
-    console.log('Display temperature threshold modal.');
     const flowType: TemperatureThresholdModalFlow = 'add-temperature-threshold';
     const addTemperatureThresholdModal = this.modal.open(TemperatureThresholdModal, {
       width: '400px',
@@ -214,47 +169,24 @@ export class ViewLocation implements OnInit, OnDestroy {
       },
     });
 
-    this.subscriptions.push(
-      addTemperatureThresholdModal
-        .afterClosed()
-        .subscribe((result: ITemperatureThresholdModalLimits) => {
-          if (result && (result.minimumTemperature || result.maximumTemperature)) {
-            // Add the new temperature threshold value(s) to the database.
-            this.addTemperatureThreshold(result);
-          }
-        }),
-    );
-  }
+    const locationId = this.locationId();
 
-  private addTemperatureThreshold(threshold: ITemperatureThresholdModalLimits) {
-    const jwtToken = this.user()?.jwtToken || undefined;
-
-    if (this.locationId && jwtToken) {
-      const request: ITemperatureThresholdRequest = {
-        minimumTemperature: threshold.minimumTemperature,
-        maximumTemperature: threshold.maximumTemperature,
-        locationId: this.locationId,
-        jwtToken,
-      };
-
-      this.temperatureThresholdService.addTemperatureThreshold(request).subscribe({
-        next: (response: ITemperatureThreshold) => {
-          this.modalService.showModalElement(ADD_TEMPERATURE_THRESHOLD_SUCCESS_MODAL);
-          this.thresholdUpdated(response);
-        },
-        error: () => {
-          // There was an error in the network call to add the new temperature threshold.
-          this.modalService.showModalElement(ADD_TEMPERATURE_THRESHOLD_ERROR_MODAL);
-        },
-      });
+    if (locationId) {
+      this.subscriptions.push(
+        addTemperatureThresholdModal
+          .afterClosed()
+          .subscribe((result: ITemperatureThresholdModalLimits) => {
+            if (result && (result.minimumTemperature || result.maximumTemperature)) {
+              // Add the new temperature threshold value(s) to the database.
+              // this.addTemperatureThreshold(result);
+              this.entityStore.addTemperatureThreshold({
+                locationId,
+                minimumTemperature: result.minimumTemperature,
+                maximumTemperature: result.maximumTemperature,
+              });
+            }
+          }),
+      );
     }
-  }
-
-  protected thresholdUpdated(threshold: ITemperatureThreshold | null): void {
-    this.temperatureThreshold.set(threshold);
-  }
-
-  private isIUser(value: IUser | null): value is IUser {
-    return this.loginService.isIUser(value);
   }
 }
