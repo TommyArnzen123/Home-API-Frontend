@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import {
   MatDialogTitle,
   MatDialogContent,
@@ -8,17 +8,15 @@ import {
 } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
 import { Subscription } from 'rxjs';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
-} from '@angular/forms';
-import { ModalService } from '../../../services/modal';
-import { MatError, MatFormField } from '@angular/material/form-field';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import {
+  minMaxValidator,
+  numericValidator,
+  updatedValueValidator,
+  valueEnteredValidator,
+} from './temperature-threshold-modal-validators';
 
 export type TemperatureThresholdModalFlow =
   | 'add-temperature-threshold'
@@ -40,6 +38,7 @@ interface ITemperatureThresholdModal extends ITemperatureThresholdModalLimits {
     MatDialogContent,
     MatDialogActions,
     MatButton,
+    MatLabel,
     MatFormField,
     MatInput,
     MatError,
@@ -51,13 +50,13 @@ interface ITemperatureThresholdModal extends ITemperatureThresholdModalLimits {
 export class TemperatureThresholdModal implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
-  private readonly modalService = inject(ModalService);
-
   protected flow: TemperatureThresholdModalFlow = 'add-temperature-threshold';
   protected title: string = 'Add Temperature Threshold';
   protected primaryButtonText: string = 'Add';
   private minimumTemperature: number | undefined = undefined;
   private maximumTemperature: number | undefined = undefined;
+
+  protected addButtonClicked = false;
 
   protected form!: FormGroup;
 
@@ -78,10 +77,17 @@ export class TemperatureThresholdModal implements OnInit, OnDestroy {
     }
   }
   ngOnInit(): void {
-    this.form = new FormGroup({
-      minimumTemperature: new FormControl(this.minimumTemperature, [numericValidator()]),
-      maximumTemperature: new FormControl(this.maximumTemperature, [numericValidator()]),
-    });
+    this.form = new FormGroup(
+      {
+        minimumTemperature: new FormControl(this.minimumTemperature, [numericValidator()]),
+        maximumTemperature: new FormControl(this.maximumTemperature, [numericValidator()]),
+      },
+      [
+        minMaxValidator(),
+        valueEnteredValidator(),
+        updatedValueValidator(this.flow, this.minimumTemperature, this.maximumTemperature),
+      ],
+    );
   }
 
   ngOnDestroy(): void {
@@ -90,8 +96,7 @@ export class TemperatureThresholdModal implements OnInit, OnDestroy {
 
   // Validate the temperature threshold form.
   protected primaryAction(): void {
-    console.log('Primary button clicked - validating form.');
-
+    this.addButtonClicked = true;
     this.form.markAllAsTouched();
 
     if (this.form.valid) {
@@ -115,21 +120,4 @@ export class TemperatureThresholdModal implements OnInit, OnDestroy {
   private closeModal(thresholdValues: ITemperatureThresholdModalLimits | null): void {
     this.modal.close(thresholdValues);
   }
-}
-
-export function numericValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const value = control.value;
-
-    if (value === null || value === '') {
-      return null;
-    }
-
-    // Check if the value is a number.
-    const isNumber = !isNaN(parseFloat(value)) && isFinite(value);
-
-    console.log(isNumber);
-
-    return isNumber ? null : { numberViolation: true };
-  };
 }

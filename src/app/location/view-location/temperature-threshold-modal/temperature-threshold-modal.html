@@ -2,12 +2,8 @@
 <mat-dialog-content>
   <form [formGroup]="form">
     <mat-form-field>
-      <input
-        type="text"
-        matInput
-        placeholder="Minimum Temperature"
-        formControlName="minimumTemperature"
-      />
+      <mat-label>Minimum Temperature</mat-label>
+      <input type="text" matInput formControlName="minimumTemperature" />
       @if (
         form.get('minimumTemperature')?.touched &&
         form.get('minimumTemperature')?.hasError('numberViolation')
@@ -18,12 +14,8 @@
     <br />
     <br />
     <mat-form-field>
-      <input
-        type="text"
-        matInput
-        placeholder="Maximum Temperature"
-        formControlName="maximumTemperature"
-      />
+      <mat-label>Maximum Temperature</mat-label>
+      <input type="text" matInput formControlName="maximumTemperature" />
       @if (
         form.get('maximumTemperature')?.touched &&
         form.get('maximumTemperature')?.hasError('numberViolation')
@@ -32,6 +24,17 @@
       }
     </mat-form-field>
     <br />
+    @if (addButtonClicked && form.hasError('minMaxTempViolation')) {
+      <mat-error>Minimum temperature must be less than or equal to maximum temperature.</mat-error>
+    }
+
+    @if (addButtonClicked && form.hasError('noValueEnteredViolation')) {
+      <mat-error>Please enter a minimum and/or maximum temperature.</mat-error>
+    }
+
+    @if (addButtonClicked && form.hasError('noValueUpdatedViolation')) {
+      <mat-error>Please update a temperature value.</mat-error>
+    }
   </form>
 </mat-dialog-content>
 <mat-dialog-actions>
