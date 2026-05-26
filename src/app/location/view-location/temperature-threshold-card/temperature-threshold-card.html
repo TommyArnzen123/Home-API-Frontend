@@ -9,20 +9,29 @@
       <mat-card-title>Temperature Threshold</mat-card-title>
       <div>
         <div class="temperature-threshold-alert-row">
-          @if (isTemperatureThresholdInViolation) {
-            <img
-              class="temperature-threshold-alert-icon"
-              src="alert-location-temperature-icon.svg"
-              alt="Red circle alert icon."
-            />
-            <div>Alert</div>
+          @if (averageTemperature) {
+            @if (isTemperatureThresholdInViolation) {
+              <img
+                class="temperature-threshold-alert-icon"
+                src="alert-location-temperature-icon.svg"
+                alt="Red circle alert icon."
+              />
+              <div>Alert</div>
+            } @else {
+              <img
+                class="temperature-threshold-alert-icon"
+                src="healthy-location-temperature-icon.svg"
+                alt="Green circle alert icon."
+              />
+              <div>Healthy</div>
+            }
           } @else {
             <img
               class="temperature-threshold-alert-icon"
-              src="healthy-location-temperature-icon.svg"
-              alt="Green circle alert icon."
+              src="no-data-location-temperature-icon.svg"
+              alt="White triangle with black border and black exclamation mark alert icon."
             />
-            <div>Healthy</div>
+            <div>No Reading</div>
           }
         </div>
       </div>

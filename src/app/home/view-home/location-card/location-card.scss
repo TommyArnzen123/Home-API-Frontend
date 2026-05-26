@@ -1,6 +1,6 @@
 .location-card {
   width: 100%;
-  min-width: 350px;
+  min-width: 425px;
   min-height: 280px;
   display: flex;
   flex-direction: column;
@@ -23,6 +23,7 @@
       .temperature-threshold-alert-icon {
         width: 25px;
         height: 25px;
+        margin-left: 30px;
       }
     }
   }

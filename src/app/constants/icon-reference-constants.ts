@@ -101,4 +101,13 @@ export const ICON_REFERENCES: IconReference[] = [
     iconPath: 'alert-location-temperature-icon.svg',
     altText: 'Red circle alert icon.',
   },
+  {
+    title: 'Triangle Exclamation SVG Vector',
+    collection: 'Dazzle Line Icons',
+    license: 'CC Attribution License',
+    author: 'Dazzle UI',
+    url: 'https://www.svgrepo.com/svg/533742/triangle-exclamation',
+    iconPath: 'no-data-location-temperature-icon.svg',
+    altText: 'White triangle with black border and black exclamation mark alert icon.',
+  },
 ];
