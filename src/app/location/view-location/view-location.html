@@ -35,11 +35,14 @@
         />
       </div>
     }
-    <div>
+    <div class="temperature-details">
       @if (deviceInfo().length > 0 && (averageTemperature() || averageTemperature() === 0)) {
-        <p class="current-average-location-temperature">
-          {{ averageTemperature() | number: '1.2-2' }}°F
-        </p>
+        <div>
+          <p class="current-average-location-temperature">
+            {{ averageTemperature() | number: '1.2-2' }}°F
+          </p>
+        </div>
+        <div class="average-temperature-title">Average Temperature</div>
       } @else {
         <div class="no-current-average-location-temperature">
           <img src="temperature-icon.svg" class="icon" alt="Temperature icon." />

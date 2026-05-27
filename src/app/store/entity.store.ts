@@ -10,6 +10,7 @@ import {
   IHomescreenInfoResponse,
   ILocationSummary,
   ITemperature,
+  IViewDeviceInfoResponse,
   IViewHomeInfoResponse,
   IViewLocationInfoResponse,
 } from '../model/get-info';
@@ -31,6 +32,7 @@ export type EntityActions =
   | 'get-view-homescreen-info'
   | 'get-view-home-info'
   | 'get-view-location-info'
+  | 'get-view-device-info'
   | 'register-home'
   | 'register-location'
   | 'register-device'
@@ -84,7 +86,10 @@ interface DeviceSummary {
   temperature: ITemperature;
 }
 
-interface DeviceDetails {}
+interface DeviceDetails {
+  deviceName: string;
+  temperature: ITemperature;
+}
 
 export type HomeData = EntityData<HomeSummary, HomeDetails>;
 export type LocationData = EntityData<LocationSummary, LocationDetails>;
@@ -230,6 +235,38 @@ export const EntityStore = signalStore(
                 error: () =>
                   patchState(store, {
                     errorNotification: 'get-view-location-info',
+                  }),
+              }),
+            );
+          }),
+        ),
+      ),
+
+      getViewDeviceInfo: rxMethod<number>(
+        pipe(
+          tap(() =>
+            patchState(store, {
+              successNotification: null,
+              errorNotification: null,
+            }),
+          ),
+          switchMap((deviceId: number) => {
+            return getInfoService.getViewDeviceInfo({ id: deviceId }).pipe(
+              tapResponse({
+                next: (deviceResponse: IViewDeviceInfoResponse) =>
+                  patchState(store, {
+                    devices: {
+                      ...store.devices(),
+                      [deviceResponse.deviceId]: generateDeviceDetailsObject(
+                        store.devices()[deviceResponse.deviceId],
+                        deviceResponse,
+                      ),
+                    },
+                    entityPath: deviceResponse.entityPath,
+                  }),
+                error: () =>
+                  patchState(store, {
+                    errorNotification: 'get-view-device-info',
                   }),
               }),
             );
@@ -584,6 +621,24 @@ function generateLocationDetailsObject(
   };
 
   return newLocationData;
+}
+
+function generateDeviceDetailsObject(
+  deviceData: DeviceData,
+  deviceInfo: IViewDeviceInfoResponse,
+): DeviceData {
+  const newDeviceData: DeviceData = {
+    ...deviceData,
+    entityId: deviceInfo.deviceId,
+    parentId: deviceInfo.locationId,
+    details: {
+      deviceName: deviceInfo.deviceName,
+      temperature: deviceInfo.temperature,
+    },
+    detailsSet: true,
+  };
+
+  return newDeviceData;
 }
 
 function modifyTemperatureThresholdInObject(

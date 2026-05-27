@@ -29,17 +29,6 @@ export interface IAverageTemperatureByHour {
   temperatureAvailable?: boolean;
 }
 
-export interface IDeviceInformationCurrentDay {
-  deviceId: number;
-  locationId: number;
-  homeId: number;
-  deviceName: string;
-  mostRecentTemperature: number;
-  mostRecentTemperatureAvailable: boolean;
-  mostRecentTemperatureAvailableDateTime: string;
-  averageTemperaturesByHourCurrentDay: IAverageTemperatureByHour[];
-}
-
 export interface IEntityInfoRequest {
   id: number;
 }
@@ -81,4 +70,13 @@ export interface IDeviceSummary {
   deviceId: number;
   deviceName: string;
   temperature: ITemperature;
+}
+
+export interface IViewDeviceInfoResponse extends EntityPath {
+  deviceId: number;
+  locationId: number;
+  homeId: number;
+  deviceName: string;
+  temperature: ITemperature;
+  averageTemperaturesByHourCurrentDay: IAverageTemperatureByHour[];
 }

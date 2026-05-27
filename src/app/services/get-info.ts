@@ -3,10 +3,10 @@ import { inject, Injectable } from '@angular/core';
 import { EnvironmentService } from './environment';
 import {
   IEntityInfoRequest,
-  IDeviceInformationCurrentDay,
   IHomescreenInfoResponse,
   IViewHomeInfoResponse,
   IViewLocationInfoResponse,
+  IViewDeviceInfoResponse,
 } from '../model/get-info';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';
 import { Observable } from 'rxjs';
@@ -63,8 +63,8 @@ export class GetInfoService {
     );
   }
 
-  getViewDeviceInformation(request: IEntityInfoRequest): Observable<IDeviceInformationCurrentDay> {
-    return this.httpClient.get<IDeviceInformationCurrentDay>(
+  getViewDeviceInfo(request: IEntityInfoRequest): Observable<IViewDeviceInfoResponse> {
+    return this.httpClient.get<IViewDeviceInfoResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.getInfoRoot +
         this.getInformationByDeviceCurrentDay +

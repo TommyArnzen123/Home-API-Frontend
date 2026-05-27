@@ -33,19 +33,31 @@
     flex-direction: column;
     margin-right: 10px;
 
-    .current-average-location-temperature {
-      text-align: center;
-      font-size: 100px;
-    }
-
-    .no-current-average-location-temperature {
+    .temperature-details {
+      margin-top: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      font-size: 20px;
 
-      .no-temperature-message-top-line {
-        margin-bottom: 5px;
+      .average-temperature-title {
+        text-align: center;
+        font-size: 40px;
+      }
+
+      .current-average-location-temperature {
+        text-align: center;
+        font-size: 60px;
+      }
+
+      .no-current-average-location-temperature {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 20px;
+
+        .no-temperature-message-top-line {
+          margin-bottom: 5px;
+        }
       }
     }
   }
