@@ -1,6 +1,5 @@
 import { Component, inject, OnInit, effect, computed, Signal } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { BreadcrumbService } from '../services/breadcrumb';
 import { RouterService } from '../services/router';
 import { HomeCard } from './home-card/home-card';
 import { ItemTotals } from '../item-totals/item-totals';
@@ -15,7 +14,6 @@ import { EntityActions, EntityStore, HomeData } from '../store/entity.store';
 })
 export class Homescreen implements OnInit {
   private readonly entityStore = inject(EntityStore);
-  private readonly breadcrumbService = inject(BreadcrumbService);
   private readonly routerService = inject(RouterService);
 
   protected greetingMessage: string = '';
@@ -39,7 +37,6 @@ export class Homescreen implements OnInit {
   );
 
   constructor() {
-    this.breadcrumbService.updatePageInFocus('homescreen');
     this.setGeneralEffects();
     this.setErrorEffects();
   }
@@ -48,11 +45,6 @@ export class Homescreen implements OnInit {
     effect(() => {
       const userFirstName = this.entityStore.userFirstName();
       this.greetingMessage = setHomescreenGreetingMessage(formatName(userFirstName));
-    });
-
-    effect(() => {
-      console.log(this.entityStore.selectedEntity());
-      console.log(this.entityStore.entityPath());
     });
   }
 
@@ -68,6 +60,7 @@ export class Homescreen implements OnInit {
 
   ngOnInit(): void {
     this.entityStore.setSelectedEntity(null);
+    this.entityStore.setPageMode('VIEW');
     this.entityStore.getHomescreenInfo();
   }
 

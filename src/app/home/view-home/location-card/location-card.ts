@@ -31,15 +31,23 @@ export class LocationCard implements OnInit {
 
   ngOnInit(): void {
     this.minThreshold =
-      this.locationInfo.summary.threshold && this.locationInfo.summary.threshold.minimumTemperature
+      this.locationInfo.summary &&
+      this.locationInfo.summary.threshold &&
+      this.locationInfo.summary.threshold.minimumTemperature
         ? this.locationInfo.summary.threshold.minimumTemperature
         : null;
     this.maxThreshold =
-      this.locationInfo.summary.threshold && this.locationInfo.summary.threshold.maximumTemperature
+      this.locationInfo.summary &&
+      this.locationInfo.summary.threshold &&
+      this.locationInfo.summary.threshold.maximumTemperature
         ? this.locationInfo.summary.threshold.maximumTemperature
         : null;
 
-    this.averageTemperature = this.locationInfo.summary.averageTemperature;
+    this.averageTemperature =
+      this.locationInfo && this.locationInfo.summary && this.locationInfo.summary.averageTemperature
+        ? this.locationInfo.summary.averageTemperature
+        : null;
+
     this.setThresholdViolationStatus();
   }
 

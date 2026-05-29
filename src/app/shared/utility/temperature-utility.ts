@@ -7,7 +7,7 @@ export function setAverageTemperature(devices: DeviceData[]): number | null {
   let temperature: number | null = null;
 
   devices.forEach((device) => {
-    if (device.summary.temperature) {
+    if (device.summary && device.summary.temperature) {
       counter++;
       temperature = temperature
         ? temperature + device.summary.temperature.temperature

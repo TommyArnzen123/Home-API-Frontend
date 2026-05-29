@@ -25,8 +25,8 @@ export interface ITemperature {
 
 export interface IAverageTemperatureByHour {
   hour: number;
-  averageTemperature: number;
-  temperatureAvailable?: boolean;
+  averageTemperature: number | null;
+  // temperatureAvailable?: boolean;
 }
 
 export interface IEntityInfoRequest {

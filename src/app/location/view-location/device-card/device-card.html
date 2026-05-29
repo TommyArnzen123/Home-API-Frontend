@@ -1,9 +1,13 @@
 <mat-card class="device-card" appearance="outlined">
   <mat-card-header>
-    <mat-card-title>{{ deviceInfo.summary.deviceName }}</mat-card-title>
+    @if (deviceInfo && deviceInfo.summary && deviceInfo.summary.deviceName) {
+      <mat-card-title>{{ deviceInfo.summary.deviceName }}</mat-card-title>
+    } @else {
+      <mat-card-title>Device Name Unavailable</mat-card-title>
+    }
   </mat-card-header>
   <div class="device-card-content">
-    @if (deviceInfo.summary.temperature) {
+    @if (deviceInfo.summary && deviceInfo.summary.temperature) {
       <div>{{ deviceInfo.summary.temperature.temperature | number: '1.2-2' }}°F</div>
     } @else {
       <div>-°F</div>

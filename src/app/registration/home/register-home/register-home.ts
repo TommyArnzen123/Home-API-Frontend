@@ -6,7 +6,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
 import { ModalService } from '../../../services/modal';
 import { RouterService } from '../../../services/router';
-import { BreadcrumbService } from '../../../services/breadcrumb';
 import { REGISTER_HOME_ERROR_MODAL } from '../../../constants/error-constants';
 import { EntityActions, EntityStore } from '../../../store/entity.store';
 
@@ -30,13 +29,10 @@ export class RegisterHome implements OnInit {
 
   private readonly routerService = inject(RouterService);
   private readonly modalService = inject(ModalService);
-  private readonly breadcrumbService = inject(BreadcrumbService);
 
   protected form!: FormGroup;
 
   constructor() {
-    this.breadcrumbService.updatePageInFocus('register-home');
-
     this.entityStore.resetNotificationState();
     this.setSuccessEffects();
   }
@@ -52,6 +48,7 @@ export class RegisterHome implements OnInit {
   }
 
   ngOnInit(): void {
+    this.entityStore.setPageMode('ADD_CHILD');
     this.form = new FormGroup({
       homeName: new FormControl('', [Validators.required]),
     });

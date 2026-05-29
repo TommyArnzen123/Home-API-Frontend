@@ -59,6 +59,8 @@ export class TemperatureThresholdCard implements OnDestroy {
         (this.maxTemperature && this.averageTemperature > this.maxTemperature)
       ) {
         this.isTemperatureThresholdInViolation = true;
+      } else {
+        this.isTemperatureThresholdInViolation = false;
       }
     }
   }

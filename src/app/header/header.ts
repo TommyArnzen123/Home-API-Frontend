@@ -3,7 +3,6 @@ import { MatButton } from '@angular/material/button';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LoginService } from '../services/login';
-import { BreadcrumbService } from '../services/breadcrumb';
 import { RouterService } from '../services/router';
 import { LOGIN_ROUTE } from '../constants/navigation-constants';
 
@@ -17,7 +16,6 @@ export class Header implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   private readonly loginService = inject(LoginService);
-  private readonly breadcrumbService = inject(BreadcrumbService);
   private readonly router = inject(Router);
   private readonly routerService = inject(RouterService);
 

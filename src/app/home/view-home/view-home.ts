@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { ModalService } from '../../services/modal';
-import { BreadcrumbService } from '../../services/breadcrumb';
 import { RouterService } from '../../services/router';
 import { ItemTotals } from '../../item-totals/item-totals';
 import { LocationCard } from './location-card/location-card';
@@ -24,14 +23,22 @@ export class ViewHome implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly routerService = inject(RouterService);
   private readonly modalService = inject(ModalService);
-  private readonly breadcrumbService = inject(BreadcrumbService);
 
   protected homeId = signal<number | null>(null);
   protected homeName = computed(() => this.homeInfo()?.details?.homeName);
   protected readonly locationInfo: Signal<LocationData[]> = computed(() =>
     Object.values(this.entityStore.locations()),
   );
-  protected totalDevices: number = 0;
+  protected totalDevices = computed(() => {
+    let numDevices = 0;
+    this.locationInfo().forEach((location) => {
+      if (location.summary && location.summary.numDevices) {
+        numDevices += location.summary.numDevices;
+      }
+    });
+
+    return numDevices;
+  });
 
   protected homeInfo = computed(() => {
     const homeId = this.homeId();
@@ -59,9 +66,6 @@ export class ViewHome implements OnInit {
       this.homeId.set(null);
     } else {
       this.homeId.set(id);
-      this.breadcrumbService.updateHomeId(this.homeId());
-      this.breadcrumbService.updatePageInFocus('view-home');
-
       this.setSuccessEffects();
       this.setErrorEffects();
     }
@@ -88,6 +92,8 @@ export class ViewHome implements OnInit {
   }
 
   ngOnInit(): void {
+    this.entityStore.setPageMode('VIEW');
+
     const homeId = this.homeId();
     if (homeId) {
       this.entityStore.setSelectedEntity({ type: 'HOME', id: homeId });

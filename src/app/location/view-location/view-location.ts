@@ -14,7 +14,6 @@ import { MatIcon } from '@angular/material/icon';
 import { DecimalPipe } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { ModalService } from '../../services/modal';
-import { BreadcrumbService } from '../../services/breadcrumb';
 import { RouterService } from '../../services/router';
 import { TemperatureThresholdCard } from './temperature-threshold-card/temperature-threshold-card';
 import { DeviceCard } from './device-card/device-card';
@@ -44,7 +43,6 @@ export class ViewLocation implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly routerService = inject(RouterService);
   private readonly modalService = inject(ModalService);
-  private readonly breadcrumbService = inject(BreadcrumbService);
   private readonly modal = inject(MatDialog);
 
   protected locationId = signal<number | null>(null);
@@ -83,9 +81,6 @@ export class ViewLocation implements OnInit, OnDestroy {
       this.locationId.set(null);
     } else {
       this.locationId.set(id);
-      this.breadcrumbService.updateLocationId(this.locationId());
-      this.breadcrumbService.updatePageInFocus('view-location');
-
       this.setSuccessEffects();
       this.setErrorEffects();
     }
@@ -112,6 +107,8 @@ export class ViewLocation implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.entityStore.setPageMode('VIEW');
+
     const locationId = this.locationId();
     if (locationId) {
       this.entityStore.setSelectedEntity({ type: 'LOCATION', id: locationId });

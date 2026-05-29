@@ -7,7 +7,6 @@ import { MatInput } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ModalService } from '../../../services/modal';
 import { RouterService } from '../../../services/router';
-import { BreadcrumbService } from '../../../services/breadcrumb';
 import { IModalActions } from '../../../model/modal';
 import {
   INVALID_LOCATION_ID_ERROR_MODAL,
@@ -36,13 +35,11 @@ export class RegisterDevice implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly routerService = inject(RouterService);
   private readonly modalService = inject(ModalService);
-  private readonly breadcrumbService = inject(BreadcrumbService);
 
   protected form!: FormGroup;
   protected locationId: number | null = null;
 
   constructor() {
-    this.breadcrumbService.updatePageInFocus('register-device');
     const id = Number(this.route.snapshot.paramMap.get('locationId'));
 
     // Verify the location ID provided in the URL is a valid number.
@@ -71,6 +68,7 @@ export class RegisterDevice implements OnInit {
   }
 
   ngOnInit(): void {
+    this.entityStore.setPageMode('ADD_CHILD');
     this.form = new FormGroup({
       deviceName: new FormControl('', [Validators.required]),
     });

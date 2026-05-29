@@ -7,7 +7,6 @@ import { MatInput } from '@angular/material/input';
 import { ActivatedRoute } from '@angular/router';
 import { ModalService } from '../../../services/modal';
 import { RouterService } from '../../../services/router';
-import { BreadcrumbService } from '../../../services/breadcrumb';
 import { IModalActions } from '../../../model/modal';
 import {
   INVALID_HOME_ID_ERROR_MODAL,
@@ -36,13 +35,11 @@ export class RegisterLocation implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly routerService = inject(RouterService);
   private readonly modalService = inject(ModalService);
-  private readonly breadcrumbService = inject(BreadcrumbService);
 
   protected form!: FormGroup;
   protected homeId: number | null;
 
   constructor() {
-    this.breadcrumbService.updatePageInFocus('register-location');
     const id = Number(this.route.snapshot.paramMap.get('homeId'));
 
     // Verify the home ID provided in the URL is a valid number.
@@ -71,6 +68,7 @@ export class RegisterLocation implements OnInit {
   }
 
   ngOnInit(): void {
+    this.entityStore.setPageMode('ADD_CHILD');
     this.form = new FormGroup({
       locationName: new FormControl('', [Validators.required]),
     });

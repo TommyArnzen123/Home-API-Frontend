@@ -5,6 +5,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { EMPTY, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import {
+  IAverageTemperatureByHour,
   IDeviceSummary,
   IHome,
   IHomescreenInfoResponse,
@@ -45,6 +46,8 @@ export type EntityActions =
   | null;
 
 type EntityTypes = 'HOME' | 'LOCATION' | 'DEVICE';
+
+export type PageModes = 'VIEW' | 'ADD_CHILD';
 
 export interface IBreadcrumb {
   type: EntityTypes;
@@ -89,6 +92,7 @@ interface DeviceSummary {
 interface DeviceDetails {
   deviceName: string;
   temperature: ITemperature;
+  averageTemperaturesByHourCurrentDate: IAverageTemperatureByHour[];
 }
 
 export type HomeData = EntityData<HomeSummary, HomeDetails>;
@@ -104,6 +108,7 @@ interface IEntityState {
   devices: Record<number, DeviceData>;
   entityPath: Array<IBreadcrumb>;
   selectedEntity: IBreadcrumb | null;
+  pageMode: PageModes | null;
   successNotification: EntityActions;
   errorNotification: EntityActions;
 }
@@ -117,6 +122,7 @@ const initialState: IEntityState = {
   devices: {},
   entityPath: [],
   selectedEntity: null,
+  pageMode: null,
   successNotification: null,
   errorNotification: null,
 };
@@ -147,6 +153,7 @@ export const EntityStore = signalStore(
             patchState(store, {
               successNotification: null,
               errorNotification: null,
+              homes: {},
             }),
           ),
           switchMap(() => {
@@ -182,6 +189,7 @@ export const EntityStore = signalStore(
             patchState(store, {
               successNotification: null,
               errorNotification: null,
+              locations: {},
             }),
           ),
           switchMap((homeId: number) => {
@@ -215,6 +223,7 @@ export const EntityStore = signalStore(
             patchState(store, {
               successNotification: null,
               errorNotification: null,
+              devices: {},
             }),
           ),
           switchMap((locationId: number) => {
@@ -519,9 +528,15 @@ export const EntityStore = signalStore(
         ),
       ),
 
-      setSelectedEntity(entityInfo: IBreadcrumb | null): void {
+      setSelectedEntity(selectedEntity: IBreadcrumb | null): void {
         patchState(store, {
-          selectedEntity: entityInfo,
+          selectedEntity,
+        });
+      },
+
+      setPageMode(pageMode: PageModes): void {
+        patchState(store, {
+          pageMode,
         });
       },
 
@@ -534,15 +549,6 @@ export const EntityStore = signalStore(
 
       reset(): void {
         patchState(store, initialState);
-      },
-
-      // TO BE DELETED. - Used to view entity store state.
-      viewStore(): void {
-        console.log(store.selectedEntity());
-        console.log(store.entityPath());
-        console.log(store.homes());
-        console.log(store.locations());
-        console.log(store.devices());
       },
     };
   }),
@@ -634,6 +640,7 @@ function generateDeviceDetailsObject(
     details: {
       deviceName: deviceInfo.deviceName,
       temperature: deviceInfo.temperature,
+      averageTemperaturesByHourCurrentDate: deviceInfo.averageTemperaturesByHourCurrentDay,
     },
     detailsSet: true,
   };

@@ -4,16 +4,17 @@ import { MatButton } from '@angular/material/button';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { ModalService } from '../../services/modal';
-import { BreadcrumbService } from '../../services/breadcrumb';
 import { RouterService } from '../../services/router';
 import { IModalActions } from '../../model/modal';
 import { VIEW_DEVICE_INVALID_DEVICE_ID_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_DEVICE_CONFIRMATION_MODAL } from '../../constants/dialog-confirmation-constants';
 import { EntityActions, EntityStore } from '../../store/entity.store';
+import { DisplayTempByHour } from './display-temp-by-hour/display-temp-by-hour';
+import { IAverageTemperatureByHour } from '../../model/get-info';
 
 @Component({
   selector: 'view-device',
-  imports: [MatButton, MatIcon, DatePipe, DecimalPipe],
+  imports: [MatButton, MatIcon, DatePipe, DisplayTempByHour, DecimalPipe],
   templateUrl: './view-device.html',
   styleUrl: './view-device.scss',
 })
@@ -49,9 +50,16 @@ export class ViewDevice implements OnInit {
     }
   });
 
+  protected averageTemperaturesByHour = computed(() => {
+    if (this.deviceInfo()) {
+      return this.deviceInfo()?.details?.averageTemperaturesByHourCurrentDate;
+    } else {
+      return null;
+    }
+  });
+
   private readonly route = inject(ActivatedRoute);
   private readonly modalService = inject(ModalService);
-  private readonly breadcrumbService = inject(BreadcrumbService);
   private readonly routerService = inject(RouterService);
 
   constructor() {
@@ -70,8 +78,6 @@ export class ViewDevice implements OnInit {
       this.deviceId.set(null);
     } else {
       this.deviceId.set(id);
-      this.breadcrumbService.updatePageInFocus('view-device');
-
       this.setSuccessEffects();
       this.setErrorEffects();
     }
@@ -98,6 +104,8 @@ export class ViewDevice implements OnInit {
   }
 
   ngOnInit(): void {
+    this.entityStore.setPageMode('VIEW');
+
     const deviceId = this.deviceId();
     if (deviceId) {
       this.entityStore.setSelectedEntity({ type: 'DEVICE', id: deviceId });
@@ -136,35 +144,26 @@ export class ViewDevice implements OnInit {
 
   // Generate an array of average temperature by hour objects
   // with the current hour as the last item in the array.
-  // protected generateHourlyTemperatureReadings(): IAverageTemperatureByHour[] {
-  //   const currentDate = new Date();
-  //   const currentHour = currentDate.getHours();
+  protected generateHourlyTemperatureReadings(): IAverageTemperatureByHour[] {
+    const formattedAverageTemperaturesByHour: IAverageTemperatureByHour[] = [];
+    const orderedAverageTemperaturesByHour: IAverageTemperatureByHour[] = [];
 
-  //   const formattedAverageTemperaturesByHour: IAverageTemperatureByHour[] = [];
+    for (let i = 0; i <= 23; i++) {
+      formattedAverageTemperaturesByHour.push({
+        hour: i,
+        averageTemperature: null,
+      });
+    }
 
-  //   const startingIndex = currentHour < 23 ? currentHour + 1 : 0;
+    this.averageTemperaturesByHour()?.forEach((temp) => {
+      formattedAverageTemperaturesByHour[temp.hour].averageTemperature = temp.averageTemperature;
+    });
 
-  //   for (let i = startingIndex; i <= 23; i++) {
-  //     if (averageTempInfo[i] && averageTempInfo[i].hour === i) {
-  //       formattedAverageTemperaturesByHour.push(averageTempInfo[i]);
-  //     }
-  //   }
+    const currentHour = new Date().getHours();
+    const startingHourlyIndex = currentHour < 23 ? currentHour + 1 : 0;
 
-  //   if (startingIndex !== 0) {
-  //     for (let i = 0; i < startingIndex; i++) {
-  //       if (averageTempInfo[i] && averageTempInfo[i].hour === i) {
-  //         formattedAverageTemperaturesByHour.push(averageTempInfo[i]);
-  //       }
-  //     }
-  //   }
-
-  //   return formattedAverageTemperaturesByHour;
-  // }
-
-  // private insertAverageTemperatureByHourInformation(tempInfo: IAverageTemperatureByHour[]): void {
-  //   for (let i = 0; i < tempInfo.length; i++) {
-  //     averageTempInfo[tempInfo[i].hour].averageTemperature = tempInfo[i].averageTemperature;
-  //     averageTempInfo[tempInfo[i].hour].temperatureAvailable = true;
-  //   }
-  // }
+    return formattedAverageTemperaturesByHour
+      .slice(startingHourlyIndex)
+      .concat(formattedAverageTemperaturesByHour.slice(0, startingHourlyIndex));
+  }
 }
