@@ -67,6 +67,21 @@ const VIEW_DEVICE_GET_INFO_ERROR: IError = {
   errorCode: '0013',
 };
 
+const ADD_TEMPERATURE_THRESHOLD_ERROR: IError = {
+  message: 'There was an error adding the temperature threshold.',
+  errorCode: '0014',
+};
+
+const UPDATE_TEMPERATURE_THRESHOLD_ERROR: IError = {
+  message: 'There was an error updating the temperature threshold.',
+  errorCode: '0015',
+};
+
+const DELETE_TEMPERATURE_THRESHOLD_ERROR: IError = {
+  message: 'There was an error deleting the temperature threshold.',
+  errorCode: '0016',
+};
+
 // Error Modal Objects.
 export const REGISTER_USER_ERROR_MODAL: IModal = {
   title: 'Something Went Wrong...',
@@ -149,5 +164,26 @@ export const VIEW_DEVICE_GET_INFO_ERROR_MODAL: IModal = {
   title: 'Something Went Wrong...',
   content: VIEW_DEVICE_GET_INFO_ERROR.message,
   footer: 'Error Code: ' + VIEW_DEVICE_GET_INFO_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const ADD_TEMPERATURE_THRESHOLD_ERROR_MODAL: IModal = {
+  title: 'Something Went Wrong...',
+  content: ADD_TEMPERATURE_THRESHOLD_ERROR.message,
+  footer: 'Error Code: ' + ADD_TEMPERATURE_THRESHOLD_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const UPDATE_TEMPERATURE_THRESHOLD_ERROR_MODAL: IModal = {
+  title: 'Something Went Wrong...',
+  content: UPDATE_TEMPERATURE_THRESHOLD_ERROR.message,
+  footer: 'Error Code: ' + UPDATE_TEMPERATURE_THRESHOLD_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const DELETE_TEMPERATURE_THRESHOLD_ERROR_MODAL: IModal = {
+  title: 'Something Went Wrong...',
+  content: DELETE_TEMPERATURE_THRESHOLD_ERROR.message,
+  footer: 'Error Code: ' + DELETE_TEMPERATURE_THRESHOLD_ERROR.errorCode,
   disableClose: true,
 };

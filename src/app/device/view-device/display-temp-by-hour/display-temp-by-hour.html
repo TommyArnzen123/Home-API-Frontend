@@ -1,8 +1,47 @@
-<div class="temperature-container">
-  <div class="hour-style">{{ hour }}</div>
-  @if (temperatureAvailable) {
-    <div class="temperature-style">{{ temperature | number: '1.2-2' }}°F</div>
+<mat-card
+  class="average-temperature-container"
+  [class.hot-background]="temperature && temperature > 80"
+  [class.temperate-background]="temperature && temperature <= 80 && temperature >= 60"
+  [class.cold-background]="temperature && temperature < 60"
+  appearance="outlined"
+>
+  @if (currentHour !== hour) {
+    <div>{{ hour }}</div>
   } @else {
-    <div class="temperature-style">N/A</div>
+    <div>Now</div>
   }
-</div>
+  <div>
+    @if (temperature) {
+      @if (temperature > 80) {
+        <img
+          class="average-temperature-icon"
+          src="thermometer-hot-icon.svg"
+          alt="Red thermometer icon."
+        />
+      } @else if (temperature < 60) {
+        <img
+          class="average-temperature-icon"
+          src="thermometer-cold-icon.svg"
+          alt="Blue thermometer icon."
+        />
+      } @else {
+        <img
+          class="average-temperature-icon"
+          src="thermometer-temperate-icon.svg"
+          alt="Orange thermometer icon."
+        />
+      }
+    } @else {
+      <img
+        class="average-temperature-icon"
+        src="no-data-location-temperature-icon.svg"
+        alt="White triangle with black border and black exclamation mark alert icon."
+      />
+    }
+  </div>
+  @if (temperature) {
+    <div>{{ temperature | number: '1.2-2' }}°F</div>
+  } @else {
+    <div>N/A</div>
+  }
+</mat-card>

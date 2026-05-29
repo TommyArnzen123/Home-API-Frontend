@@ -1,22 +1,13 @@
-import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
+import { Component, inject, OnInit, effect } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
-import { Subscription } from 'rxjs';
-import { RegistrationService } from '../../../services/registration';
-import { LoginService } from '../../../services/login';
 import { ModalService } from '../../../services/modal';
 import { RouterService } from '../../../services/router';
-import { BreadcrumbService } from '../../../services/breadcrumb';
-import {
-  IRegisterGenericEntityRequest,
-  IRegisterGenericEntityResponse,
-} from '../../../model/registration';
-import { IUser } from '../../../model/login';
-import { REGISTER_HOME_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
 import { REGISTER_HOME_ERROR_MODAL } from '../../../constants/error-constants';
+import { EntityActions, EntityStore } from '../../../store/entity.store';
 
 @Component({
   selector: 'register-home',
@@ -33,30 +24,33 @@ import { REGISTER_HOME_ERROR_MODAL } from '../../../constants/error-constants';
   templateUrl: './register-home.html',
   styleUrl: './register-home.scss',
 })
-export class RegisterHome implements OnInit, OnDestroy {
-  private subscriptions: Subscription[] = [];
+export class RegisterHome implements OnInit {
+  private readonly entityStore = inject(EntityStore);
 
   private readonly routerService = inject(RouterService);
-  private readonly registrationService = inject(RegistrationService);
-  private readonly loginService = inject(LoginService);
   private readonly modalService = inject(ModalService);
-  private readonly breadcrumbService = inject(BreadcrumbService);
 
   protected form!: FormGroup;
 
   constructor() {
-    this.breadcrumbService.updatePageInFocus('register-home');
+    this.entityStore.resetNotificationState();
+    this.setSuccessEffects();
   }
 
-  ngOnInit(): void {
-    this.form = new FormGroup({
-      homeName: new FormControl('', [Validators.required]),
+  private setSuccessEffects(): void {
+    effect(() => {
+      const success: EntityActions = this.entityStore.successNotification();
+
+      if (success === 'register-home') {
+        this.viewHomescreen();
+      }
     });
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((subscription) => {
-      subscription.unsubscribe();
+  ngOnInit(): void {
+    this.entityStore.setPageMode('ADD_CHILD');
+    this.form = new FormGroup({
+      homeName: new FormControl('', [Validators.required]),
     });
   }
 
@@ -67,7 +61,7 @@ export class RegisterHome implements OnInit, OnDestroy {
       const homeName = this.form.get('homeName')?.value || '';
 
       if (homeName) {
-        this.registerHomeAction(homeName);
+        this.entityStore.registerHome(homeName);
       } else {
         this.modalService.showModalElement(REGISTER_HOME_ERROR_MODAL);
       }
@@ -76,36 +70,5 @@ export class RegisterHome implements OnInit, OnDestroy {
 
   protected viewHomescreen(): void {
     this.routerService.viewHomescreen();
-  }
-
-  private registerHomeAction(homeName: string): void {
-    const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
-    const userId = user()?.userId;
-    const jwtToken = user()?.jwtToken;
-
-    if (userId && jwtToken && homeName) {
-      const registerHomeRequest: IRegisterGenericEntityRequest = {
-        parentEntityId: userId,
-        name: homeName,
-      };
-
-      this.subscriptions.push(
-        this.registrationService.registerHome(registerHomeRequest, jwtToken).subscribe({
-          next: (response: IRegisterGenericEntityResponse) => {
-            if (response) {
-              // The home has been added to the application.
-              // Display a success modal and route the user to the homescreen component.
-              this.modalService.showModalElement(REGISTER_HOME_SUCCESS_MESSAGE);
-              this.viewHomescreen();
-            }
-          },
-          error: () => {
-            this.modalService.showModalElement(REGISTER_HOME_ERROR_MODAL);
-          },
-        }),
-      );
-    } else {
-      this.modalService.showModalElement(REGISTER_HOME_ERROR_MODAL);
-    }
   }
 }

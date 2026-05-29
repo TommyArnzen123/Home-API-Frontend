@@ -1,67 +1,62 @@
 @if (showBreadcrumbComponent) {
-  @if (isIUser(user())) {
-    <div class="breadcrumb-display">
-      <!-- Display the home page option. -->
-      @if (
-        pageInFocus() === 'view-home' ||
-        pageInFocus() === 'view-location' ||
-        pageInFocus() === 'view-device' ||
-        pageInFocus() === 'register-home' ||
-        pageInFocus() === 'register-location' ||
-        pageInFocus() === 'register-device'
-      ) {
-        <div class="clickable" (click)="viewHomescreen()">Home Screen</div>
-      }
+  <div class="breadcrumb-display">
+    <!-- Display the home page option. -->
+    @if (
+      (!selectedEntity() && pageMode() === 'ADD_CHILD') ||
+      selectedEntity() === 'HOME' ||
+      selectedEntity() === 'LOCATION' ||
+      selectedEntity() === 'DEVICE'
+    ) {
+      <div class="clickable" (click)="viewHomescreen()">Home Screen</div>
+    }
 
-      <!-- Display the register home option. -->
-      @if (pageInFocus() === 'register-home') {
-        <div>></div>
-        <div class="non-clickable">Register Home</div>
-      }
+    <!-- Display the register home option. -->
+    @if (!selectedEntity() && pageMode() === 'ADD_CHILD') {
+      <div>></div>
+      <div class="non-clickable">Register Home</div>
+    }
 
-      <!-- Display the view home option. -->
-      @if (pageInFocus() === 'view-home') {
-        <div>></div>
-        <div class="non-clickable">View Home</div>
-      } @else if (
-        (homeId() && pageInFocus() === 'view-location') ||
-        (homeId() && pageInFocus() === 'view-device') ||
-        (homeId() && pageInFocus() === 'register-location') ||
-        (homeId() && pageInFocus() === 'register-device')
-      ) {
-        <div>></div>
-        <div class="clickable" (click)="viewHomeById()">View Home</div>
-      }
+    <!-- Display the view home option. -->
+    @if (selectedEntity() === 'HOME' && pageMode() === 'VIEW') {
+      <div>></div>
+      <div class="non-clickable">View Home</div>
+    } @else if (
+      (selectedEntity() === 'HOME' && pageMode() === 'ADD_CHILD') ||
+      selectedEntity() === 'LOCATION' ||
+      selectedEntity() === 'DEVICE'
+    ) {
+      <div>></div>
+      <div class="clickable" (click)="viewHomeById()">View Home</div>
+    }
 
-      <!-- Display the register location option. -->
-      @if (pageInFocus() === 'register-location') {
-        <div>></div>
-        <div class="non-clickable">Register Location</div>
-      }
+    <!-- Display the register location option. -->
+    @if (selectedEntity() === 'HOME' && pageMode() === 'ADD_CHILD') {
+      <div>></div>
+      <div class="non-clickable">Register Location</div>
+    }
 
-      <!-- Display the view location option. -->
-      @if (pageInFocus() === 'view-location') {
-        <div>></div>
-        <div class="non-clickable">View Location</div>
-      } @else if (
-        (locationId() && pageInFocus() === 'view-device') ||
-        (locationId() && pageInFocus() === 'register-device')
-      ) {
-        <div>></div>
-        <div class="clickable" (click)="viewLocationById()">View Location</div>
-      }
+    <!-- Display the view location option. -->
+    @if (selectedEntity() === 'LOCATION' && pageMode() === 'VIEW') {
+      <div>></div>
+      <div class="non-clickable">View Location</div>
+    } @else if (
+      (selectedEntity() === 'LOCATION' && pageMode() === 'ADD_CHILD') ||
+      selectedEntity() === 'DEVICE'
+    ) {
+      <div>></div>
+      <div class="clickable" (click)="viewLocationById()">View Location</div>
+    }
 
-      <!-- Display the register device option. -->
-      @if (pageInFocus() === 'register-device') {
-        <div>></div>
-        <div class="non-clickable">Register Device</div>
-      }
+    <!-- Display the register device option. -->
+    @if (selectedEntity() === 'LOCATION' && pageMode() === 'ADD_CHILD') {
+      <div>></div>
+      <div class="non-clickable">Register Device</div>
+    }
 
-      <!-- Display the view device option. -->
-      @if (pageInFocus() === 'view-device') {
-        <div>></div>
-        <div class="non-clickable">View Device</div>
-      }
-    </div>
-  }
+    <!-- Display the view device option. -->
+    @if (selectedEntity() === 'DEVICE' && pageMode() === 'VIEW') {
+      <div>></div>
+      <div class="non-clickable">View Device</div>
+    }
+  </div>
 }

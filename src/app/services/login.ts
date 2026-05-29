@@ -4,11 +4,11 @@ import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { EnvironmentService } from './environment';
 import { SessionStorageService } from './session-storage';
-import { BreadcrumbService } from './breadcrumb';
 import { ILoginRequest, IUser } from '../model/login';
 import { USER_LOGIN_INFO_KEY } from '../constants/session-storage-constants';
 import { LOGIN_ROUTE } from '../constants/navigation-constants';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';
+import { EntityStore } from '../store/entity.store';
 
 @Injectable({
   providedIn: 'root',
@@ -18,11 +18,12 @@ export class LoginService {
   private userLoginInfo = this.#loginResponseInfo$.asReadonly();
   private loginUrl = '/login';
 
+  private readonly entityStore = inject(EntityStore);
+
   private readonly httpClient = inject(HttpClient);
   private readonly environmentService = inject(EnvironmentService);
   private readonly sessionStorageService = inject(SessionStorageService);
   private readonly router = inject(Router);
-  private readonly breadcrumbService = inject(BreadcrumbService);
 
   isLoggedIn = computed(() => !!this.userLoginInfo());
 
@@ -44,6 +45,10 @@ export class LoginService {
     return this.userLoginInfo;
   }
 
+  getJwtToken(): string | undefined {
+    return this.userLoginInfo()?.jwtToken;
+  }
+
   private updateUserLoginInfo(userInfo: IUser | null): void {
     let tempUserInfo: IUser | null = userInfo;
     if (userInfo) {
@@ -51,6 +56,9 @@ export class LoginService {
         ...userInfo,
         userId: Number(userInfo.userId),
       };
+
+      // If the user login info is set, store the userId and user first name in the signal store.
+      this.entityStore.setUserInformation(tempUserInfo.userId, tempUserInfo.firstName);
     }
     this.#loginResponseInfo$.set(tempUserInfo);
   }
@@ -71,7 +79,7 @@ export class LoginService {
   }
 
   logout(): void {
-    this.breadcrumbService.clearService(); // Clear the breadcrumb service.
+    this.entityStore.reset(); // Clear the entity store.
     this.sessionStorageService.removeItem(USER_LOGIN_INFO_KEY); // Remove the user login info from session storage.
     this.updateUserLoginInfo(null); // Remove the user login info from memory.
     this.router.navigateByUrl(LOGIN_ROUTE); // Route to the login screen.

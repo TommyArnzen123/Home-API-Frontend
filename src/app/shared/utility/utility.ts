@@ -13,3 +13,30 @@ export function formatTemperature(temperature: number, isFahrenheit: boolean): s
 export function fahrenheitToCelsius(tempFahrenheit: number): number {
   return 0;
 }
+
+export function setHomescreenGreetingMessage(userFirstName: string): string {
+  // Get the current hour.
+  const currentDate = new Date();
+  const currentHour = currentDate.getHours();
+
+  // Set a default message.
+  let message = ('Hello ' + userFirstName).trim() + '!';
+
+  if (currentHour >= 0 && currentHour <= 11) {
+    message = ('Good Morning ' + userFirstName).trim() + '!';
+  } else if (currentHour >= 12 && currentHour <= 16) {
+    message = ('Good Afternoon ' + userFirstName).trim() + '!';
+  } else {
+    message = ('Good Evening ' + userFirstName).trim() + '!';
+  }
+
+  return message;
+}
+
+export function formatName(name: string | null): string {
+  if (!name) return '';
+
+  let formattedName = name.toLowerCase();
+  formattedName = formattedName.charAt(0).toUpperCase() + formattedName.substring(1);
+  return formattedName;
+}

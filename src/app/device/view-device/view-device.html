@@ -1,14 +1,14 @@
 <div class="top-row-container">
   <div>
-    @if (deviceInformation && deviceInformation.deviceName) {
-      <div class="title">{{ deviceInformation.deviceName }}</div>
+    @if (deviceName()) {
+      <div class="title">{{ deviceName() }}</div>
     } @else {
       <div class="title">Device Name Unavailable</div>
     }
   </div>
 
   <div>
-    @if (deviceId) {
+    @if (deviceId()) {
       <button matButton="outlined" (click)="deleteDeviceConfirmation()">
         <mat-icon>delete</mat-icon>Delete Device
       </button>
@@ -19,13 +19,13 @@
 <div class="body-content-container">
   <div class="most-recent-temperature-container">
     <h1>Most Recent Temperature Recorded</h1>
-    @if (deviceInformation && deviceInformation.mostRecentTemperatureAvailable) {
+    @if (mostRecentTemperature() && mostRecentTemperature()?.temperature) {
       <div class="temperature-display">
-        {{ deviceInformation.mostRecentTemperature | number: '1.2-2' }}°F
+        {{ mostRecentTemperature()?.temperature | number: '1.2-2' }}°F
       </div>
-      @if (mostRecentTemperatureDate) {
+      @if (mostRecentTemperature()?.dateRecorded) {
         <div class="date-recorded-display">
-          {{ mostRecentTemperatureDate | date: 'MM/dd/yyyy h:mm a' }}
+          {{ mostRecentTemperature()?.dateRecorded | date: 'MM/dd/yyyy h:mm a' }}
         </div>
       }
     } @else {
@@ -36,14 +36,15 @@
   <div class="temperature-by-hour-container">
     <h1 class="title">Average Temperatures by Hour (Past 24 hours)</h1>
     <div class="hourly-display">
-      @for (tempByHour of generateHourlyTemperatureReadings(); track tempByHour.hour) {
-        <div class="individual-temperature-item">
-          <display-temp-by-hour
-            [hour]="tempByHour.hour"
-            [temperature]="tempByHour.averageTemperature"
-            [temperatureAvailable]="tempByHour.temperatureAvailable || false"
-          />
-        </div>
+      @if (averageTemperaturesByHour()) {
+        @for (tempByHour of generateHourlyTemperatureReadings(); track tempByHour.hour) {
+          <div class="individual-temperature-item">
+            <display-temp-by-hour
+              [hour]="tempByHour.hour"
+              [temperature]="tempByHour.averageTemperature"
+            />
+          </div>
+        }
       }
     </div>
   </div>

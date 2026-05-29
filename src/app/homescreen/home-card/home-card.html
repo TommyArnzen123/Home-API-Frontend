@@ -1,6 +1,10 @@
 <mat-card class="home-card" appearance="outlined">
   <mat-card-header>
-    <mat-card-title>{{ homeInfo.homeName }}</mat-card-title>
+    @if (homeInfo && homeInfo.summary && homeInfo.summary.homeName) {
+      <mat-card-title>{{ homeInfo.summary.homeName }}</mat-card-title>
+    } @else {
+      <mat-card-title>Home Name Unavailable</mat-card-title>
+    }
   </mat-card-header>
   <div class="home-card-content">
     <div>
@@ -9,16 +13,32 @@
     <div class="entity-totals-container">
       <div class="entity">
         <img src="location-icon.svg" class="entity-icon" alt="Location icon." />
-        <div class="total-items">{{ homeInfo.totalLocations }}</div>
+        @if (
+          homeInfo &&
+          homeInfo.summary &&
+          (homeInfo.summary.totalLocations || homeInfo.summary.totalLocations === 0)
+        ) {
+          <div class="total-items">{{ homeInfo.summary.totalLocations }}</div>
+        } @else {
+          <div class="total-items">N/A</div>
+        }
       </div>
       <div class="entity">
         <img src="device-icon.svg" class="entity-icon" alt="Device icon." />
-        <div class="total-items">{{ homeInfo.totalDevices }}</div>
+        @if (
+          homeInfo &&
+          homeInfo.summary &&
+          (homeInfo.summary.totalDevices || homeInfo.summary.totalDevices === 0)
+        ) {
+          <div class="total-items">{{ homeInfo.summary.totalDevices }}</div>
+        } @else {
+          <div class="total-items">N/A</div>
+        }
       </div>
     </div>
   </div>
   <mat-card-actions class="button-container">
-    @if (this.homeInfo && this.homeInfo.homeId) {
+    @if (this.homeInfo && this.homeInfo.entityId) {
       <button matButton="outlined" (click)="viewHomeById()">View</button>
       <button matButton="filled" (click)="deleteHomeConfirmation()">
         <mat-icon>delete</mat-icon>Delete

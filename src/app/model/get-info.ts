@@ -1,3 +1,6 @@
+import { IBreadcrumb } from '../store/entity.store';
+import { ITemperatureThreshold } from './temperature-threshold';
+
 export interface IUser {
   id: number;
   firstName: string;
@@ -14,20 +17,6 @@ export interface IHome {
   totalDevices: number;
 }
 
-export interface ILocation {
-  homeId: number;
-  locationId: number;
-  locationName: string;
-  devices: IDevice[];
-}
-
-export interface IDevice {
-  locationId: number;
-  deviceId: number;
-  deviceName: string;
-  temperature: ITemperature;
-}
-
 export interface ITemperature {
   temperatureId: number;
   temperature: number;
@@ -36,33 +25,58 @@ export interface ITemperature {
 
 export interface IAverageTemperatureByHour {
   hour: number;
-  averageTemperature: number;
-  temperatureAvailable?: boolean;
-}
-
-export interface IDeviceInformationCurrentDay {
-  deviceId: number;
-  locationId: number;
-  homeId: number;
-  deviceName: string;
-  mostRecentTemperature: number;
-  mostRecentTemperatureAvailable: boolean;
-  mostRecentTemperatureAvailableDateTime: string;
-  averageTemperaturesByHourCurrentDay: IAverageTemperatureByHour[];
+  averageTemperature: number | null;
+  // temperatureAvailable?: boolean;
 }
 
 export interface IEntityInfoRequest {
   id: number;
-  jwtToken: string;
 }
 
-export interface IHomescreenInfoResponse {
+export interface IHomescreenInfoResponse extends EntityPath {
   userId: number;
   homes: IHome[];
 }
 
-export interface IViewHomeInfoResponse {
+export interface IViewHomeInfoResponse extends EntityPath {
   homeId: number;
   homeName: string;
-  locations: ILocation[];
+  locations: ILocationSummary[];
+}
+
+export interface EntityPath {
+  entityPath: IBreadcrumb[];
+}
+
+export interface ILocationSummary {
+  homeId: number;
+  locationId: number;
+  locationName: string;
+  numDevices: number;
+  averageTemperature: number;
+  threshold: ITemperatureThreshold;
+}
+
+export interface IViewLocationInfoResponse extends EntityPath {
+  homeId: number;
+  locationId: number;
+  locationName: string;
+  devices: IDeviceSummary[];
+  threshold: ITemperatureThreshold;
+}
+
+export interface IDeviceSummary {
+  locationId: number;
+  deviceId: number;
+  deviceName: string;
+  temperature: ITemperature;
+}
+
+export interface IViewDeviceInfoResponse extends EntityPath {
+  deviceId: number;
+  locationId: number;
+  homeId: number;
+  deviceName: string;
+  temperature: ITemperature;
+  averageTemperaturesByHourCurrentDay: IAverageTemperatureByHour[];
 }

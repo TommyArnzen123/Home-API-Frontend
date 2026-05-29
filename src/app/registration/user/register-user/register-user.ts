@@ -19,7 +19,7 @@ import { ModalService } from '../../../services/modal';
 import { RouterService } from '../../../services/router';
 import { IRegisterGenericEntityResponse, IRegisterUserRequest } from '../../../model/registration';
 import { REGISTER_USER_ERROR_MODAL } from '../../../constants/error-constants';
-import { REGISTER_USER_SUCCESS_MESSAGE } from '../../../constants/registration-constants';
+import { REGISTER_USER_SUCCESS_MODAL } from '../../../constants/success-constants';
 
 @Component({
   selector: 'register-user',
@@ -105,7 +105,7 @@ export class RegisterUser implements OnInit, OnDestroy {
           if (response) {
             // The user has been added to the application.
             // Display a modal message and route the user to the login component.
-            this.modalService.showModalElement(REGISTER_USER_SUCCESS_MESSAGE);
+            this.modalService.showModalElement(REGISTER_USER_SUCCESS_MODAL);
             this.viewLoginPage();
           }
         },

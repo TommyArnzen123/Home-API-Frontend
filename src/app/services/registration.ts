@@ -36,7 +36,6 @@ export class RegistrationService {
 
   registerHome(
     registerHomeRequest: IRegisterGenericEntityRequest,
-    jwtToken: string,
   ): Observable<IRegisterGenericEntityResponse> {
     return this.httpClient.post<IRegisterGenericEntityResponse>(
       this.environmentService.getEnvironment().backendUrl +
@@ -44,7 +43,6 @@ export class RegistrationService {
         this.registerHomePath,
       registerHomeRequest,
       {
-        headers: this.generateHeaderWithBearerToken(jwtToken),
         context: new HttpContext().set(LoadingContextToken, 'Registering new home'),
       },
     );
@@ -52,7 +50,6 @@ export class RegistrationService {
 
   registerLocation(
     registerLocationRequest: IRegisterGenericEntityRequest,
-    jwtToken: string,
   ): Observable<IRegisterGenericEntityResponse> {
     return this.httpClient.post<IRegisterGenericEntityResponse>(
       this.environmentService.getEnvironment().backendUrl +
@@ -60,7 +57,6 @@ export class RegistrationService {
         this.registerLocationPath,
       registerLocationRequest,
       {
-        headers: this.generateHeaderWithBearerToken(jwtToken),
         context: new HttpContext().set(LoadingContextToken, 'Registering new location'),
       },
     );
@@ -68,7 +64,6 @@ export class RegistrationService {
 
   registerDevice(
     registerDeviceRequest: IRegisterGenericEntityRequest,
-    jwtToken: string,
   ): Observable<IRegisterGenericEntityResponse> {
     return this.httpClient.post<IRegisterGenericEntityResponse>(
       this.environmentService.getEnvironment().backendUrl +
@@ -76,15 +71,8 @@ export class RegistrationService {
         this.registerDevicePath,
       registerDeviceRequest,
       {
-        headers: this.generateHeaderWithBearerToken(jwtToken),
         context: new HttpContext().set(LoadingContextToken, 'Registering new device'),
       },
     );
-  }
-
-  generateHeaderWithBearerToken(jwtToken: string): HttpHeaders {
-    return new HttpHeaders({
-      Authorization: `Bearer ${jwtToken}`,
-    });
   }
 }
