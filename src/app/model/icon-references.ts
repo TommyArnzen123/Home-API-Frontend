@@ -1,4 +1,5 @@
 export interface IconReference {
+  id: number;
   title: string;
   collection: string;
   license: string;

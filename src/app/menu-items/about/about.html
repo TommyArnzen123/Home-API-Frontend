@@ -29,7 +29,7 @@
   <h2>Icon References</h2>
   <div class="icon-reference-item-container">
     <div>Icons sourced from 'svgrepo.com' (https://www.svgrepo.com/vectors/).</div>
-    @for (icon of iconReferences; track icon.url) {
+    @for (icon of iconReferences; track icon.id) {
       <div class="icon-display">
         <div>
           <img src="{{ icon.iconPath }}" alt="{{ icon.altText }}" />

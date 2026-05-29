@@ -2,6 +2,7 @@ import { IconReference } from '../model/icon-references';
 
 export const ICON_REFERENCES: IconReference[] = [
   {
+    id: 1,
     title: 'Device Activating SVG Vector',
     collection: 'Brightlayer UI Icons',
     license: 'MIT License',
@@ -11,6 +12,7 @@ export const ICON_REFERENCES: IconReference[] = [
     altText: 'Black device with black signal on top.',
   },
   {
+    id: 2,
     title: 'Frozen House Ice SVG Vector',
     collection: 'Winter Duotone Glyph Vectors',
     license: 'CC Attribution License',
@@ -20,6 +22,7 @@ export const ICON_REFERENCES: IconReference[] = [
     altText: 'Black house with blue ice on top.',
   },
   {
+    id: 3,
     title: 'Home 2 SVG Vector',
     collection: 'Iconfy Duotone Line Icons',
     license: 'CC Attribution License',
@@ -29,6 +32,7 @@ export const ICON_REFERENCES: IconReference[] = [
     altText: 'House with blue roof. The walls and base are black.',
   },
   {
+    id: 4,
     title: 'Home Alt 3 SVG Vector',
     collection: 'Variety Duotone Filled Icons',
     license: 'PD License',
@@ -38,6 +42,7 @@ export const ICON_REFERENCES: IconReference[] = [
     altText: 'Home icon with all black color.',
   },
   {
+    id: 5,
     title: 'Location Pin SVG Vector',
     collection: 'Orchid Line Interface Icons',
     license: 'MIT License',
@@ -47,6 +52,7 @@ export const ICON_REFERENCES: IconReference[] = [
     altText: 'Black location icon with black circle in the middle.',
   },
   {
+    id: 6,
     title: 'Thermometer Temperature SVG',
     collection: 'Winter 4',
     license: 'CC0 License',
@@ -56,6 +62,7 @@ export const ICON_REFERENCES: IconReference[] = [
     altText: 'Light blue and gray thermometer icon with yellow shapes around the outside.',
   },
   {
+    id: 7,
     title: 'Error SVG Vector',
     collection: 'Iconpark Duotone Icons',
     license: 'Apache License',
@@ -65,6 +72,7 @@ export const ICON_REFERENCES: IconReference[] = [
     altText: 'Blue X Icon with bold black outline.',
   },
   {
+    id: 8,
     title: 'Triangle Exclamation SVG Vector',
     collection: 'Dazzle Line Icons',
     license: 'CC Attribution License',
@@ -75,6 +83,7 @@ export const ICON_REFERENCES: IconReference[] = [
     altText: 'Blue triangle with blue exclamation inside.',
   },
   {
+    id: 9,
     title: 'Time SVG Vector',
     collection: 'Iconpark Duotone Icons',
     license: 'Apache License',
@@ -84,6 +93,7 @@ export const ICON_REFERENCES: IconReference[] = [
     altText: 'Blue clock with white hands and bold black outline.',
   },
   {
+    id: 10,
     title: 'Circle SVG Vector',
     collection: 'Chunk 16px Thick Interface Icons',
     license: 'PD License',
@@ -93,6 +103,7 @@ export const ICON_REFERENCES: IconReference[] = [
     altText: 'Green circle alert icon.',
   },
   {
+    id: 11,
     title: 'Circle SVG Vector',
     collection: 'Chunk 16px Thick Interface Icons',
     license: 'PD License',
@@ -102,6 +113,7 @@ export const ICON_REFERENCES: IconReference[] = [
     altText: 'Red circle alert icon.',
   },
   {
+    id: 12,
     title: 'Triangle Exclamation SVG Vector',
     collection: 'Dazzle Line Icons',
     license: 'CC Attribution License',
@@ -111,6 +123,7 @@ export const ICON_REFERENCES: IconReference[] = [
     altText: 'White triangle with black border and black exclamation mark alert icon.',
   },
   {
+    id: 13,
     title: 'Thermometer SVG Vector',
     collection: 'Weather 27',
     license: 'CC0 License',
@@ -120,6 +133,7 @@ export const ICON_REFERENCES: IconReference[] = [
     altText: 'Red thermometer icon.',
   },
   {
+    id: 14,
     title: 'Thermometer SVG Vector',
     collection: 'Weather 28',
     license: 'CC0 License',
@@ -129,6 +143,7 @@ export const ICON_REFERENCES: IconReference[] = [
     altText: 'Orange thermometer icon.',
   },
   {
+    id: 15,
     title: 'Thermometer Temperature SVG',
     collection: 'Weather 25',
     license: 'CC0 License',
