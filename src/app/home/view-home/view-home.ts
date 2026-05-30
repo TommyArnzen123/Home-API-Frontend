@@ -96,8 +96,14 @@ export class ViewHome implements OnInit {
 
     const homeId = this.homeId();
     if (homeId) {
-      this.entityStore.setSelectedEntity({ type: 'HOME', id: homeId });
       this.entityStore.getViewHomeInfo(homeId);
+    }
+  }
+
+  protected viewEditHomePage(): void {
+    const homeId = this.homeId();
+    if (homeId !== null) {
+      this.routerService.viewEditHomePage(homeId);
     }
   }
 

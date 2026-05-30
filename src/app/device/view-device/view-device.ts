@@ -108,7 +108,6 @@ export class ViewDevice implements OnInit {
 
     const deviceId = this.deviceId();
     if (deviceId) {
-      this.entityStore.setSelectedEntity({ type: 'DEVICE', id: deviceId });
       this.entityStore.getViewDeviceInfo(deviceId);
     }
   }

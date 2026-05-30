@@ -59,7 +59,6 @@ export class Homescreen implements OnInit {
   }
 
   ngOnInit(): void {
-    this.entityStore.setSelectedEntity(null);
     this.entityStore.setPageMode('VIEW');
     this.entityStore.getHomescreenInfo();
   }

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import {
   ABOUT_ROUTE,
   CAPTIVE_ERROR_ROUTE,
+  EDIT_HOME_ROUTE,
   HOMESCREEN_ROUTE,
   LOGIN_ROUTE,
   REGISTER_DEVICE_ROUTE,
@@ -15,6 +16,7 @@ import {
   VIEW_LOCATION_ROUTE,
 } from '../constants/navigation-constants';
 import { ICaptiveError } from '../model/captive-error';
+import { IBreadcrumbItemDisplay } from '../model/breadcrumb';
 
 @Injectable({
   providedIn: 'root',
@@ -23,62 +25,67 @@ export class RouterService {
   private readonly router = inject(Router);
 
   // Route to the login page.
-  viewLoginPage() {
+  viewLoginPage(): void {
     this.router.navigate([LOGIN_ROUTE]);
   }
 
   // Route to the register user page.
-  viewRegisterUserPage() {
+  viewRegisterUserPage(): void {
     this.router.navigate([REGISTER_USER_ROUTE]);
   }
 
   // Route to the register home page.
-  viewRegisterHomePage() {
+  viewRegisterHomePage(): void {
     this.router.navigate([REGISTER_HOME_ROUTE]);
   }
 
   // Route to the register location page.
-  viewRegisterLocationPage(homeId: number) {
+  viewRegisterLocationPage(homeId: number): void {
     this.router.navigate([REGISTER_LOCATION_ROUTE, homeId]);
   }
 
   // Route to the register device page.
-  viewRegisterDevicePage(locationId: number) {
+  viewRegisterDevicePage(locationId: number): void {
     this.router.navigate([REGISTER_DEVICE_ROUTE, locationId]);
   }
 
+  // Route to the edit home page.
+  viewEditHomePage(homeId: number): void {
+    this.router.navigate([EDIT_HOME_ROUTE, homeId]);
+  }
+
   // Route to the about page.
-  viewAboutPage() {
+  viewAboutPage(): void {
     this.router.navigate([ABOUT_ROUTE]);
   }
 
   // Route to the settings page.
-  viewSettingsPage() {
+  viewSettingsPage(): void {
     this.router.navigate([SETTINGS_ROUTE]);
   }
 
   // Route to the homescreen.
-  viewHomescreen() {
+  viewHomescreen(): void {
     this.router.navigate([HOMESCREEN_ROUTE]);
   }
 
   // Route to the 'view home' page.
-  viewHomeById(homeId: number) {
+  viewHomeById(homeId: number): void {
     this.router.navigate([VIEW_HOME_ROUTE, homeId]);
   }
 
   // Route to the 'view location' page.
-  viewLocationById(locationId: number) {
+  viewLocationById(locationId: number): void {
     this.router.navigate([VIEW_LOCATION_ROUTE, locationId]);
   }
 
   // Route to the 'view device' page.
-  viewDeviceById(deviceId: number) {
+  viewDeviceById(deviceId: number): void {
     this.router.navigate([VIEW_DEVICE_ROUTE, deviceId]);
   }
 
   // Route to the captive error page.
-  viewCaptiveErrorScreen(params: ICaptiveError) {
+  viewCaptiveErrorScreen(params: ICaptiveError): void {
     // Set the params that have been defined.
     const queryParams = {
       ...(params.homescreenInfoError && { homescreenInfoError: true }),
@@ -86,5 +93,23 @@ export class RouterService {
     };
 
     this.router.navigate([CAPTIVE_ERROR_ROUTE], { queryParams });
+  }
+
+  // Route to the right page based on the breadcrumb item selected.
+  breadcrumbRoute(selectedItem: IBreadcrumbItemDisplay): void {
+    switch (selectedItem.entityType) {
+      case 'USER':
+        this.viewHomescreen();
+        break;
+      case 'HOME':
+        this.viewHomeById(selectedItem.entityId);
+        break;
+      case 'LOCATION':
+        this.viewLocationById(selectedItem.entityId);
+        break;
+      case 'DEVICE':
+        this.viewDeviceById(selectedItem.entityId);
+        break;
+    }
   }
 }

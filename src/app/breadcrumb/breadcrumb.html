@@ -1,62 +1,28 @@
 @if (showBreadcrumbComponent) {
-  <div class="breadcrumb-display">
-    <!-- Display the home page option. -->
-    @if (
-      (!selectedEntity() && pageMode() === 'ADD_CHILD') ||
-      selectedEntity() === 'HOME' ||
-      selectedEntity() === 'LOCATION' ||
-      selectedEntity() === 'DEVICE'
-    ) {
-      <div class="clickable" (click)="viewHomescreen()">Home Screen</div>
-    }
+  @if (!isHomescreen()) {
+    <div class="breadcrumb-display">
+      @for (item of entityPath(); track item.entityId; let last = $last) {
+        @if (!last) {
+          <div class="clickable" (click)="navigate(item)">{{ item.label }}</div>
+        } @else {
+          @if (pageMode() === 'VIEW') {
+            <div class="non-clickable">{{ item.label }}</div>
+          }
 
-    <!-- Display the register home option. -->
-    @if (!selectedEntity() && pageMode() === 'ADD_CHILD') {
-      <div>></div>
-      <div class="non-clickable">Register Home</div>
-    }
+          @if (pageMode() === 'ADD_CHILD' || pageMode() === 'EDIT') {
+            <div class="clickable" (click)="navigate(item)">{{ item.label }}</div>
+          }
+        }
 
-    <!-- Display the view home option. -->
-    @if (selectedEntity() === 'HOME' && pageMode() === 'VIEW') {
-      <div>></div>
-      <div class="non-clickable">View Home</div>
-    } @else if (
-      (selectedEntity() === 'HOME' && pageMode() === 'ADD_CHILD') ||
-      selectedEntity() === 'LOCATION' ||
-      selectedEntity() === 'DEVICE'
-    ) {
-      <div>></div>
-      <div class="clickable" (click)="viewHomeById()">View Home</div>
-    }
+        @if (!last) {
+          <div>></div>
+        }
+      }
 
-    <!-- Display the register location option. -->
-    @if (selectedEntity() === 'HOME' && pageMode() === 'ADD_CHILD') {
-      <div>></div>
-      <div class="non-clickable">Register Location</div>
-    }
-
-    <!-- Display the view location option. -->
-    @if (selectedEntity() === 'LOCATION' && pageMode() === 'VIEW') {
-      <div>></div>
-      <div class="non-clickable">View Location</div>
-    } @else if (
-      (selectedEntity() === 'LOCATION' && pageMode() === 'ADD_CHILD') ||
-      selectedEntity() === 'DEVICE'
-    ) {
-      <div>></div>
-      <div class="clickable" (click)="viewLocationById()">View Location</div>
-    }
-
-    <!-- Display the register device option. -->
-    @if (selectedEntity() === 'LOCATION' && pageMode() === 'ADD_CHILD') {
-      <div>></div>
-      <div class="non-clickable">Register Device</div>
-    }
-
-    <!-- Display the view device option. -->
-    @if (selectedEntity() === 'DEVICE' && pageMode() === 'VIEW') {
-      <div>></div>
-      <div class="non-clickable">View Device</div>
-    }
-  </div>
+      @if (breadcrumbSuffix()) {
+        <div>></div>
+        <div class="non-clickable">{{ breadcrumbSuffix() }}</div>
+      }
+    </div>
+  }
 }

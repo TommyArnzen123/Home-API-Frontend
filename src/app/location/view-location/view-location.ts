@@ -111,7 +111,6 @@ export class ViewLocation implements OnInit, OnDestroy {
 
     const locationId = this.locationId();
     if (locationId) {
-      this.entityStore.setSelectedEntity({ type: 'LOCATION', id: locationId });
       this.entityStore.getViewLocationInfo(locationId);
     }
   }

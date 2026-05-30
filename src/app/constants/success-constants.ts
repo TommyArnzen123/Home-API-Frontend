@@ -20,6 +20,11 @@ export const REGISTER_DEVICE_SUCCESS_MODAL: IModal = {
   content: 'Your new device has been registered.',
 };
 
+export const EDIT_HOME_SUCCESS_MODAL: IModal = {
+  title: 'Home Updated',
+  content: "Your home's information has been updated.",
+};
+
 export const ADD_TEMPERATURE_THRESHOLD_SUCCESS_MODAL: IModal = {
   title: 'Threshold Added',
   content: 'The temperature threshold has been added.',

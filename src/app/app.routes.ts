@@ -26,7 +26,9 @@ import {
   SETTINGS_ROUTE,
   ABOUT_ROUTE,
   ROOT_ROUTE,
+  EDIT_HOME_ROUTE,
 } from './constants/navigation-constants';
+import { EditHome } from './edit/home/edit-home';
 
 export const routes: Routes = [
   {
@@ -58,6 +60,10 @@ export const routes: Routes = [
       {
         path: VIEW_DEVICE_ROUTE + '/:deviceId',
         component: ViewDevice,
+      },
+      {
+        path: EDIT_HOME_ROUTE + '/:homeId',
+        component: EditHome,
       },
       {
         path: SETTINGS_ROUTE,

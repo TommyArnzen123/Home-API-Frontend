@@ -8,6 +8,7 @@ export const REGISTER_DEVICE_ROUTE = 'register-device';
 export const VIEW_HOME_ROUTE = 'view-home';
 export const VIEW_LOCATION_ROUTE = 'view-location';
 export const VIEW_DEVICE_ROUTE = 'view-device';
+export const EDIT_HOME_ROUTE = 'edit-home';
 export const CAPTIVE_ERROR_ROUTE = 'captive-error';
 export const SETTINGS_ROUTE = 'settings';
 export const ABOUT_ROUTE = 'about';

@@ -1,0 +1,24 @@
+<mat-card class="centered-content">
+  <mat-card-title>Edit Home</mat-card-title>
+  <br />
+  <mat-card-content>
+    <form [formGroup]="form">
+      <mat-form-field>
+        <input type="text" matInput placeholder="Home Name" formControlName="homeName" />
+      </mat-form-field>
+      <br />
+      @if (form.get('homeName')?.touched && form.get('homeName')?.hasError('required')) {
+        <mat-error>Please enter home name.</mat-error>
+      }
+      <br />
+      @if (homeId()) {
+        <div class="left-button">
+          <button (click)="viewHomeById()" type="button" matButton>Return to View Home</button>
+        </div>
+      }
+      <div class="right-button">
+        <button (click)="update()" type="submit" matButton>Update Home</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

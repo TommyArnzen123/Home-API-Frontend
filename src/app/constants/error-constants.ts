@@ -43,7 +43,7 @@ const INVALID_HOME_ID_ERROR: IError = {
 };
 
 const VIEW_HOME_GET_INFO_ERROR: IError = {
-  message: 'There was an error viewing the selected home.',
+  message: 'There was an error getting information for the selected home.',
   errorCode: '0009',
 };
 
@@ -80,6 +80,11 @@ const UPDATE_TEMPERATURE_THRESHOLD_ERROR: IError = {
 const DELETE_TEMPERATURE_THRESHOLD_ERROR: IError = {
   message: 'There was an error deleting the temperature threshold.',
   errorCode: '0016',
+};
+
+const EDIT_HOME_ERROR: IError = {
+  message: 'There was an error editing the home information.',
+  errorCode: '0017',
 };
 
 // Error Modal Objects.
@@ -185,5 +190,12 @@ export const DELETE_TEMPERATURE_THRESHOLD_ERROR_MODAL: IModal = {
   title: 'Something Went Wrong...',
   content: DELETE_TEMPERATURE_THRESHOLD_ERROR.message,
   footer: 'Error Code: ' + DELETE_TEMPERATURE_THRESHOLD_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const EDIT_HOME_ERROR_MODAL: IModal = {
+  title: 'Something Went Wrong...',
+  content: EDIT_HOME_ERROR.message,
+  footer: 'Error Code: ' + EDIT_HOME_ERROR.errorCode,
   disableClose: true,
 };

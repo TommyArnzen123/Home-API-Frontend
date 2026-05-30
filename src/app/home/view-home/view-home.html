@@ -6,6 +6,9 @@
   }
   <div class="button-container">
     @if (homeId()) {
+      <button class="button-display" matButton="filled" (click)="viewEditHomePage()">
+        Edit Home Information
+      </button>
       <button class="button-display" matButton="outlined" (click)="deleteHomeConfirmation()">
         <mat-icon>delete</mat-icon>Delete Home
       </button>

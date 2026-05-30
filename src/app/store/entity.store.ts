@@ -28,6 +28,8 @@ import {
 } from '../model/temperature-threshold';
 import { TemperatureThresholdService } from '../services/temperature-threshold';
 import { IRegisterGenericEntityRequest } from '../model/registration';
+import { IEditHomeRequest } from '../model/edit';
+import { EditService } from '../services/edit';
 
 export type EntityActions =
   | 'get-view-homescreen-info'
@@ -37,6 +39,7 @@ export type EntityActions =
   | 'register-home'
   | 'register-location'
   | 'register-device'
+  | 'edit-home'
   | 'add-temperature-threshold'
   | 'update-temperature-threshold'
   | 'delete-temperature-threshold'
@@ -45,9 +48,9 @@ export type EntityActions =
   | 'delete-device'
   | null;
 
-type EntityTypes = 'HOME' | 'LOCATION' | 'DEVICE';
+export type EntityTypes = 'USER' | 'HOME' | 'LOCATION' | 'DEVICE';
 
-export type PageModes = 'VIEW' | 'ADD_CHILD';
+export type PageModes = 'VIEW' | 'EDIT' | 'ADD_CHILD';
 
 export interface IBreadcrumb {
   type: EntityTypes;
@@ -107,7 +110,6 @@ interface IEntityState {
   locations: Record<number, LocationData>;
   devices: Record<number, DeviceData>;
   entityPath: Array<IBreadcrumb>;
-  selectedEntity: IBreadcrumb | null;
   pageMode: PageModes | null;
   successNotification: EntityActions;
   errorNotification: EntityActions;
@@ -121,7 +123,6 @@ const initialState: IEntityState = {
   locations: {},
   devices: {},
   entityPath: [],
-  selectedEntity: null,
   pageMode: null,
   successNotification: null,
   errorNotification: null,
@@ -135,6 +136,7 @@ export const EntityStore = signalStore(
   withMethods((store) => {
     const getInfoService = inject(GetInfoService);
     const registrationService = inject(RegistrationService);
+    const editService = inject(EditService);
     const thresholdService = inject(TemperatureThresholdService);
     const deleteService = inject(DeleteService);
 
@@ -312,6 +314,28 @@ export const EntityStore = signalStore(
                     }),
                 }),
               );
+          }),
+        ),
+      ),
+
+      editHome: rxMethod<IEditHomeRequest>(
+        pipe(
+          tap(() => patchState(store, { successNotification: null, errorNotification: null })),
+          switchMap((editHomeRequest: IEditHomeRequest) => {
+            return editService.editHome(editHomeRequest).pipe(
+              tapResponse({
+                next: () =>
+                  patchState(store, {
+                    // Edited home object does not need to be updated here.
+                    // Updates to the home object will be fetched when routed to the view home page.
+                    successNotification: 'edit-home',
+                  }),
+                error: () =>
+                  patchState(store, {
+                    errorNotification: 'edit-home',
+                  }),
+              }),
+            );
           }),
         ),
       ),
@@ -527,12 +551,6 @@ export const EntityStore = signalStore(
           ),
         ),
       ),
-
-      setSelectedEntity(selectedEntity: IBreadcrumb | null): void {
-        patchState(store, {
-          selectedEntity,
-        });
-      },
 
       setPageMode(pageMode: PageModes): void {
         patchState(store, {
