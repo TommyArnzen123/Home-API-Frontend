@@ -53,7 +53,7 @@ const INVALID_LOCATION_ID_ERROR: IError = {
 };
 
 const VIEW_LOCATION_GET_INFO_ERROR: IError = {
-  message: 'There was an error viewing the selected location.',
+  message: 'There was an error getting information for the selected location.',
   errorCode: '0011',
 };
 
@@ -63,7 +63,7 @@ const VIEW_DEVICE_INVALID_DEVICE_ID_ERROR: IError = {
 };
 
 const VIEW_DEVICE_GET_INFO_ERROR: IError = {
-  message: 'There was an error viewing the selected device.',
+  message: 'There was an error getting information for the selected device.',
   errorCode: '0013',
 };
 
@@ -85,6 +85,11 @@ const DELETE_TEMPERATURE_THRESHOLD_ERROR: IError = {
 const EDIT_HOME_ERROR: IError = {
   message: 'There was an error editing the home information.',
   errorCode: '0017',
+};
+
+const EDIT_LOCATION_ERROR: IError = {
+  message: 'There was an error editing the location information.',
+  errorCode: '0018',
 };
 
 // Error Modal Objects.
@@ -197,5 +202,12 @@ export const EDIT_HOME_ERROR_MODAL: IModal = {
   title: 'Something Went Wrong...',
   content: EDIT_HOME_ERROR.message,
   footer: 'Error Code: ' + EDIT_HOME_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const EDIT_LOCATION_ERROR_MODAL: IModal = {
+  title: 'Something Went Wrong...',
+  content: EDIT_LOCATION_ERROR.message,
+  footer: 'Error Code: ' + EDIT_LOCATION_ERROR.errorCode,
   disableClose: true,
 };

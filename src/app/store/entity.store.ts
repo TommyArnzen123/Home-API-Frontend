@@ -28,7 +28,7 @@ import {
 } from '../model/temperature-threshold';
 import { TemperatureThresholdService } from '../services/temperature-threshold';
 import { IRegisterGenericEntityRequest } from '../model/registration';
-import { IEditHomeRequest } from '../model/edit';
+import { IEditHomeRequest, IEditLocationRequest } from '../model/edit';
 import { EditService } from '../services/edit';
 
 export type EntityActions =
@@ -40,6 +40,7 @@ export type EntityActions =
   | 'register-location'
   | 'register-device'
   | 'edit-home'
+  | 'edit-location'
   | 'add-temperature-threshold'
   | 'update-temperature-threshold'
   | 'delete-temperature-threshold'
@@ -355,6 +356,28 @@ export const EntityStore = signalStore(
                 error: () =>
                   patchState(store, {
                     errorNotification: 'register-location',
+                  }),
+              }),
+            );
+          }),
+        ),
+      ),
+
+      editLocation: rxMethod<IEditLocationRequest>(
+        pipe(
+          tap(() => patchState(store, { successNotification: null, errorNotification: null })),
+          switchMap((editLocationRequest: IEditLocationRequest) => {
+            return editService.editLocation(editLocationRequest).pipe(
+              tapResponse({
+                next: () =>
+                  patchState(store, {
+                    // Edited location object does not need to be updated here.
+                    // Updates to the location object will be fetched when routed to the view location page.
+                    successNotification: 'edit-location',
+                  }),
+                error: () =>
+                  patchState(store, {
+                    errorNotification: 'edit-location',
                   }),
               }),
             );

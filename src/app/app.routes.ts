@@ -27,8 +27,10 @@ import {
   ABOUT_ROUTE,
   ROOT_ROUTE,
   EDIT_HOME_ROUTE,
+  EDIT_LOCATION_ROUTE,
 } from './constants/navigation-constants';
 import { EditHome } from './edit/home/edit-home';
+import { EditLocation } from './edit/location/edit-location';
 
 export const routes: Routes = [
   {
@@ -64,6 +66,10 @@ export const routes: Routes = [
       {
         path: EDIT_HOME_ROUTE + '/:homeId',
         component: EditHome,
+      },
+      {
+        path: EDIT_LOCATION_ROUTE + '/:locationId',
+        component: EditLocation,
       },
       {
         path: SETTINGS_ROUTE,

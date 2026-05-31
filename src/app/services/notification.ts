@@ -8,6 +8,7 @@ import {
   DELETE_LOCATION_ERROR_MODAL,
   DELETE_TEMPERATURE_THRESHOLD_ERROR_MODAL,
   EDIT_HOME_ERROR_MODAL,
+  EDIT_LOCATION_ERROR_MODAL,
   REGISTER_DEVICE_ERROR_MODAL,
   REGISTER_HOME_ERROR_MODAL,
   REGISTER_LOCATION_ERROR_MODAL,
@@ -24,6 +25,7 @@ import {
 import {
   ADD_TEMPERATURE_THRESHOLD_SUCCESS_MODAL,
   EDIT_HOME_SUCCESS_MODAL,
+  EDIT_LOCATION_SUCCESS_MODAL,
   REGISTER_DEVICE_SUCCESS_MODAL,
   REGISTER_HOME_SUCCESS_MODAL,
   REGISTER_LOCATION_SUCCESS_MODAL,
@@ -59,6 +61,10 @@ export class NotificationService {
 
       if (success === 'edit-home') {
         this.modalService.showModalElement(EDIT_HOME_SUCCESS_MODAL);
+      }
+
+      if (success === 'edit-location') {
+        this.modalService.showModalElement(EDIT_LOCATION_SUCCESS_MODAL);
       }
 
       if (success === 'add-temperature-threshold') {
@@ -113,6 +119,10 @@ export class NotificationService {
 
       if (error === 'edit-home') {
         this.modalService.showModalElement(EDIT_HOME_ERROR_MODAL);
+      }
+
+      if (error === 'edit-location') {
+        this.modalService.showModalElement(EDIT_LOCATION_ERROR_MODAL);
       }
 
       if (error === 'add-temperature-threshold') {

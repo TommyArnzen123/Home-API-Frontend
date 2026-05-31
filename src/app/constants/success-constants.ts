@@ -25,6 +25,11 @@ export const EDIT_HOME_SUCCESS_MODAL: IModal = {
   content: "Your home's information has been updated.",
 };
 
+export const EDIT_LOCATION_SUCCESS_MODAL: IModal = {
+  title: 'Location Updated',
+  content: "Your location's information has been updated.",
+};
+
 export const ADD_TEMPERATURE_THRESHOLD_SUCCESS_MODAL: IModal = {
   title: 'Threshold Added',
   content: 'The temperature threshold has been added.',

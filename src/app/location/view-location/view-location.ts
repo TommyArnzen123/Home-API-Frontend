@@ -185,4 +185,11 @@ export class ViewLocation implements OnInit, OnDestroy {
       );
     }
   }
+
+  protected viewEditLocationPage(): void {
+    const locationId = this.locationId();
+    if (locationId !== null) {
+      this.routerService.viewEditLocationPage(locationId);
+    }
+  }
 }

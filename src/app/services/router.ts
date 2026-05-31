@@ -4,6 +4,7 @@ import {
   ABOUT_ROUTE,
   CAPTIVE_ERROR_ROUTE,
   EDIT_HOME_ROUTE,
+  EDIT_LOCATION_ROUTE,
   HOMESCREEN_ROUTE,
   LOGIN_ROUTE,
   REGISTER_DEVICE_ROUTE,
@@ -52,6 +53,11 @@ export class RouterService {
   // Route to the edit home page.
   viewEditHomePage(homeId: number): void {
     this.router.navigate([EDIT_HOME_ROUTE, homeId]);
+  }
+
+  // Route to the edit location page.
+  viewEditLocationPage(locationId: number): void {
+    this.router.navigate([EDIT_LOCATION_ROUTE, locationId]);
   }
 
   // Route to the about page.
