@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import {
   ABOUT_ROUTE,
   CAPTIVE_ERROR_ROUTE,
+  EDIT_DEVICE_ROUTE,
   EDIT_HOME_ROUTE,
   EDIT_LOCATION_ROUTE,
   HOMESCREEN_ROUTE,
@@ -58,6 +59,11 @@ export class RouterService {
   // Route to the edit location page.
   viewEditLocationPage(locationId: number): void {
     this.router.navigate([EDIT_LOCATION_ROUTE, locationId]);
+  }
+
+  // Route to the edit device page.
+  viewEditDevicePage(deviceId: number): void {
+    this.router.navigate([EDIT_DEVICE_ROUTE, deviceId]);
   }
 
   // Route to the about page.

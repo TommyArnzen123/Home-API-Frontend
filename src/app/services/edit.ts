@@ -8,7 +8,12 @@ import {
   IRegisterUserRequest,
 } from '../model/registration';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';
-import { IEditGenericEntityResponse, IEditHomeRequest, IEditLocationRequest } from '../model/edit';
+import {
+  IEditDeviceRequest,
+  IEditGenericEntityResponse,
+  IEditHomeRequest,
+  IEditLocationRequest,
+} from '../model/edit';
 import { IHome } from '../model/get-info';
 
 @Injectable({
@@ -56,17 +61,13 @@ export class EditService {
     );
   }
 
-  //   editDevice(
-  //     registerDeviceRequest: IRegisterGenericEntityRequest,
-  //   ): Observable<IRegisterGenericEntityResponse> {
-  //     return this.httpClient.post<IRegisterGenericEntityResponse>(
-  //       this.environmentService.getEnvironment().backendUrl +
-  //         this.registrationRoot +
-  //         this.registerDevicePath,
-  //       registerDeviceRequest,
-  //       {
-  //         context: new HttpContext().set(LoadingContextToken, 'Registering new device'),
-  //       },
-  //     );
-  //   }
+  editDevice(editDeviceRequest: IEditDeviceRequest): Observable<IEditGenericEntityResponse> {
+    return this.httpClient.put<IEditGenericEntityResponse>(
+      this.environmentService.getEnvironment().backendUrl + this.editRoot + this.editDevicePath,
+      editDeviceRequest,
+      {
+        context: new HttpContext().set(LoadingContextToken, 'Editing device'),
+      },
+    );
+  }
 }

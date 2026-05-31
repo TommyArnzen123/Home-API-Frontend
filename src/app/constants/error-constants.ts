@@ -57,7 +57,7 @@ const VIEW_LOCATION_GET_INFO_ERROR: IError = {
   errorCode: '0011',
 };
 
-const VIEW_DEVICE_INVALID_DEVICE_ID_ERROR: IError = {
+const INVALID_DEVICE_ID_ERROR: IError = {
   message: 'The device ID provided was invalid.',
   errorCode: '0012',
 };
@@ -90,6 +90,11 @@ const EDIT_HOME_ERROR: IError = {
 const EDIT_LOCATION_ERROR: IError = {
   message: 'There was an error editing the location information.',
   errorCode: '0018',
+};
+
+const EDIT_DEVICE_ERROR: IError = {
+  message: 'There was an error editing the device information.',
+  errorCode: '0019',
 };
 
 // Error Modal Objects.
@@ -163,10 +168,10 @@ export const VIEW_LOCATION_GET_INFO_ERROR_MODAL: IModal = {
   disableClose: true,
 };
 
-export const VIEW_DEVICE_INVALID_DEVICE_ID_ERROR_MODAL: IModal = {
+export const INVALID_DEVICE_ID_ERROR_MODAL: IModal = {
   title: 'Something Went Wrong...',
-  content: VIEW_DEVICE_INVALID_DEVICE_ID_ERROR.message,
-  footer: 'Error Code: ' + VIEW_DEVICE_INVALID_DEVICE_ID_ERROR.errorCode,
+  content: INVALID_DEVICE_ID_ERROR.message,
+  footer: 'Error Code: ' + INVALID_DEVICE_ID_ERROR.errorCode,
   disableClose: true,
 };
 
@@ -209,5 +214,12 @@ export const EDIT_LOCATION_ERROR_MODAL: IModal = {
   title: 'Something Went Wrong...',
   content: EDIT_LOCATION_ERROR.message,
   footer: 'Error Code: ' + EDIT_LOCATION_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const EDIT_DEVICE_ERROR_MODAL: IModal = {
+  title: 'Something Went Wrong...',
+  content: EDIT_DEVICE_ERROR.message,
+  footer: 'Error Code: ' + EDIT_DEVICE_ERROR.errorCode,
   disableClose: true,
 };

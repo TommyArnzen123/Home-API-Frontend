@@ -11,6 +11,11 @@ export interface IEditLocationRequest {
   name: string;
 }
 
+export interface IEditDeviceRequest {
+  entityId: number;
+  name: string;
+}
+
 export interface IEditGenericEntityResponse {
   message: string;
 }

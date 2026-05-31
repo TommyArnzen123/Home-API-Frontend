@@ -2,13 +2,13 @@ import { Routes } from '@angular/router';
 import { isUserAuthenticated } from './guards/auth.guard';
 import { Login } from './login/login';
 import { Homescreen } from './homescreen/homescreen';
-import { RegisterUser } from './registration/user/register-user/register-user';
+import { RegisterUser } from './register/user/register-user/register-user';
 import { ViewHome } from './home/view-home/view-home';
 import { ViewDevice } from './device/view-device/view-device';
 import { ViewLocation } from './location/view-location/view-location';
-import { RegisterHome } from './registration/home/register-home/register-home';
-import { RegisterLocation } from './registration/location/register-location/register-location';
-import { RegisterDevice } from './registration/device/register-device/register-device';
+import { RegisterHome } from './register/home/register-home/register-home';
+import { RegisterLocation } from './register/location/register-location/register-location';
+import { RegisterDevice } from './register/device/register-device/register-device';
 import { CaptiveError } from './captive-error/captive-error';
 import { Settings } from './menu-items/settings/settings';
 import { About } from './menu-items/about/about';
@@ -28,9 +28,11 @@ import {
   ROOT_ROUTE,
   EDIT_HOME_ROUTE,
   EDIT_LOCATION_ROUTE,
+  EDIT_DEVICE_ROUTE,
 } from './constants/navigation-constants';
 import { EditHome } from './edit/home/edit-home';
 import { EditLocation } from './edit/location/edit-location';
+import { EditDevice } from './edit/device/edit-device';
 
 export const routes: Routes = [
   {
@@ -70,6 +72,10 @@ export const routes: Routes = [
       {
         path: EDIT_LOCATION_ROUTE + '/:locationId',
         component: EditLocation,
+      },
+      {
+        path: EDIT_DEVICE_ROUTE + '/:deviceId',
+        component: EditDevice,
       },
       {
         path: SETTINGS_ROUTE,

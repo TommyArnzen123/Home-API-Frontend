@@ -30,6 +30,11 @@ export const EDIT_LOCATION_SUCCESS_MODAL: IModal = {
   content: "Your location's information has been updated.",
 };
 
+export const EDIT_DEVICE_SUCCESS_MODAL: IModal = {
+  title: 'Device Updated',
+  content: "Your device's information has been updated.",
+};
+
 export const ADD_TEMPERATURE_THRESHOLD_SUCCESS_MODAL: IModal = {
   title: 'Threshold Added',
   content: 'The temperature threshold has been added.',

@@ -6,7 +6,7 @@ import { MatIcon } from '@angular/material/icon';
 import { ModalService } from '../../services/modal';
 import { RouterService } from '../../services/router';
 import { IModalActions } from '../../model/modal';
-import { VIEW_DEVICE_INVALID_DEVICE_ID_ERROR_MODAL } from '../../constants/error-constants';
+import { INVALID_DEVICE_ID_ERROR_MODAL } from '../../constants/error-constants';
 import { DELETE_DEVICE_CONFIRMATION_MODAL } from '../../constants/dialog-confirmation-constants';
 import { EntityActions, EntityStore } from '../../store/entity.store';
 import { DisplayTempByHour } from './display-temp-by-hour/display-temp-by-hour';
@@ -72,7 +72,7 @@ export class ViewDevice implements OnInit {
         primaryAction: () => this.viewLocationById(),
       };
       this.modalService.showModalElement(
-        VIEW_DEVICE_INVALID_DEVICE_ID_ERROR_MODAL,
+        INVALID_DEVICE_ID_ERROR_MODAL,
         viewDeviceInvalidDeviceIDErrorActions,
       );
       this.deviceId.set(null);
@@ -164,5 +164,12 @@ export class ViewDevice implements OnInit {
     return formattedAverageTemperaturesByHour
       .slice(startingHourlyIndex)
       .concat(formattedAverageTemperaturesByHour.slice(0, startingHourlyIndex));
+  }
+
+  protected viewEditDevicePage(): void {
+    const deviceId = this.deviceId();
+    if (deviceId !== null) {
+      this.routerService.viewEditDevicePage(deviceId);
+    }
   }
 }

@@ -7,12 +7,14 @@ import {
   DELETE_HOME_ERROR_MODAL,
   DELETE_LOCATION_ERROR_MODAL,
   DELETE_TEMPERATURE_THRESHOLD_ERROR_MODAL,
+  EDIT_DEVICE_ERROR_MODAL,
   EDIT_HOME_ERROR_MODAL,
   EDIT_LOCATION_ERROR_MODAL,
   REGISTER_DEVICE_ERROR_MODAL,
   REGISTER_HOME_ERROR_MODAL,
   REGISTER_LOCATION_ERROR_MODAL,
   UPDATE_TEMPERATURE_THRESHOLD_ERROR_MODAL,
+  VIEW_DEVICE_GET_INFO_ERROR_MODAL,
   VIEW_HOME_GET_INFO_ERROR_MODAL,
   VIEW_LOCATION_GET_INFO_ERROR_MODAL,
 } from '../constants/error-constants';
@@ -24,6 +26,7 @@ import {
 } from '../constants/delete-constants';
 import {
   ADD_TEMPERATURE_THRESHOLD_SUCCESS_MODAL,
+  EDIT_DEVICE_SUCCESS_MODAL,
   EDIT_HOME_SUCCESS_MODAL,
   EDIT_LOCATION_SUCCESS_MODAL,
   REGISTER_DEVICE_SUCCESS_MODAL,
@@ -67,6 +70,10 @@ export class NotificationService {
         this.modalService.showModalElement(EDIT_LOCATION_SUCCESS_MODAL);
       }
 
+      if (success === 'edit-device') {
+        this.modalService.showModalElement(EDIT_DEVICE_SUCCESS_MODAL);
+      }
+
       if (success === 'add-temperature-threshold') {
         this.modalService.showModalElement(ADD_TEMPERATURE_THRESHOLD_SUCCESS_MODAL);
       }
@@ -105,6 +112,10 @@ export class NotificationService {
         this.modalService.showModalElement(VIEW_LOCATION_GET_INFO_ERROR_MODAL);
       }
 
+      if (error === 'get-view-device-info') {
+        this.modalService.showModalElement(VIEW_DEVICE_GET_INFO_ERROR_MODAL);
+      }
+
       if (error === 'register-home') {
         this.modalService.showModalElement(REGISTER_HOME_ERROR_MODAL);
       }
@@ -123,6 +134,10 @@ export class NotificationService {
 
       if (error === 'edit-location') {
         this.modalService.showModalElement(EDIT_LOCATION_ERROR_MODAL);
+      }
+
+      if (error === 'edit-device') {
+        this.modalService.showModalElement(EDIT_DEVICE_ERROR_MODAL);
       }
 
       if (error === 'add-temperature-threshold') {
