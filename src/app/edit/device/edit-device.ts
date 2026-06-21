@@ -85,7 +85,7 @@ export class EditDevice implements OnInit {
 
   private setErrorEffects(): void {
     effect(() => {
-      const error: EntityActions = this.entityStore.errorNotification();
+      const error: EntityActions | undefined = this.entityStore.errorNotification()?.errorAction;
 
       if (error === 'get-view-device-info') {
         this.viewHomescreen();

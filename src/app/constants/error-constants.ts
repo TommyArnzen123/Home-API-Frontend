@@ -97,6 +97,48 @@ const EDIT_DEVICE_ERROR: IError = {
   errorCode: '0019',
 };
 
+const GENERATE_EMAIL_CONFIRMATION_CODE_TOO_MANY_REQUESTS_ERROR: IError = {
+  message: 'You have made too many code generation requests. Please try again soon.',
+  errorCode: '0020',
+};
+
+const GENERATE_EMAIL_CONFIRMATION_CODE_EMAIL_ALREADY_CONFIRMED_ERROR: IError = {
+  message: 'Your email address is already confirmed.',
+  errorCode: '0021',
+};
+
+const GENERATE_EMAIL_CONFIRMATION_CODE_BAD_REQUEST_ERROR: IError = {
+  message: 'There was an error generating the email confirmation code. Please try again.',
+  errorCode: '0022',
+};
+
+const CONFIRM_EMAIL_CODE_NOT_ACTIVE_ERROR: IError = {
+  message: 'The email confirmation code is not active. Please generate a new code.',
+  errorCode: '0024',
+};
+
+const CONFIRM_EMAIL_CODE_ALREADY_CONFIRMED_ERROR: IError = {
+  message: 'The email confirmation code is already confirmed. No further action is needed.',
+  errorCode: '0025',
+};
+
+const CONFIRM_EMAIL_CODE_EXPIRED_CODE_ERROR: IError = {
+  message:
+    'The email confirmation code has expired. Confirmation codes must be entered within five minutes of their creation. Please generate a new code.',
+  errorCode: '0026',
+};
+
+const CONFIRM_EMAIL_CODE_TOO_MANY_ATTEMPTS_ERROR: IError = {
+  message:
+    'You have reached the maximum number of confirmation attempts (5). Please generate a new code.',
+  errorCode: '0027',
+};
+
+const CONFIRM_EMAIL_CODE_BAD_REQUEST_ERROR: IError = {
+  message: 'There was an error confirming your email. Please generate a new code.',
+  errorCode: '0028',
+};
+
 // Error Modal Objects.
 export const REGISTER_USER_ERROR_MODAL: IModal = {
   title: 'Something Went Wrong...',
@@ -221,5 +263,61 @@ export const EDIT_DEVICE_ERROR_MODAL: IModal = {
   title: 'Something Went Wrong...',
   content: EDIT_DEVICE_ERROR.message,
   footer: 'Error Code: ' + EDIT_DEVICE_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const GENERATE_EMAIL_CONFIRMATION_CODE_TOO_MANY_REQUESTS_ERROR_MODAL: IModal = {
+  title: 'Too Many Requests',
+  content: GENERATE_EMAIL_CONFIRMATION_CODE_TOO_MANY_REQUESTS_ERROR.message,
+  footer: 'Error Code: ' + GENERATE_EMAIL_CONFIRMATION_CODE_TOO_MANY_REQUESTS_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const GENERATE_EMAIL_CONFIRMATION_CODE_EMAIL_ALREADY_CONFIRMED_ERROR_MODAL: IModal = {
+  title: 'Email Already Confirmed',
+  content: GENERATE_EMAIL_CONFIRMATION_CODE_EMAIL_ALREADY_CONFIRMED_ERROR.message,
+  footer: 'Error Code: ' + GENERATE_EMAIL_CONFIRMATION_CODE_EMAIL_ALREADY_CONFIRMED_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const GENERATE_EMAIL_CONFIRMATION_CODE_BAD_REQUEST_ERROR_MODAL: IModal = {
+  title: 'Something Went Wrong...',
+  content: GENERATE_EMAIL_CONFIRMATION_CODE_BAD_REQUEST_ERROR.message,
+  footer: 'Error Code: ' + GENERATE_EMAIL_CONFIRMATION_CODE_BAD_REQUEST_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const CONFIRM_EMAIL_CODE_NOT_ACTIVE_ERROR_MODAL: IModal = {
+  title: 'Confirmation Code Not Active',
+  content: CONFIRM_EMAIL_CODE_NOT_ACTIVE_ERROR.message,
+  footer: 'Error Code: ' + CONFIRM_EMAIL_CODE_NOT_ACTIVE_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const CONFIRM_EMAIL_CODE_ALREADY_CONFIRMED_ERROR_MODAL: IModal = {
+  title: 'Confirmation Code Already Confirmed',
+  content: CONFIRM_EMAIL_CODE_ALREADY_CONFIRMED_ERROR.message,
+  footer: 'Error Code: ' + CONFIRM_EMAIL_CODE_ALREADY_CONFIRMED_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const CONFIRM_EMAIL_CODE_EXPIRED_CODE_ERROR_MODAL: IModal = {
+  title: 'Confirmation Code Expired',
+  content: CONFIRM_EMAIL_CODE_EXPIRED_CODE_ERROR.message,
+  footer: 'Error Code: ' + CONFIRM_EMAIL_CODE_EXPIRED_CODE_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const CONFIRM_EMAIL_CODE_TOO_MANY_ATTEMPTS_ERROR_MODAL: IModal = {
+  title: 'Too Many Attempts',
+  content: CONFIRM_EMAIL_CODE_TOO_MANY_ATTEMPTS_ERROR.message,
+  footer: 'Error Code: ' + CONFIRM_EMAIL_CODE_TOO_MANY_ATTEMPTS_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const CONFIRM_EMAIL_CODE_BAD_REQUEST_ERROR_MODAL: IModal = {
+  title: 'Something Went Wrong...',
+  content: CONFIRM_EMAIL_CODE_BAD_REQUEST_ERROR.message,
+  footer: 'Error Code: ' + CONFIRM_EMAIL_CODE_BAD_REQUEST_ERROR.errorCode,
   disableClose: true,
 };

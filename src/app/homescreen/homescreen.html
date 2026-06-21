@@ -7,6 +7,12 @@
 
 <div class="homescreen-container">
   <div class="home-container">
+    @if (emailConfirmed() === false) {
+      <banner-element
+        [bannerInfo]="confirmEmailBanner"
+        [bannerActions]="confirmEmailBannerActions"
+      />
+    }
     <h1>Your Homes</h1>
     <div class="home-items">
       @if (homeInfo() && homeInfo().length > 0) {

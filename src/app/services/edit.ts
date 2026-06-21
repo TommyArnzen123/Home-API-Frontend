@@ -1,12 +1,7 @@
-import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { EnvironmentService } from './environment';
-import {
-  IRegisterGenericEntityRequest,
-  IRegisterGenericEntityResponse,
-  IRegisterUserRequest,
-} from '../model/registration';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';
 import {
   IEditDeviceRequest,
@@ -14,7 +9,6 @@ import {
   IEditHomeRequest,
   IEditLocationRequest,
 } from '../model/edit';
-import { IHome } from '../model/get-info';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +18,6 @@ export class EditService {
   private readonly environmentService = inject(EnvironmentService);
 
   private editRoot = '/edit';
-  private editUserPath = '/user';
   private editHomePath = '/home';
   private editLocationPath = '/location';
   private editDevicePath = '/device';

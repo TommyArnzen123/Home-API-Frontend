@@ -30,12 +30,23 @@ import { TemperatureThresholdService } from '../services/temperature-threshold';
 import { IRegisterGenericEntityRequest } from '../model/registration';
 import { IEditDeviceRequest, IEditHomeRequest, IEditLocationRequest } from '../model/edit';
 import { EditService } from '../services/edit';
+import { ConfirmEmailService } from '../services/confirm-email';
+import {
+  IGenerateEmailConfirmationCodeError,
+  IGenerateEmailConfirmationCodeErrorResponse,
+  IEmailConfirmationCode,
+  IConfirmEmailConfirmationCodeErrorResponse,
+  IConfirmEmailError,
+  IEmailConfirmed,
+} from '../model/confirm-email';
 
 export type EntityActions =
   | 'get-view-homescreen-info'
   | 'get-view-home-info'
   | 'get-view-location-info'
   | 'get-view-device-info'
+  | 'generate-email-confirmation-code'
+  | 'confirm-email'
   | 'register-home'
   | 'register-location'
   | 'register-device'
@@ -65,6 +76,13 @@ interface EntityData<TSummary, TDetails> {
   summary: TSummary;
   details?: TDetails;
   detailsSet: boolean;
+}
+
+type ErrorData = IGenerateEmailConfirmationCodeError | IConfirmEmailError | null;
+
+export interface ErrorState {
+  errorAction: EntityActions;
+  errorData?: ErrorData;
 }
 
 interface HomeSummary {
@@ -107,6 +125,7 @@ export type DeviceData = EntityData<DeviceSummary, DeviceDetails>;
 interface IEntityState {
   userId: number | null;
   userFirstName: string | null;
+  emailConfirmed: IEmailConfirmed;
   userInitialized: boolean;
   homes: Record<number, HomeData>;
   locations: Record<number, LocationData>;
@@ -114,12 +133,15 @@ interface IEntityState {
   entityPath: Array<IBreadcrumb>;
   pageMode: PageModes | null;
   successNotification: EntityActions;
-  errorNotification: EntityActions;
+  errorNotification: ErrorState | null;
 }
 
 const initialState: IEntityState = {
   userId: null,
   userFirstName: null,
+  emailConfirmed: {
+    isConfirmed: false,
+  },
   userInitialized: false,
   homes: {},
   locations: {},
@@ -137,6 +159,7 @@ export const EntityStore = signalStore(
   withState(initialState),
   withMethods((store) => {
     const getInfoService = inject(GetInfoService);
+    const confirmEmailService = inject(ConfirmEmailService);
     const registrationService = inject(RegistrationService);
     const editService = inject(EditService);
     const thresholdService = inject(TemperatureThresholdService);
@@ -165,7 +188,7 @@ export const EntityStore = signalStore(
 
             if (!userId) {
               patchState(store, {
-                errorNotification: 'get-view-homescreen-info',
+                errorNotification: { errorAction: 'get-view-homescreen-info' },
               });
               return EMPTY;
             }
@@ -175,14 +198,136 @@ export const EntityStore = signalStore(
                 next: (homescreenInfo: IHomescreenInfoResponse) =>
                   patchState(store, {
                     homes: generateHomeSummaryObjects(homescreenInfo.homes),
+                    emailConfirmed: {
+                      ...store.emailConfirmed(),
+                      isConfirmed: homescreenInfo.emailConfirmed,
+                    },
                     entityPath: homescreenInfo.entityPath,
                   }),
                 error: () =>
                   patchState(store, {
-                    errorNotification: 'get-view-homescreen-info',
+                    errorNotification: { errorAction: 'get-view-homescreen-info' },
                   }),
               }),
             );
+          }),
+        ),
+      ),
+
+      generateEmailConfirmationCode: rxMethod<void>(
+        pipe(
+          tap(() =>
+            patchState(store, {
+              successNotification: null,
+              errorNotification: null,
+            }),
+          ),
+          switchMap(() => {
+            const userId = store.userId();
+
+            if (!userId) {
+              patchState(store, {
+                errorNotification: { errorAction: 'generate-email-confirmation-code' },
+              });
+              return EMPTY;
+            }
+
+            return confirmEmailService.generateEmailConfirmationCode(userId).pipe(
+              tapResponse({
+                next: (response: IEmailConfirmationCode) =>
+                  patchState(store, {
+                    successNotification: 'generate-email-confirmation-code',
+                    emailConfirmed: {
+                      ...store.emailConfirmed(),
+                      generatedCode: response,
+                    },
+                  }),
+                error: (response: IGenerateEmailConfirmationCodeErrorResponse) =>
+                  patchState(store, {
+                    emailConfirmed: {
+                      ...store.emailConfirmed(),
+                      isConfirmed:
+                        response.error.errorType === 'EMAIL_ALREADY_CONFIRMED' ? true : false,
+                    },
+                    errorNotification: {
+                      errorAction: 'generate-email-confirmation-code',
+                      errorData: {
+                        errorType: response.error.errorType,
+                        retryAfterSeconds: response.error.retryAfterSeconds,
+                      },
+                    },
+                  }),
+              }),
+            );
+          }),
+        ),
+      ),
+
+      confirmEmail: rxMethod<number>(
+        pipe(
+          tap(() =>
+            patchState(store, {
+              successNotification: null,
+              errorNotification: null,
+            }),
+          ),
+          switchMap((emailConfirmationCode: number) => {
+            // ID of the user making the request.
+            const userId = store.userId();
+
+            // ID of the confirmation object in focus.
+            const confirmationId = store.emailConfirmed().generatedCode?.confirmationId;
+
+            if (!userId || !confirmationId) {
+              patchState(store, {
+                errorNotification: { errorAction: 'confirm-email' },
+              });
+              return EMPTY;
+            }
+
+            return confirmEmailService
+              .confirmEmail({ confirmationId, userId, emailConfirmationCode })
+              .pipe(
+                tapResponse({
+                  next: () =>
+                    patchState(store, {
+                      successNotification: 'confirm-email',
+                      emailConfirmed: {
+                        ...store.emailConfirmed(),
+                        isConfirmed: true,
+                      },
+                    }),
+                  error: (response: IConfirmEmailConfirmationCodeErrorResponse) => {
+                    let confirmationCodeEntity: IEmailConfirmationCode | undefined = undefined;
+                    const errorType = response.error.errorType;
+                    const confirmationId = response.error.confirmationId;
+                    const expiresAt = response.error.expiresAt;
+                    const attemptsRemaining = response.error.attemptsRemaining;
+
+                    if (confirmationId && expiresAt && attemptsRemaining) {
+                      confirmationCodeEntity = {
+                        confirmationId: confirmationId,
+                        expiresAt: expiresAt,
+                        attemptsRemaining: attemptsRemaining,
+                      };
+                    }
+
+                    return patchState(store, {
+                      emailConfirmed: {
+                        ...store.emailConfirmed(),
+                        isConfirmed: errorType === 'ALREADY_CONFIRMED' ? true : false,
+                        generatedCode: confirmationCodeEntity,
+                      },
+                      errorNotification: {
+                        errorAction: 'confirm-email',
+                        errorData: {
+                          errorType,
+                        },
+                      },
+                    });
+                  },
+                }),
+              );
           }),
         ),
       ),
@@ -213,7 +358,7 @@ export const EntityStore = signalStore(
                   }),
                 error: () =>
                   patchState(store, {
-                    errorNotification: 'get-view-home-info',
+                    errorNotification: { errorAction: 'get-view-home-info' },
                   }),
               }),
             );
@@ -247,7 +392,7 @@ export const EntityStore = signalStore(
                   }),
                 error: () =>
                   patchState(store, {
-                    errorNotification: 'get-view-location-info',
+                    errorNotification: { errorAction: 'get-view-location-info' },
                   }),
               }),
             );
@@ -279,7 +424,7 @@ export const EntityStore = signalStore(
                   }),
                 error: () =>
                   patchState(store, {
-                    errorNotification: 'get-view-device-info',
+                    errorNotification: { errorAction: 'get-view-device-info' },
                   }),
               }),
             );
@@ -295,7 +440,7 @@ export const EntityStore = signalStore(
 
             if (!userId) {
               patchState(store, {
-                errorNotification: 'register-home',
+                errorNotification: { errorAction: 'register-home' },
               });
               return EMPTY;
             }
@@ -312,7 +457,7 @@ export const EntityStore = signalStore(
                     }),
                   error: () =>
                     patchState(store, {
-                      errorNotification: 'register-home',
+                      errorNotification: { errorAction: 'register-home' },
                     }),
                 }),
               );
@@ -334,7 +479,7 @@ export const EntityStore = signalStore(
                   }),
                 error: () =>
                   patchState(store, {
-                    errorNotification: 'edit-home',
+                    errorNotification: { errorAction: 'edit-home' },
                   }),
               }),
             );
@@ -356,7 +501,7 @@ export const EntityStore = signalStore(
                   }),
                 error: () =>
                   patchState(store, {
-                    errorNotification: 'register-location',
+                    errorNotification: { errorAction: 'register-location' },
                   }),
               }),
             );
@@ -378,7 +523,7 @@ export const EntityStore = signalStore(
                   }),
                 error: () =>
                   patchState(store, {
-                    errorNotification: 'edit-location',
+                    errorNotification: { errorAction: 'edit-location' },
                   }),
               }),
             );
@@ -400,7 +545,7 @@ export const EntityStore = signalStore(
                   }),
                 error: () =>
                   patchState(store, {
-                    errorNotification: 'register-device',
+                    errorNotification: { errorAction: 'register-device' },
                   }),
               }),
             );
@@ -422,7 +567,7 @@ export const EntityStore = signalStore(
                   }),
                 error: () =>
                   patchState(store, {
-                    errorNotification: 'edit-device',
+                    errorNotification: { errorAction: 'edit-device' },
                   }),
               }),
             );
@@ -449,7 +594,7 @@ export const EntityStore = signalStore(
                   }),
                 error: () =>
                   patchState(store, {
-                    errorNotification: 'add-temperature-threshold',
+                    errorNotification: { errorAction: 'add-temperature-threshold' },
                   }),
               }),
             ),
@@ -476,7 +621,7 @@ export const EntityStore = signalStore(
                   }),
                 error: () =>
                   patchState(store, {
-                    errorNotification: 'update-temperature-threshold',
+                    errorNotification: { errorAction: 'update-temperature-threshold' },
                   }),
               }),
             ),
@@ -503,7 +648,7 @@ export const EntityStore = signalStore(
                   }),
                 error: () =>
                   patchState(store, {
-                    errorNotification: 'delete-temperature-threshold',
+                    errorNotification: { errorAction: 'delete-temperature-threshold' },
                   }),
               }),
             ),
@@ -532,7 +677,7 @@ export const EntityStore = signalStore(
                   }),
                 error: () =>
                   patchState(store, {
-                    errorNotification: 'delete-home',
+                    errorNotification: { errorAction: 'delete-home' },
                   }),
               }),
             ),
@@ -561,7 +706,7 @@ export const EntityStore = signalStore(
                   }),
                 error: () =>
                   patchState(store, {
-                    errorNotification: 'delete-location',
+                    errorNotification: { errorAction: 'delete-location' },
                   }),
               }),
             ),
@@ -590,7 +735,7 @@ export const EntityStore = signalStore(
                   }),
                 error: () =>
                   patchState(store, {
-                    errorNotification: 'delete-device',
+                    errorNotification: { errorAction: 'delete-device' },
                   }),
               }),
             ),

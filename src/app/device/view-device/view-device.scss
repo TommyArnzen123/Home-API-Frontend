@@ -59,6 +59,7 @@
     .hourly-display {
       display: flex;
       flex-direction: row;
+      direction: rtl;
       justify-content: space-between;
       gap: 25px;
       width: 100%;

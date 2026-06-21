@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>{{ title }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <div class="email-sent-display">
+      <mat-label>A confirmation code has been sent to your email.</mat-label>
+    </div>
+    <mat-form-field>
+      <mat-label>Email Confirmation Code</mat-label>
+      <input type="text" matInput maxlength="6" formControlName="emailConfirmationCode" />
+      @if (
+        form.get('emailConfirmationCode')?.touched &&
+        form.get('emailConfirmationCode')?.hasError('required')
+      ) {
+        <mat-error>Please enter an email confirmation code.</mat-error>
+      } @else if (
+        form.get('emailConfirmationCode')?.touched &&
+        form.get('emailConfirmationCode')?.hasError('numberViolation')
+      ) {
+        <mat-error>Please enter a valid number.</mat-error>
+      } @else if (
+        form.get('emailConfirmationCode')?.touched &&
+        form.get('emailConfirmationCode')?.hasError('pattern')
+      ) {
+        <mat-error>Confirmation code must be 6-digits.</mat-error>
+      }
+    </mat-form-field>
+
+    @if (attemptsRemaining(); as attempts) {
+      @if (attempts < 5) {
+        <mat-error
+          >The code did not match. You have {{ attempts }}
+          {{ attempts === 1 ? 'attempt' : 'attempts' }} left.</mat-error
+        >
+      }
+    }
+  </form>
+  @if (expiresAt()) {
+    <div class="expiration-time-display">
+      <mat-label
+        >Email confirmation code will expire in
+        {{ getMinutesUntilConfirmationCodeExpiration() }}.</mat-label
+      >
+    </div>
+  }
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button matButton="outlined" (click)="cancelAction()">Cancel</button>
+  <button matButton="filled" (click)="primaryAction()">Confirm Email</button>
+</mat-dialog-actions>

@@ -95,7 +95,7 @@ export class ViewDevice implements OnInit {
 
   private setErrorEffects(): void {
     effect(() => {
-      const error: EntityActions = this.entityStore.errorNotification();
+      const error: EntityActions | undefined = this.entityStore.errorNotification()?.errorAction;
 
       if (error === 'get-view-device-info') {
         this.viewLocationById();
@@ -145,7 +145,6 @@ export class ViewDevice implements OnInit {
   // with the current hour as the last item in the array.
   protected generateHourlyTemperatureReadings(): IAverageTemperatureByHour[] {
     const formattedAverageTemperaturesByHour: IAverageTemperatureByHour[] = [];
-    const orderedAverageTemperaturesByHour: IAverageTemperatureByHour[] = [];
 
     for (let i = 0; i <= 23; i++) {
       formattedAverageTemperaturesByHour.push({
@@ -163,7 +162,8 @@ export class ViewDevice implements OnInit {
 
     return formattedAverageTemperaturesByHour
       .slice(startingHourlyIndex)
-      .concat(formattedAverageTemperaturesByHour.slice(0, startingHourlyIndex));
+      .concat(formattedAverageTemperaturesByHour.slice(0, startingHourlyIndex))
+      .reverse();
   }
 
   protected viewEditDevicePage(): void {

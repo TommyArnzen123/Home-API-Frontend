@@ -1,0 +1,35 @@
+@if (bannerInfo()) {
+  <mat-card
+    class="banner-card-container"
+    [class.info-banner]="bannerInfo().type === 'INFO'"
+    [class.success-banner]="bannerInfo().type === 'SUCCESS'"
+    [class.warning-banner]="bannerInfo().type === 'WARNING'"
+    [class.alert-banner]="bannerInfo().type === 'ALERT'"
+    appearance="outlined"
+  >
+    <div class="banner-card-content">
+      @if (bannerInfo().message) {
+        <div class="left-side-container">
+          <img
+            class="banner-icon"
+            [src]="getIconPath()"
+            alt="White triangle with black border and black exclamation mark alert icon."
+          />
+          <div>{{ bannerInfo().message }}</div>
+        </div>
+      }
+      <mat-card-actions class="button-container">
+        @if (
+          bannerInfo() &&
+          bannerInfo().tertiaryText &&
+          bannerActions() &&
+          bannerActions()?.tertiaryAction
+        ) {
+          <a matButton (click)="tertiaryClicked()" target="_blank">{{
+            bannerInfo().tertiaryText
+          }}</a>
+        }
+      </mat-card-actions>
+    </div>
+  </mat-card>
+}

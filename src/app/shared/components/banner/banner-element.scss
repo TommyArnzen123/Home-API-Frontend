@@ -1,0 +1,48 @@
+.banner-card-container {
+  margin-right: 50px;
+  background-color: #f5f5f5;
+
+  .banner-card-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 16px;
+    padding-left: 16px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 16px;
+
+    .left-side-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+
+      .banner-icon {
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+    .button-container {
+      white-space: nowrap;
+    }
+  }
+}
+
+.info-banner {
+  border: 3px solid #2d527c;
+}
+
+.success-banner {
+  border: 3px solid #507c5c;
+}
+
+.warning-banner {
+  border: 3px solid #ffc61b;
+}
+
+.alert-banner {
+  border: 3px solid #b3404a;
+}

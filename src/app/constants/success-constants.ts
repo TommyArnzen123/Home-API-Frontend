@@ -44,3 +44,8 @@ export const UPDATE_TEMPERATURE_THRESHOLD_SUCCESS_MODAL: IModal = {
   title: 'Threshold Updated',
   content: 'The temperature threshold has been updated.',
 };
+
+export const EMAIL_ADDRESS_CONFIRMATION_SUCCESS_MODAL: IModal = {
+  title: 'Email Address Confirmed',
+  content: 'Your email address has been confirmed.',
+};

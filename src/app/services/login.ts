@@ -50,17 +50,11 @@ export class LoginService {
   }
 
   private updateUserLoginInfo(userInfo: IUser | null): void {
-    let tempUserInfo: IUser | null = userInfo;
     if (userInfo) {
-      tempUserInfo = {
-        ...userInfo,
-        userId: Number(userInfo.userId),
-      };
-
       // If the user login info is set, store the userId and user first name in the signal store.
-      this.entityStore.setUserInformation(tempUserInfo.userId, tempUserInfo.firstName);
+      this.entityStore.setUserInformation(userInfo.userId, userInfo.firstName);
     }
-    this.#loginResponseInfo$.set(tempUserInfo);
+    this.#loginResponseInfo$.set(userInfo);
   }
 
   login(loginRequest: ILoginRequest): Observable<IUser> {

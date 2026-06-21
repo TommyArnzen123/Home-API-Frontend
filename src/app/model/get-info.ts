@@ -35,6 +35,7 @@ export interface IEntityInfoRequest {
 
 export interface IHomescreenInfoResponse extends EntityPath {
   userId: number;
+  emailConfirmed: boolean;
   homes: IHome[];
 }
 
