@@ -1,1 +1,3 @@
-export const USER_LOGIN_INFO_KEY = 'USER_LOGIN_INFO';
+export const USER_INFO_KEY = 'USER_INFO';
+export const ACCOUNT_SETTINGS_KEY = 'ACCOUNT_SETTINGS';
+export const JWT_TOKEN_KEY = 'JWT_TOKEN';

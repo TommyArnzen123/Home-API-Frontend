@@ -69,7 +69,7 @@ export class Homescreen implements OnInit, OnDestroy {
 
   private setGeneralEffects(): void {
     effect(() => {
-      const userFirstName = this.entityStore.userFirstName();
+      const userFirstName = this.entityStore.userInfo()?.firstName ?? '';
       this.greetingMessage = setHomescreenGreetingMessage(formatName(userFirstName));
     });
   }

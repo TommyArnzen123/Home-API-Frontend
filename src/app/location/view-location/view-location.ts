@@ -11,7 +11,6 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { DecimalPipe } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { ModalService } from '../../services/modal';
 import { RouterService } from '../../services/router';
@@ -22,16 +21,22 @@ import { INVALID_LOCATION_ID_ERROR_MODAL } from '../../constants/error-constants
 import { DELETE_LOCATION_CONFIRMATION_MODAL } from '../../constants/dialog-confirmation-constants';
 import { MatDialog } from '@angular/material/dialog';
 import {
+  ITemperatureThresholdModal,
   ITemperatureThresholdModalLimits,
   TemperatureThresholdModal,
   TemperatureThresholdModalFlow,
 } from './temperature-threshold-modal/temperature-threshold-modal';
 import { DeviceData, EntityActions, EntityStore } from '../../store/entity.store';
-import { setAverageTemperature } from '../../shared/utility/temperature-utility';
+import {
+  addTemperatureSymbol,
+  fahrenheitToCelsius,
+  setAverageTemperature,
+} from '../../shared/utility/temperature-utility';
+import { TemperatureDisplayOptions } from '../../model/account-settings';
 
 @Component({
   selector: 'view-location',
-  imports: [MatButton, MatIcon, DeviceCard, TemperatureThresholdCard, DecimalPipe],
+  imports: [MatButton, MatIcon, DeviceCard, TemperatureThresholdCard],
   templateUrl: './view-location.html',
   styleUrl: './view-location.scss',
 })
@@ -47,7 +52,21 @@ export class ViewLocation implements OnInit, OnDestroy {
 
   protected locationId = signal<number | null>(null);
   protected averageTemperature = computed(() => setAverageTemperature(this.deviceInfo()));
+  protected averageTemperatureDisplay = computed(() => {
+    const averageTemp = this.averageTemperature();
+    if (averageTemp) {
+      return this.formatTemperatureDisplay(averageTemp);
+    } else {
+      return null;
+    }
+  });
   protected temperatureThreshold = computed(() => this.locationInfo()?.details?.threshold);
+
+  private isFahrenheitDisplay = computed(
+    () =>
+      this.entityStore.accountSettings()?.temperatureDisplaySetting ===
+      TemperatureDisplayOptions.FAHRENHEIT,
+  );
 
   protected locationInfo = computed(() => {
     const locationId = this.locationId();
@@ -64,6 +83,17 @@ export class ViewLocation implements OnInit, OnDestroy {
   protected readonly deviceInfo: Signal<DeviceData[]> = computed(() =>
     Object.values(this.entityStore.devices()),
   );
+
+  formatTemperatureDisplay(originalTemp: number | undefined): string {
+    let temp = '';
+    if (originalTemp && !this.isFahrenheitDisplay()) {
+      temp = fahrenheitToCelsius(originalTemp);
+    } else if (originalTemp && this.isFahrenheitDisplay()) {
+      temp = String(originalTemp);
+    }
+
+    return addTemperatureSymbol(temp, this.isFahrenheitDisplay());
+  }
 
   constructor() {
     const id = Number(this.route.snapshot.paramMap.get('locationId'));
@@ -162,7 +192,10 @@ export class ViewLocation implements OnInit, OnDestroy {
       width: '400px',
       data: {
         flow: flowType,
-      },
+        isFahrenheitDisplay: this.isFahrenheitDisplay(),
+        minimumTemperature: undefined,
+        maximumTemperature: undefined,
+      } as ITemperatureThresholdModal,
     });
 
     const locationId = this.locationId();

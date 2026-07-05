@@ -1,24 +1,24 @@
 <mat-card
   class="average-temperature-container"
-  [class.hot-background]="temperature && temperature > 80"
-  [class.temperate-background]="temperature && temperature <= 80 && temperature >= 60"
-  [class.cold-background]="temperature && temperature < 60"
+  [class.hot-background]="backgroundDisplayStyle() === 'HOT'"
+  [class.temperate-background]="backgroundDisplayStyle() === 'TEMPERATE'"
+  [class.cold-background]="backgroundDisplayStyle() === 'COLD'"
   appearance="outlined"
 >
-  @if (currentHour !== hour) {
-    <div>{{ hour }}</div>
+  @if (currentHour !== hour()) {
+    <div class="text-display">{{ hourDisplay() }}</div>
   } @else {
     <div>Now</div>
   }
   <div>
-    @if (temperature) {
-      @if (temperature > 80) {
+    @if (temperature(); as temp) {
+      @if (temp > 80) {
         <img
           class="average-temperature-icon"
           src="thermometer-alert-icon.svg"
           alt="Red thermometer icon."
         />
-      } @else if (temperature < 60) {
+      } @else if (temp < 60) {
         <img
           class="average-temperature-icon"
           src="thermometer-cold-icon.svg"
@@ -39,8 +39,8 @@
       />
     }
   </div>
-  @if (temperature) {
-    <div>{{ temperature | number: '1.2-2' }}°F</div>
+  @if (temperatureDisplay() !== undefined) {
+    <div class="text-display">{{ temperatureDisplay() }}</div>
   } @else {
     <div>N/A</div>
   }

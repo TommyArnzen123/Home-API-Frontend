@@ -42,7 +42,7 @@
       @if (deviceInfo().length > 0 && (averageTemperature() || averageTemperature() === 0)) {
         <div>
           <p class="current-average-location-temperature">
-            {{ averageTemperature() | number: '1.2-2' }}°F
+            {{ averageTemperatureDisplay() }}
           </p>
         </div>
         <div class="average-temperature-title">Average Temperature</div>

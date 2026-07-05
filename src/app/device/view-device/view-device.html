@@ -22,13 +22,17 @@
 <div class="body-content-container">
   <div class="most-recent-temperature-container">
     <h1>Most Recent Temperature Recorded</h1>
-    @if (mostRecentTemperature() && mostRecentTemperature()?.temperature) {
+    @if (mostRecentTemperatureDisplay()) {
       <div class="temperature-display">
-        {{ mostRecentTemperature()?.temperature | number: '1.2-2' }}°F
+        {{ mostRecentTemperatureDisplay() }}
       </div>
       @if (mostRecentTemperature()?.dateRecorded) {
         <div class="date-recorded-display">
-          {{ mostRecentTemperature()?.dateRecorded | date: 'MM/dd/yyyy h:mm a' }}
+          {{
+            is12HourTimeDisplay()
+              ? (mostRecentTemperature()?.dateRecorded | date: 'MM/dd/yyyy h:mm a')
+              : (mostRecentTemperature()?.dateRecorded | date: 'MM/dd/yyyy H:mm')
+          }}
         </div>
       }
     } @else {
@@ -45,6 +49,8 @@
             <display-temp-by-hour
               [hour]="tempByHour.hour"
               [temperature]="tempByHour.averageTemperature"
+              [is12HourTimeDisplay]="is12HourTimeDisplay()"
+              [isFahrenheitDisplay]="isFahrenheitDisplay()"
             />
           </div>
         }

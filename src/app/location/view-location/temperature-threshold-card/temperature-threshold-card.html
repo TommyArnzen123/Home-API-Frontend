@@ -1,7 +1,9 @@
 <mat-card
   class="threshold-card"
-  [class.temperature-threshold-healthy]="averageTemperature && !isTemperatureThresholdInViolation"
-  [class.temperature-threshold-violation]="averageTemperature && isTemperatureThresholdInViolation"
+  [class.temperature-threshold-healthy]="averageTemperature() && !isTemperatureThresholdInViolation"
+  [class.temperature-threshold-violation]="
+    averageTemperature() && isTemperatureThresholdInViolation
+  "
   appearance="outlined"
 >
   <mat-card-header>
@@ -9,7 +11,7 @@
       <mat-card-title>Temperature Threshold</mat-card-title>
       <div>
         <div class="temperature-threshold-alert-row">
-          @if (averageTemperature) {
+          @if (averageTemperature()) {
             @if (isTemperatureThresholdInViolation) {
               <img
                 class="temperature-threshold-alert-icon"
@@ -39,10 +41,10 @@
   </mat-card-header>
   <div class="threshold-card-content">
     @if (minTemperature) {
-      <div>Min Temp: {{ minTemperature | number: '1.2-2' }}°F</div>
+      <div>Min Temp: {{ minTemperatureDisplay }}</div>
     }
     @if (maxTemperature) {
-      <div>Max Temp: {{ maxTemperature | number: '1.2-2' }}°F</div>
+      <div>Max Temp: {{ maxTemperatureDisplay }}</div>
     }
   </div>
   <mat-card-actions>

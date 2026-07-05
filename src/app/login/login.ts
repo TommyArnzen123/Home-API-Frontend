@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, Signal } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatCard, MatCardTitle, MatCardContent } from '@angular/material/card';
 import { MatFormField } from '@angular/material/form-field';
@@ -9,7 +9,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { LoginService } from '../services/login';
 import { RouterService } from '../services/router';
-import { ILoginRequest, IUser } from '../model/login';
+import { ILoginInfo, ILoginRequest } from '../model/login';
+import { EntityStore } from '../store/entity.store';
 
 @Component({
   selector: 'login',
@@ -26,11 +27,14 @@ import { ILoginRequest, IUser } from '../model/login';
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
-export class Login implements OnInit, OnDestroy {
+export class Login implements OnDestroy {
   private subscriptions: Subscription[] = [];
 
   private readonly routerService = inject(RouterService);
   private readonly loginService = inject(LoginService);
+  private readonly entityStore = inject(EntityStore);
+
+  private readonly isLoggedIn = computed(() => this.entityStore.userInitialized());
 
   protected form: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required]),
@@ -38,15 +42,23 @@ export class Login implements OnInit, OnDestroy {
   });
   protected error!: string;
 
-  ngOnInit(): void {
-    const user: Signal<IUser | null> = this.loginService.getUserLoginInfo();
-
-    // If the user is logged in (the user value is set in the login service),
-    // route the user to the home page component.
-    if (user()) {
-      this.viewHomescreen();
-    }
+  constructor() {
+    effect(() => {
+      if (this.isLoggedIn()) {
+        this.viewHomescreen();
+      }
+    });
   }
+
+  // ngOnInit(): void {
+  //   const user: Signal<ILoginInfo | null> = this.loginService.getLoginInfo();
+
+  //   // If the user is logged in (the user value is set in the login service),
+  //   // route the user to the home page component.
+  //   if (user()) {
+  //     this.viewHomescreen();
+  //   }
+  // }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
@@ -82,8 +94,9 @@ export class Login implements OnInit, OnDestroy {
     if (this.form.valid) {
       this.subscriptions.push(
         this.loginService.login(loginRequest).subscribe({
-          next: (response: IUser) => {
+          next: (response: ILoginInfo) => {
             if (response) {
+              console.log(response);
               this.viewHomescreen();
             }
           },

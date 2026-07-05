@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, computed, signal, effect } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatButton } from '@angular/material/button';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { ModalService } from '../../services/modal';
 import { RouterService } from '../../services/router';
@@ -11,24 +11,29 @@ import { DELETE_DEVICE_CONFIRMATION_MODAL } from '../../constants/dialog-confirm
 import { EntityActions, EntityStore } from '../../store/entity.store';
 import { DisplayTempByHour } from './display-temp-by-hour/display-temp-by-hour';
 import { IAverageTemperatureByHour } from '../../model/get-info';
+import { TemperatureDisplayOptions, TimeDisplayOptions } from '../../model/account-settings';
+import {
+  addTemperatureSymbol,
+  fahrenheitToCelsius,
+} from '../../shared/utility/temperature-utility';
 
 @Component({
   selector: 'view-device',
-  imports: [MatButton, MatIcon, DatePipe, DisplayTempByHour, DecimalPipe],
+  imports: [MatButton, MatIcon, DatePipe, DisplayTempByHour],
   templateUrl: './view-device.html',
   styleUrl: './view-device.scss',
 })
 export class ViewDevice implements OnInit {
   private readonly entityStore = inject(EntityStore);
 
-  protected deviceId = signal<number | null>(null);
-  private locationId: number | null = null;
+  protected deviceId = signal<number | undefined>(undefined);
+  private locationId: number | undefined = undefined;
 
   protected deviceInfo = computed(() => {
     const deviceId = this.deviceId();
 
     if (!deviceId) {
-      return null;
+      return undefined;
     } else {
       return this.entityStore.devices()[deviceId];
     }
@@ -38,7 +43,7 @@ export class ViewDevice implements OnInit {
     if (this.deviceInfo()) {
       return this.deviceInfo()?.details?.deviceName;
     } else {
-      return null;
+      return undefined;
     }
   });
 
@@ -46,7 +51,37 @@ export class ViewDevice implements OnInit {
     if (this.deviceInfo()) {
       return this.deviceInfo()?.details?.temperature;
     } else {
-      return null;
+      return undefined;
+    }
+  });
+
+  protected is12HourTimeDisplay = computed(
+    () => this.entityStore.accountSettings()?.timeDisplaySetting === TimeDisplayOptions.HOUR_12,
+  );
+
+  protected isFahrenheitDisplay = computed(
+    () =>
+      this.entityStore.accountSettings()?.temperatureDisplaySetting ===
+      TemperatureDisplayOptions.FAHRENHEIT,
+  );
+
+  formatTemperatureDisplay(originalTemp: number | undefined): string {
+    let temp = '';
+    if (originalTemp && !this.isFahrenheitDisplay()) {
+      temp = fahrenheitToCelsius(originalTemp);
+    } else if (originalTemp && this.isFahrenheitDisplay()) {
+      temp = String(originalTemp);
+    }
+
+    return addTemperatureSymbol(temp, this.isFahrenheitDisplay());
+  }
+
+  protected mostRecentTemperatureDisplay = computed(() => {
+    const temp = this.mostRecentTemperature()?.temperature;
+    if (temp) {
+      return this.formatTemperatureDisplay(temp);
+    } else {
+      return undefined;
     }
   });
 
@@ -54,7 +89,7 @@ export class ViewDevice implements OnInit {
     if (this.deviceInfo()) {
       return this.deviceInfo()?.details?.averageTemperaturesByHourCurrentDate;
     } else {
-      return null;
+      return undefined;
     }
   });
 
@@ -75,12 +110,16 @@ export class ViewDevice implements OnInit {
         INVALID_DEVICE_ID_ERROR_MODAL,
         viewDeviceInvalidDeviceIDErrorActions,
       );
-      this.deviceId.set(null);
+      this.deviceId.set(undefined);
     } else {
       this.deviceId.set(id);
       this.setSuccessEffects();
       this.setErrorEffects();
     }
+
+    effect(() => {
+      this.mostRecentTemperatureDisplay();
+    });
   }
 
   private setSuccessEffects(): void {
@@ -117,7 +156,7 @@ export class ViewDevice implements OnInit {
     if (deviceId) {
       const deleteDeviceConfirmationActions: IModalActions = {
         primaryAction: () => {
-          this.locationId = this.deviceInfo()?.parentId ?? null;
+          this.locationId = this.deviceInfo()?.parentId ?? undefined;
           this.entityStore.deleteDevice(deviceId);
         },
       };
@@ -130,7 +169,7 @@ export class ViewDevice implements OnInit {
   }
 
   private viewLocationById(): void {
-    if (this.locationId !== null) {
+    if (this.locationId !== undefined) {
       this.routerService.viewLocationById(this.locationId);
     } else {
       this.viewHomescreen();
@@ -168,7 +207,7 @@ export class ViewDevice implements OnInit {
 
   protected viewEditDevicePage(): void {
     const deviceId = this.deviceId();
-    if (deviceId !== null) {
+    if (deviceId !== undefined) {
       this.routerService.viewEditDevicePage(deviceId);
     }
   }

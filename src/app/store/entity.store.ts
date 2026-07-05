@@ -39,6 +39,17 @@ import {
   IConfirmEmailError,
   IEmailConfirmed,
 } from '../model/confirm-email';
+import {
+  IAccountSettings,
+  IUpdateAccountSetting,
+  IUpdateTemperatureDisplaySettingResponse,
+  IUpdateTimeDisplaySettingResponse,
+  TemperatureDisplayOptions,
+  TimeDisplayOptions,
+} from '../model/account-settings';
+import { AccountSettingsService } from '../services/account-settings';
+import { IUserInfo } from '../model/login';
+import { celsiusToFahrenheit } from '../shared/utility/temperature-utility';
 
 export type EntityActions =
   | 'get-view-homescreen-info'
@@ -59,6 +70,9 @@ export type EntityActions =
   | 'delete-home'
   | 'delete-location'
   | 'delete-device'
+  | 'get-account-settings'
+  | 'update-time-display-setting'
+  | 'update-temperature-display-setting'
   | null;
 
 export type EntityTypes = 'USER' | 'HOME' | 'LOCATION' | 'DEVICE';
@@ -123,8 +137,11 @@ export type LocationData = EntityData<LocationSummary, LocationDetails>;
 export type DeviceData = EntityData<DeviceSummary, DeviceDetails>;
 
 interface IEntityState {
-  userId: number | null;
-  userFirstName: string | null;
+  // userId: number | null;
+  userInfo: IUserInfo | null;
+  jwtToken: string | null;
+  // userFirstName: string | null;
+  accountSettings: IAccountSettings | null;
   emailConfirmed: IEmailConfirmed;
   userInitialized: boolean;
   homes: Record<number, HomeData>;
@@ -137,8 +154,11 @@ interface IEntityState {
 }
 
 const initialState: IEntityState = {
-  userId: null,
-  userFirstName: null,
+  // userId: null,
+  // userFirstName: null,
+  userInfo: null,
+  jwtToken: null,
+  accountSettings: null,
   emailConfirmed: {
     isConfirmed: false,
   },
@@ -164,13 +184,25 @@ export const EntityStore = signalStore(
     const editService = inject(EditService);
     const thresholdService = inject(TemperatureThresholdService);
     const deleteService = inject(DeleteService);
+    const accountSettingsService = inject(AccountSettingsService);
 
     return {
-      setUserInformation(userId: number, userFirstName: string): void {
+      setUserInformation(userInfo: IUserInfo | null): void {
         patchState(store, {
-          userId,
-          userFirstName,
-          userInitialized: true,
+          userInfo,
+          userInitialized: userInfo ? true : false,
+        });
+      },
+
+      setAccountSettings(accountSettings: IAccountSettings | null): void {
+        patchState(store, {
+          accountSettings,
+        });
+      },
+
+      setJwtToken(jwtToken: string | null): void {
+        patchState(store, {
+          jwtToken,
         });
       },
 
@@ -184,7 +216,7 @@ export const EntityStore = signalStore(
             }),
           ),
           switchMap(() => {
-            const userId = store.userId();
+            const userId = store.userInfo()?.userId;
 
             if (!userId) {
               patchState(store, {
@@ -214,6 +246,132 @@ export const EntityStore = signalStore(
         ),
       ),
 
+      getAccountSettings: rxMethod<void>(
+        pipe(
+          tap(() =>
+            patchState(store, {
+              successNotification: null,
+              errorNotification: null,
+            }),
+          ),
+          switchMap(() => {
+            const userId = store.userInfo()?.userId;
+
+            if (!userId) {
+              patchState(store, {
+                errorNotification: { errorAction: 'get-account-settings' },
+              });
+              return EMPTY;
+            }
+
+            return accountSettingsService.getAccountSettings(userId).pipe(
+              tapResponse({
+                next: (accountSettings: IAccountSettings) =>
+                  patchState(store, {
+                    accountSettings,
+                  }),
+                error: () =>
+                  patchState(store, {
+                    errorNotification: { errorAction: 'get-account-settings' },
+                  }),
+              }),
+            );
+          }),
+        ),
+      ),
+
+      updateTimeDisplaySetting: rxMethod<TimeDisplayOptions>(
+        pipe(
+          tap(() =>
+            patchState(store, {
+              successNotification: null,
+              errorNotification: null,
+            }),
+          ),
+          switchMap((setting: TimeDisplayOptions) => {
+            const userId = store.userInfo()?.userId;
+
+            if (!userId) {
+              patchState(store, {
+                errorNotification: { errorAction: 'update-time-display-setting' },
+              });
+              return EMPTY;
+            }
+
+            return accountSettingsService.updateTimeDisplaySetting({ userId, setting }).pipe(
+              tapResponse({
+                next: (response: IUpdateTimeDisplaySettingResponse) => {
+                  patchState(store, (state) => {
+                    if (state.accountSettings === null) {
+                      console.log('NOT SET');
+                      return {};
+                    }
+
+                    return {
+                      accountSettings: {
+                        ...state.accountSettings,
+                        timeDisplaySetting: response.timeSetting,
+                      },
+                      successNotification: 'update-time-display-setting' as EntityActions,
+                    };
+                  });
+                },
+                error: () =>
+                  patchState(store, {
+                    errorNotification: { errorAction: 'update-time-display-setting' },
+                  }),
+              }),
+            );
+          }),
+        ),
+      ),
+
+      updateTemperatureDisplaySetting: rxMethod<TemperatureDisplayOptions>(
+        pipe(
+          tap(() =>
+            patchState(store, {
+              successNotification: null,
+              errorNotification: null,
+            }),
+          ),
+          switchMap((setting: TemperatureDisplayOptions) => {
+            const userId = store.userInfo()?.userId;
+
+            if (!userId) {
+              patchState(store, {
+                errorNotification: { errorAction: 'update-temperature-display-setting' },
+              });
+              return EMPTY;
+            }
+
+            return accountSettingsService.updateTemperatureDisplaySetting({ userId, setting }).pipe(
+              tapResponse({
+                next: (response: IUpdateTemperatureDisplaySettingResponse) => {
+                  patchState(store, (state) => {
+                    if (state.accountSettings === null) {
+                      console.log('NOT SET');
+                      return {};
+                    }
+
+                    return {
+                      accountSettings: {
+                        ...state.accountSettings,
+                        temperatureDisplaySetting: response.temperatureSetting,
+                      },
+                      successNotification: 'update-temperature-display-setting' as EntityActions,
+                    };
+                  });
+                },
+                error: () =>
+                  patchState(store, {
+                    errorNotification: { errorAction: 'update-temperature-display-setting' },
+                  }),
+              }),
+            );
+          }),
+        ),
+      ),
+
       generateEmailConfirmationCode: rxMethod<void>(
         pipe(
           tap(() =>
@@ -223,7 +381,7 @@ export const EntityStore = signalStore(
             }),
           ),
           switchMap(() => {
-            const userId = store.userId();
+            const userId = store.userInfo()?.userId;
 
             if (!userId) {
               patchState(store, {
@@ -273,7 +431,7 @@ export const EntityStore = signalStore(
           ),
           switchMap((emailConfirmationCode: number) => {
             // ID of the user making the request.
-            const userId = store.userId();
+            const userId = store.userInfo()?.userId;
 
             // ID of the confirmation object in focus.
             const confirmationId = store.emailConfirmed().generatedCode?.confirmationId;
@@ -436,7 +594,7 @@ export const EntityStore = signalStore(
         pipe(
           tap(() => patchState(store, { successNotification: null, errorNotification: null })),
           switchMap((homeName: string) => {
-            const userId = store.userId();
+            const userId = store.userInfo()?.userId;
 
             if (!userId) {
               patchState(store, {
@@ -578,8 +736,21 @@ export const EntityStore = signalStore(
       addTemperatureThreshold: rxMethod<ITemperatureThreshold>(
         pipe(
           tap(() => patchState(store, { successNotification: null, errorNotification: null })),
-          switchMap((thresholdRequest: ITemperatureThreshold) =>
-            thresholdService.addTemperatureThreshold(thresholdRequest).pipe(
+          switchMap((thresholdRequest: ITemperatureThreshold) => {
+            // Convert the Celsius temperatures to Fahrenheit if the temperature display setting is 'CELSIUS'.
+            if (
+              store.accountSettings()?.temperatureDisplaySetting ===
+              TemperatureDisplayOptions.CELSIUS
+            ) {
+              thresholdRequest.minimumTemperature = thresholdRequest.minimumTemperature
+                ? Number(celsiusToFahrenheit(thresholdRequest.minimumTemperature))
+                : thresholdRequest.minimumTemperature;
+              thresholdRequest.maximumTemperature = thresholdRequest.maximumTemperature
+                ? Number(celsiusToFahrenheit(thresholdRequest.maximumTemperature))
+                : thresholdRequest.maximumTemperature;
+            }
+
+            return thresholdService.addTemperatureThreshold(thresholdRequest).pipe(
               tapResponse({
                 next: (thresholdResponse: ITemperatureThreshold) =>
                   patchState(store, {
@@ -597,16 +768,29 @@ export const EntityStore = signalStore(
                     errorNotification: { errorAction: 'add-temperature-threshold' },
                   }),
               }),
-            ),
-          ),
+            );
+          }),
         ),
       ),
 
       updateTemperatureThreshold: rxMethod<ITemperatureThreshold>(
         pipe(
           tap(() => patchState(store, { successNotification: null, errorNotification: null })),
-          switchMap((thresholdRequest: ITemperatureThreshold) =>
-            thresholdService.updateTemperatureThreshold(thresholdRequest).pipe(
+          switchMap((thresholdRequest: ITemperatureThreshold) => {
+            // Convert the Celsius temperatures to Fahrenheit if the temperature display setting is 'CELSIUS'.
+            if (
+              store.accountSettings()?.temperatureDisplaySetting ===
+              TemperatureDisplayOptions.CELSIUS
+            ) {
+              thresholdRequest.minimumTemperature = thresholdRequest.minimumTemperature
+                ? Number(celsiusToFahrenheit(thresholdRequest.minimumTemperature))
+                : thresholdRequest.minimumTemperature;
+              thresholdRequest.maximumTemperature = thresholdRequest.maximumTemperature
+                ? Number(celsiusToFahrenheit(thresholdRequest.maximumTemperature))
+                : thresholdRequest.maximumTemperature;
+            }
+
+            return thresholdService.updateTemperatureThreshold(thresholdRequest).pipe(
               tapResponse({
                 next: () =>
                   patchState(store, {
@@ -624,8 +808,8 @@ export const EntityStore = signalStore(
                     errorNotification: { errorAction: 'update-temperature-threshold' },
                   }),
               }),
-            ),
-          ),
+            );
+          }),
         ),
       ),
 

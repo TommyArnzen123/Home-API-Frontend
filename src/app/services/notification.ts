@@ -18,10 +18,13 @@ import {
   GENERATE_EMAIL_CONFIRMATION_CODE_BAD_REQUEST_ERROR_MODAL,
   GENERATE_EMAIL_CONFIRMATION_CODE_EMAIL_ALREADY_CONFIRMED_ERROR_MODAL,
   GENERATE_EMAIL_CONFIRMATION_CODE_TOO_MANY_REQUESTS_ERROR_MODAL,
+  GET_ACCOUNT_SETTINGS_ERROR_MODAL,
   REGISTER_DEVICE_ERROR_MODAL,
   REGISTER_HOME_ERROR_MODAL,
   REGISTER_LOCATION_ERROR_MODAL,
+  UPDATE_TEMPERATURE_DISPLAY_SETTING_ERROR_MODAL,
   UPDATE_TEMPERATURE_THRESHOLD_ERROR_MODAL,
+  UPDATE_TIME_DISPLAY_SETTING_ERROR_MODAL,
   VIEW_DEVICE_GET_INFO_ERROR_MODAL,
   VIEW_HOME_GET_INFO_ERROR_MODAL,
   VIEW_LOCATION_GET_INFO_ERROR_MODAL,
@@ -41,7 +44,9 @@ import {
   REGISTER_DEVICE_SUCCESS_MODAL,
   REGISTER_HOME_SUCCESS_MODAL,
   REGISTER_LOCATION_SUCCESS_MODAL,
+  UPDATE_TEMPERATURE_DISPLAY_SETTING_SUCCESS_MODAL,
   UPDATE_TEMPERATURE_THRESHOLD_SUCCESS_MODAL,
+  UPDATE_TIME_DISPLAY_SETTING_SUCCESS_MODAL,
 } from '../constants/success-constants';
 import { ConfirmEmailErrorTypes } from '../model/confirm-email';
 
@@ -110,6 +115,14 @@ export class NotificationService {
 
       if (success === 'delete-device') {
         this.modalService.showModalElement(DELETE_DEVICE_SUCCESS_MODAL);
+      }
+
+      if (success === 'update-time-display-setting') {
+        this.modalService.showModalElement(UPDATE_TIME_DISPLAY_SETTING_SUCCESS_MODAL);
+      }
+
+      if (success === 'update-temperature-display-setting') {
+        this.modalService.showModalElement(UPDATE_TEMPERATURE_DISPLAY_SETTING_SUCCESS_MODAL);
       }
     });
   }
@@ -224,6 +237,18 @@ export class NotificationService {
 
       if (error?.errorAction === 'delete-device') {
         this.modalService.showModalElement(DELETE_DEVICE_ERROR_MODAL);
+      }
+
+      if (error?.errorAction === 'get-account-settings') {
+        this.modalService.showModalElement(GET_ACCOUNT_SETTINGS_ERROR_MODAL);
+      }
+
+      if (error?.errorAction === 'update-time-display-setting') {
+        this.modalService.showModalElement(UPDATE_TIME_DISPLAY_SETTING_ERROR_MODAL);
+      }
+
+      if (error?.errorAction === 'update-temperature-display-setting') {
+        this.modalService.showModalElement(UPDATE_TEMPERATURE_DISPLAY_SETTING_ERROR_MODAL);
       }
     });
   }

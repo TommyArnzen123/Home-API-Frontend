@@ -139,6 +139,21 @@ const CONFIRM_EMAIL_CODE_BAD_REQUEST_ERROR: IError = {
   errorCode: '0028',
 };
 
+const GET_ACCOUNT_SETTINGS_ERROR: IError = {
+  message: 'There was an error getting your account settings. Please try again.',
+  errorCode: '0029',
+};
+
+const UPDATE_TIME_DISPLAY_SETTING_ERROR: IError = {
+  message: 'There was an error updating the time display setting. Please try again.',
+  errorCode: '0030',
+};
+
+const UPDATE_TEMPERATURE_DISPLAY_SETTING_ERROR: IError = {
+  message: 'There was an error updating the temperature display setting. Please try again.',
+  errorCode: '0031',
+};
+
 // Error Modal Objects.
 export const REGISTER_USER_ERROR_MODAL: IModal = {
   title: 'Something Went Wrong...',
@@ -319,5 +334,26 @@ export const CONFIRM_EMAIL_CODE_BAD_REQUEST_ERROR_MODAL: IModal = {
   title: 'Something Went Wrong...',
   content: CONFIRM_EMAIL_CODE_BAD_REQUEST_ERROR.message,
   footer: 'Error Code: ' + CONFIRM_EMAIL_CODE_BAD_REQUEST_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const GET_ACCOUNT_SETTINGS_ERROR_MODAL: IModal = {
+  title: 'Something Went Wrong...',
+  content: GET_ACCOUNT_SETTINGS_ERROR.message,
+  footer: 'Error Code: ' + GET_ACCOUNT_SETTINGS_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const UPDATE_TIME_DISPLAY_SETTING_ERROR_MODAL: IModal = {
+  title: 'Something Went Wrong...',
+  content: UPDATE_TIME_DISPLAY_SETTING_ERROR.message,
+  footer: 'Error Code: ' + UPDATE_TIME_DISPLAY_SETTING_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const UPDATE_TEMPERATURE_DISPLAY_SETTING_ERROR_MODAL: IModal = {
+  title: 'Something Went Wrong...',
+  content: UPDATE_TEMPERATURE_DISPLAY_SETTING_ERROR.message,
+  footer: 'Error Code: ' + UPDATE_TEMPERATURE_DISPLAY_SETTING_ERROR.errorCode,
   disableClose: true,
 };

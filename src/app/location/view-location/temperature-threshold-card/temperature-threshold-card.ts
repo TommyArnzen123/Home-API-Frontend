@@ -1,10 +1,10 @@
-import { Component, effect, inject, input, Input, OnDestroy } from '@angular/core';
+import { Component, computed, effect, inject, input, OnDestroy } from '@angular/core';
 import { MatCard, MatCardActions, MatCardHeader, MatCardTitle } from '@angular/material/card';
-import { DecimalPipe } from '@angular/common';
 import { ITemperatureThreshold } from '../../../model/temperature-threshold';
 import { MatButton } from '@angular/material/button';
 import { Subscription } from 'rxjs';
 import {
+  ITemperatureThresholdModal,
   ITemperatureThresholdModalLimits,
   TemperatureThresholdModal,
   TemperatureThresholdModalFlow,
@@ -15,10 +15,15 @@ import { IModalActions } from '../../../model/modal';
 import { DELETE_TEMPERATURE_THRESHOLD_CONFIRMATION_MODAL } from '../../../constants/dialog-confirmation-constants';
 import { MatIcon } from '@angular/material/icon';
 import { EntityStore } from '../../../store/entity.store';
+import { TemperatureDisplayOptions } from '../../../model/account-settings';
+import {
+  addTemperatureSymbol,
+  fahrenheitToCelsius,
+} from '../../../shared/utility/temperature-utility';
 
 @Component({
   selector: 'temperature-threshold-card',
-  imports: [MatCard, MatCardHeader, MatCardTitle, MatCardActions, MatButton, MatIcon, DecimalPipe],
+  imports: [MatCard, MatCardHeader, MatCardTitle, MatCardActions, MatButton, MatIcon],
   templateUrl: './temperature-threshold-card.html',
   styleUrl: './temperature-threshold-card.scss',
 })
@@ -26,21 +31,30 @@ export class TemperatureThresholdCard implements OnDestroy {
   private subscriptions: Subscription[] = [];
 
   private readonly entityStore = inject(EntityStore);
-
   private readonly modal = inject(MatDialog);
   private readonly modalService = inject(ModalService);
 
-  @Input({ required: true }) averageTemperature!: number | null;
+  averageTemperature = input.required<number | null>();
   temperatureThreshold = input.required<ITemperatureThreshold | undefined>();
-  protected minTemperature: number | null | undefined = null;
-  protected maxTemperature: number | null | undefined = null;
+  protected minTemperature: number | undefined = undefined;
+  protected minTemperatureDisplay: string | undefined = undefined;
+  protected maxTemperature: number | undefined = undefined;
+  protected maxTemperatureDisplay: string | undefined = undefined;
   protected isTemperatureThresholdInViolation: boolean = false;
+
+  private isFahrenheitDisplay = computed(
+    () =>
+      this.entityStore.accountSettings()?.temperatureDisplaySetting ===
+      TemperatureDisplayOptions.FAHRENHEIT,
+  );
 
   constructor() {
     effect(() => {
       const threshold: ITemperatureThreshold | undefined = this.temperatureThreshold();
       this.minTemperature = threshold?.minimumTemperature;
+      this.minTemperatureDisplay = this.formatTemperatureDisplay(this.minTemperature);
       this.maxTemperature = threshold?.maximumTemperature;
+      this.maxTemperatureDisplay = this.formatTemperatureDisplay(this.maxTemperature);
       this.setThresholdViolationStatus();
     });
   }
@@ -49,14 +63,27 @@ export class TemperatureThresholdCard implements OnDestroy {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
+  formatTemperatureDisplay(originalTemp: number | undefined): string {
+    let temp = '';
+    if (originalTemp && !this.isFahrenheitDisplay()) {
+      temp = fahrenheitToCelsius(originalTemp);
+    } else if (originalTemp && this.isFahrenheitDisplay()) {
+      temp = String(originalTemp);
+    }
+
+    return addTemperatureSymbol(temp, this.isFahrenheitDisplay());
+  }
+
   // If the average temperature is set and there is a temperature threshold
   // for the location, check to see if the average temperature is outside the
   // allowed threshold limits.
   private setThresholdViolationStatus(): void {
-    if (this.averageTemperature) {
+    const averageTemp = this.averageTemperature();
+
+    if (averageTemp) {
       if (
-        (this.minTemperature && this.averageTemperature < this.minTemperature) ||
-        (this.maxTemperature && this.averageTemperature > this.maxTemperature)
+        (this.minTemperature && averageTemp < this.minTemperature) ||
+        (this.maxTemperature && averageTemp > this.maxTemperature)
       ) {
         this.isTemperatureThresholdInViolation = true;
       } else {
@@ -71,9 +98,10 @@ export class TemperatureThresholdCard implements OnDestroy {
       width: '400px',
       data: {
         flow: flowType,
+        isFahrenheitDisplay: this.isFahrenheitDisplay(),
         minimumTemperature: this.minTemperature,
         maximumTemperature: this.maxTemperature,
-      },
+      } as ITemperatureThresholdModal,
     });
 
     this.subscriptions.push(
@@ -124,22 +152,5 @@ export class TemperatureThresholdCard implements OnDestroy {
         deleteTemperatureThresholdConfirmationActions,
       );
     }
-  }
-
-  private deleteTemperatureThreshold(): void {
-    // const thresholdId: number | undefined = this.temperatureThreshold()?.id;
-    // if (thresholdId) {
-    // this.temperatureThresholdService.deleteTemperatureThreshold(thresholdId).subscribe({
-    //   next: () => {
-    //     this.modalService.showModalElement(DELETE_TEMPERATURE_THRESHOLD_SUCCESS_MODAL);
-    //     // The temperature threshold has been deleted, emit a notification to the parent component.
-    //     // this.thresholdUpdated.emit(null);
-    //   },
-    //   error: () => {
-    //     // There was an error deleting the temperature threshold.
-    //     this.modalService.showModalElement(DELETE_TEMPERATURE_THRESHOLD_ERROR_MODAL);
-    //   },
-    // });
-    // }
   }
 }

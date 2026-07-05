@@ -1,26 +1,26 @@
 <mat-card
   class="location-card"
   [class.temperature-threshold-healthy]="
-    locationInfo.summary &&
-    locationInfo.summary.averageTemperature &&
-    locationInfo.summary.threshold &&
+    locationInfo().summary &&
+    locationInfo().summary.averageTemperature &&
+    locationInfo().summary.threshold &&
     !isTemperatureThresholdInViolation
   "
   [class.temperature-threshold-violation]="
-    locationInfo.summary && locationInfo.summary.threshold && isTemperatureThresholdInViolation
+    locationInfo().summary && locationInfo().summary.threshold && isTemperatureThresholdInViolation
   "
   appearance="outlined"
 >
   <mat-card-header>
     <div class="title-row">
-      @if (locationInfo && locationInfo.summary && locationInfo.summary.locationName) {
+      @if (locationInfo() && locationInfo().summary && locationInfo().summary.locationName) {
         <mat-card-title>
-          {{ locationInfo.summary.locationName }}
+          {{ locationInfo().summary.locationName }}
         </mat-card-title>
       } @else {
         <mat-card-title> Location Name Unavailable </mat-card-title>
       }
-      @if (locationInfo && locationInfo.summary && locationInfo.summary.threshold) {
+      @if (locationInfo() && locationInfo().summary && locationInfo().summary.threshold) {
         <div>
           <div class="temperature-threshold-alert-row">
             @if (averageTemperature) {
@@ -53,28 +53,26 @@
     </div>
   </mat-card-header>
   <div class="location-card-content">
-    @if (locationInfo && locationInfo.summary && locationInfo.summary.averageTemperature) {
-      <div class="temperature average-temperature">
-        {{ averageTemperature | number: '1.2-2' }}°F
-      </div>
+    @if (averageTemperatureDisplay) {
+      <div class="temperature average-temperature">{{ averageTemperatureDisplay }}</div>
     } @else {
       <div class="temperature default-temperature">-°F</div>
     }
     <div class="right-section">
       @if (minThreshold || maxThreshold) {
         <div>
-          @if (minThreshold) {
-            <div>Min Temp: {{ minThreshold }}°F</div>
+          @if (minThresholdDisplay) {
+            <div>Min Temp: {{ minThresholdDisplay }}</div>
           }
-          @if (maxThreshold) {
-            <div>Max Temp: {{ maxThreshold }}°F</div>
+          @if (maxThresholdDisplay) {
+            <div>Max Temp: {{ maxThresholdDisplay }}</div>
           }
         </div>
       }
       <div class="entity">
         <img src="device-icon.svg" class="entity-icon" alt="Device icon." />
-        @if (locationInfo && locationInfo.summary && locationInfo.summary.numDevices) {
-          <div class="total-items">{{ locationInfo.summary.numDevices }}</div>
+        @if (locationInfo() && locationInfo().summary && locationInfo().summary.numDevices) {
+          <div class="total-items">{{ locationInfo().summary.numDevices }}</div>
         } @else {
           <div class="total-items">0</div>
         }
@@ -82,7 +80,7 @@
     </div>
   </div>
   <mat-card-actions class="button-container">
-    @if (this.locationInfo && this.locationInfo.entityId) {
+    @if (this.locationInfo() && this.locationInfo().entityId) {
       <button matButton="outlined" (click)="viewLocationById()">View</button>
       <button matButton="filled" (click)="deleteLocationConfirmation()">
         <mat-icon>delete</mat-icon>Delete

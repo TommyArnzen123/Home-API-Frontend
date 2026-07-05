@@ -2,7 +2,7 @@
 <mat-dialog-content>
   <form [formGroup]="form">
     <mat-form-field>
-      <mat-label>Minimum Temperature</mat-label>
+      <mat-label>{{ minimumTemperatureLabel() }}</mat-label>
       <input type="text" matInput formControlName="minimumTemperature" />
       @if (
         form.get('minimumTemperature')?.touched &&
@@ -14,7 +14,7 @@
     <br />
     <br />
     <mat-form-field>
-      <mat-label>Maximum Temperature</mat-label>
+      <mat-label>{{ maximumTemperatureLabel() }}</mat-label>
       <input type="text" matInput formControlName="maximumTemperature" />
       @if (
         form.get('maximumTemperature')?.touched &&
