@@ -1,4 +1,4 @@
-import { IBreadcrumb } from '../store/entity.store';
+import { IBreadcrumb } from './breadcrumb';
 import { ITemperatureThreshold } from './temperature-threshold';
 
 export interface IUser {

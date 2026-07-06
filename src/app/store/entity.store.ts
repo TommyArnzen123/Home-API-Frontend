@@ -50,6 +50,7 @@ import {
 import { AccountSettingsService } from '../services/account-settings';
 import { IUserInfo } from '../model/login';
 import { celsiusToFahrenheit } from '../shared/utility/temperature-utility';
+import { IBreadcrumb } from '../model/breadcrumb';
 
 export type EntityActions =
   | 'get-view-homescreen-info'
@@ -78,11 +79,6 @@ export type EntityActions =
 export type EntityTypes = 'USER' | 'HOME' | 'LOCATION' | 'DEVICE';
 
 export type PageModes = 'VIEW' | 'EDIT' | 'ADD_CHILD';
-
-export interface IBreadcrumb {
-  type: EntityTypes;
-  id: number;
-}
 
 interface EntityData<TSummary, TDetails> {
   entityId: number;
