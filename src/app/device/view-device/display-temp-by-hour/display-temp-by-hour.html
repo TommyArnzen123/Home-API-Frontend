@@ -13,29 +13,33 @@
   <div>
     @if (temperature(); as temp) {
       @if (temp > 80) {
-        <img
-          class="average-temperature-icon"
-          src="thermometer-alert-icon.svg"
+        <icon-element
+          src="thermometer-alert-icon"
+          [width]="30"
+          [height]="30"
           alt="Red thermometer icon."
         />
       } @else if (temp < 60) {
-        <img
-          class="average-temperature-icon"
-          src="thermometer-cold-icon.svg"
+        <icon-element
+          src="thermometer-cold-icon"
+          [width]="30"
+          [height]="30"
           alt="Blue thermometer icon."
         />
       } @else {
-        <img
-          class="average-temperature-icon"
-          src="thermometer-temperate-icon.svg"
+        <icon-element
+          src="thermometer-temperate-icon"
+          [width]="30"
+          [height]="30"
           alt="Orange thermometer icon."
         />
       }
     } @else {
-      <img
-        class="average-temperature-icon"
-        src="no-data-location-temperature-icon.svg"
-        alt="White triangle with black border and black exclamation mark alert icon."
+      <icon-element
+        src="no-data-location-temperature-icon"
+        [width]="30"
+        [height]="30"
+        alt="Triangle with border and exclamation mark alert icon."
       />
     }
   </div>

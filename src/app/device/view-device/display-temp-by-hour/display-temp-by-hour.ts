@@ -4,6 +4,7 @@ import {
   addTemperatureSymbol,
   fahrenheitToCelsius,
 } from '../../../shared/utility/temperature-utility';
+import { IconElement } from '../../../shared/components/icon-element/icon-element';
 
 enum BackgroundDisplayOptions {
   'HOT' = 'HOT',
@@ -14,7 +15,7 @@ enum BackgroundDisplayOptions {
 
 @Component({
   selector: 'display-temp-by-hour',
-  imports: [MatCard],
+  imports: [MatCard, IconElement],
   templateUrl: './display-temp-by-hour.html',
   styleUrl: './display-temp-by-hour.scss',
 })

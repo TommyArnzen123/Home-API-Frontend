@@ -13,10 +13,20 @@ import {
 } from '../../../shared/utility/temperature-utility';
 import { EntityStore, LocationData } from '../../../store/entity.store';
 import { TemperatureDisplayOptions } from '../../../model/account-settings';
+import { IconElement } from '../../../shared/components/icon-element/icon-element';
+import { DeleteButtonElement } from '../../../shared/components/button-element/delete-button-element';
 
 @Component({
   selector: 'location-card',
-  imports: [MatCard, MatCardHeader, MatCardTitle, MatCardActions, MatButton, MatIcon],
+  imports: [
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardActions,
+    MatButton,
+    IconElement,
+    DeleteButtonElement,
+  ],
   templateUrl: './location-card.html',
   styleUrl: './location-card.scss',
 })
@@ -132,7 +142,7 @@ export class LocationCard {
     }
   }
 
-  protected deleteLocationConfirmation(): void {
+  protected deleteLocationConfirmation = (): void => {
     const deleteLocationConfirmationActions: IModalActions = {
       primaryAction: () => this.entityStore.deleteLocation(this.locationInfo().entityId),
     };
@@ -141,5 +151,5 @@ export class LocationCard {
       DELETE_LOCATION_CONFIRMATION_MODAL,
       deleteLocationConfirmationActions,
     );
-  }
+  };
 }

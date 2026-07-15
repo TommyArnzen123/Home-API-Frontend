@@ -25,7 +25,7 @@
 .body-content-container {
   display: flex;
   flex-direction: row;
-  max-height: 75%;
+  max-height: 60%;
 
   .locations-container {
     width: 100%;
@@ -50,14 +50,10 @@
         margin-top: 50px;
         min-height: 250px;
 
-        .no-locations-registered-icon {
-          width: 125px;
-          margin-bottom: 20px;
-        }
-
         .no-locations-registered-text {
           font-size: 20px;
           text-align: center;
+          margin-top: 20px;
         }
       }
     }

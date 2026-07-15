@@ -101,6 +101,7 @@ export class LoginService {
             accountSettingId: response.accountSettings.accountSettingId,
             timeDisplaySetting: response.accountSettings.timeDisplaySetting,
             temperatureDisplaySetting: response.accountSettings.temperatureDisplaySetting,
+            themeDisplaySetting: response.accountSettings.themeDisplaySetting,
           };
 
           this.sessionStorageService.setItem(USER_INFO_KEY, JSON.stringify(response.userInfo));

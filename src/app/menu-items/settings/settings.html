@@ -25,4 +25,16 @@
       <mat-button-toggle value="HOUR_24">24 Hour</mat-button-toggle>
     </mat-button-toggle-group>
   </section>
+  <div>Theme Display</div>
+  <section>
+    <mat-button-toggle-group
+      #groupTheme="matButtonToggleGroup"
+      [value]="themeDisplaySetting()"
+      (change)="updateThemeDisplaySetting($event, groupTheme)"
+      aria-label="Theme Display Setting"
+    >
+      <mat-button-toggle value="LIGHT">Light</mat-button-toggle>
+      <mat-button-toggle value="DARK">Dark</mat-button-toggle>
+    </mat-button-toggle-group>
+  </section>
 </div>

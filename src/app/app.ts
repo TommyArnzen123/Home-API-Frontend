@@ -5,6 +5,8 @@ import { Footer } from './footer/footer';
 import { LoadingIndicator } from './loading-indicator/loading-indicator';
 import { Breadcrumb } from './breadcrumb/breadcrumb';
 import { NotificationService } from './services/notification';
+import { ThemeService } from './services/theme';
+import { IconRegistryService } from './services/icon-registry';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +15,9 @@ import { NotificationService } from './services/notification';
   styleUrl: './app.scss',
 })
 export class App {
-  // NOTE: Generating the notification service will generated the initial signal store with default values.
+  // NOTE: Generating the notification service will generate the initial signal store with default values.
   // The signal store user auth information will be set from the login service when the user logs in.
   private readonly notificationService = inject(NotificationService);
+  private readonly themeService = inject(ThemeService);
+  private readonly iconRegistryService = inject(IconRegistryService);
 }

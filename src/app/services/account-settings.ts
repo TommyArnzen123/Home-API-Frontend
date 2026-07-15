@@ -7,8 +7,10 @@ import {
   IAccountSettings,
   IUpdateAccountSetting,
   IUpdateTemperatureDisplaySettingResponse,
+  IUpdateThemeDisplaySettingResponse,
   IUpdateTimeDisplaySettingResponse,
   TemperatureDisplayOptions,
+  ThemeDisplayOptions,
   TimeDisplayOptions,
 } from '../model/account-settings';
 import { SessionStorageService } from './session-storage';
@@ -26,6 +28,7 @@ export class AccountSettingsService {
   private readonly getAccountSettingsPath = '/getSettings';
   private readonly updateTimeDisplaySettingPath = '/timeDisplay';
   private readonly updateTemperatureDisplaySettingPath = '/temperatureDisplay';
+  private readonly updateThemeDisplaySettingPath = '/themeDisplay';
 
   setAccountSettingsSessionStorage(accountSettings: IAccountSettings): void {
     this.sessionStorageService.setItem(ACCOUNT_SETTINGS_KEY, JSON.stringify(accountSettings));
@@ -65,6 +68,16 @@ export class AccountSettingsService {
     }
   }
 
+  updateThemeDisplaySettingSessionStorage(themeDisplaySetting: ThemeDisplayOptions): void {
+    const accountSettings: IAccountSettings | null = this.getAccountSettingsFromSessionStorage();
+
+    // Set the theme display setting if the account settings are stored in session storage.
+    if (accountSettings) {
+      accountSettings.themeDisplaySetting = themeDisplaySetting;
+      this.setAccountSettingsSessionStorage(accountSettings);
+    }
+  }
+
   getAccountSettings(userId: number): Observable<IAccountSettings> {
     return this.httpClient
       .get<IAccountSettings>(
@@ -85,7 +98,6 @@ export class AccountSettingsService {
       );
   }
 
-  // Store result in session storage.
   updateTimeDisplaySetting(
     request: IUpdateAccountSetting,
   ): Observable<IUpdateTimeDisplaySettingResponse> {
@@ -107,7 +119,6 @@ export class AccountSettingsService {
       );
   }
 
-  // Store result in session storage.
   updateTemperatureDisplaySetting(
     request: IUpdateAccountSetting,
   ): Observable<IUpdateTemperatureDisplaySettingResponse> {
@@ -127,6 +138,27 @@ export class AccountSettingsService {
       .pipe(
         map((response: IUpdateTemperatureDisplaySettingResponse) => {
           this.updateTemperatureDisplaySettingSessionStorage(response.temperatureSetting);
+          return response;
+        }),
+      );
+  }
+
+  updateThemeDisplaySetting(
+    request: IUpdateAccountSetting,
+  ): Observable<IUpdateThemeDisplaySettingResponse> {
+    return this.httpClient
+      .put<IUpdateThemeDisplaySettingResponse>(
+        this.environmentService.getEnvironment().backendUrl +
+          this.accountSettingsRoot +
+          this.updateThemeDisplaySettingPath,
+        request,
+        {
+          context: new HttpContext().set(LoadingContextToken, 'Updating theme display setting'),
+        },
+      )
+      .pipe(
+        map((response: IUpdateThemeDisplaySettingResponse) => {
+          this.updateThemeDisplaySettingSessionStorage(response.themeSetting);
           return response;
         }),
       );

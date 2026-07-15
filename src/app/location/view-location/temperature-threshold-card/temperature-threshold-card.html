@@ -13,25 +13,28 @@
         <div class="temperature-threshold-alert-row">
           @if (averageTemperature()) {
             @if (isTemperatureThresholdInViolation) {
-              <img
-                class="temperature-threshold-alert-icon"
-                src="alert-location-temperature-icon.svg"
+              <icon-element
+                src="alert-location-temperature-icon"
+                [width]="25"
+                [height]="25"
                 alt="Red circle alert icon."
               />
               <div>Alert</div>
             } @else {
-              <img
-                class="temperature-threshold-alert-icon"
-                src="healthy-location-temperature-icon.svg"
+              <icon-element
+                src="healthy-location-temperature-icon"
+                [width]="25"
+                [height]="25"
                 alt="Green circle alert icon."
               />
               <div>Healthy</div>
             }
           } @else {
-            <img
-              class="temperature-threshold-alert-icon"
-              src="no-data-location-temperature-icon.svg"
-              alt="White triangle with black border and black exclamation mark alert icon."
+            <icon-element
+              src="no-data-location-temperature-icon"
+              [width]="25"
+              [height]="25"
+              alt="Triangle with border and exclamation mark alert icon."
             />
             <div>No Reading</div>
           }
@@ -52,9 +55,7 @@
       <button matButton="filled" (click)="displayTemperatureThresholdModal()">
         Update Threshold
       </button>
-      <button matButton="outlined" (click)="deleteTemperatureThresholdConfirmation()">
-        <mat-icon>delete</mat-icon>Delete Threshold
-      </button>
+      <delete-button-element [action]="deleteTemperatureThresholdConfirmation" />
     </div>
   </mat-card-actions>
 </mat-card>

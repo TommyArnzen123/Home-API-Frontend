@@ -20,10 +20,20 @@ import {
   addTemperatureSymbol,
   fahrenheitToCelsius,
 } from '../../../shared/utility/temperature-utility';
+import { IconElement } from '../../../shared/components/icon-element/icon-element';
+import { DeleteButtonElement } from '../../../shared/components/button-element/delete-button-element';
 
 @Component({
   selector: 'temperature-threshold-card',
-  imports: [MatCard, MatCardHeader, MatCardTitle, MatCardActions, MatButton, MatIcon],
+  imports: [
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardActions,
+    MatButton,
+    IconElement,
+    DeleteButtonElement,
+  ],
   templateUrl: './temperature-threshold-card.html',
   styleUrl: './temperature-threshold-card.scss',
 })
@@ -132,7 +142,7 @@ export class TemperatureThresholdCard implements OnDestroy {
     }
   }
 
-  protected deleteTemperatureThresholdConfirmation(): void {
+  protected deleteTemperatureThresholdConfirmation = (): void => {
     const thresholdId = this.temperatureThreshold()?.id;
     const locationId = this.temperatureThreshold()?.locationId;
 
@@ -152,5 +162,5 @@ export class TemperatureThresholdCard implements OnDestroy {
         deleteTemperatureThresholdConfirmationActions,
       );
     }
-  }
+  };
 }

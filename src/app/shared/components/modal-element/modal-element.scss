@@ -1,0 +1,9 @@
+.button-container {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+
+  .button-item {
+    flex: 1;
+  }
+}

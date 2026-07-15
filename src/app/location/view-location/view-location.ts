@@ -33,10 +33,12 @@ import {
   setAverageTemperature,
 } from '../../shared/utility/temperature-utility';
 import { TemperatureDisplayOptions } from '../../model/account-settings';
+import { IconElement } from '../../shared/components/icon-element/icon-element';
+import { DeleteButtonElement } from '../../shared/components/button-element/delete-button-element';
 
 @Component({
   selector: 'view-location',
-  imports: [MatButton, MatIcon, DeviceCard, TemperatureThresholdCard],
+  imports: [MatButton, DeviceCard, TemperatureThresholdCard, IconElement, DeleteButtonElement],
   templateUrl: './view-location.html',
   styleUrl: './view-location.scss',
 })
@@ -169,7 +171,7 @@ export class ViewLocation implements OnInit, OnDestroy {
     this.routerService.viewHomescreen();
   }
 
-  protected deleteLocationConfirmation(): void {
+  protected deleteLocationConfirmation = (): void => {
     const locationId = this.locationId();
     if (locationId) {
       const deleteLocationConfirmationActions: IModalActions = {
@@ -184,7 +186,7 @@ export class ViewLocation implements OnInit, OnDestroy {
         deleteLocationConfirmationActions,
       );
     }
-  }
+  };
 
   protected displayTemperatureThresholdModal(): void {
     const flowType: TemperatureThresholdModalFlow = 'add-temperature-threshold';

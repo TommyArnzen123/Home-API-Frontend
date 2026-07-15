@@ -154,6 +154,11 @@ const UPDATE_TEMPERATURE_DISPLAY_SETTING_ERROR: IError = {
   errorCode: '0031',
 };
 
+const UPDATE_THEME_DISPLAY_SETTING_ERROR: IError = {
+  message: 'There was an error updating the theme display setting. Please try again.',
+  errorCode: '0032',
+};
+
 // Error Modal Objects.
 export const REGISTER_USER_ERROR_MODAL: IModal = {
   title: 'Something Went Wrong...',
@@ -355,5 +360,12 @@ export const UPDATE_TEMPERATURE_DISPLAY_SETTING_ERROR_MODAL: IModal = {
   title: 'Something Went Wrong...',
   content: UPDATE_TEMPERATURE_DISPLAY_SETTING_ERROR.message,
   footer: 'Error Code: ' + UPDATE_TEMPERATURE_DISPLAY_SETTING_ERROR.errorCode,
+  disableClose: true,
+};
+
+export const UPDATE_THEME_DISPLAY_SETTING_ERROR_MODAL: IModal = {
+  title: 'Something Went Wrong...',
+  content: UPDATE_THEME_DISPLAY_SETTING_ERROR.message,
+  footer: 'Error Code: ' + UPDATE_THEME_DISPLAY_SETTING_ERROR.errorCode,
   disableClose: true,
 };

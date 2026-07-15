@@ -1,10 +1,11 @@
-import { IModal } from '../model/modal';
+import { ButtonIntent, IModal } from '../model/modal';
 
 export const DELETE_HOME_CONFIRMATION_MODAL: IModal = {
   title: 'Confirmation',
   content: 'Are you sure you want to delete the home?',
   primaryText: 'Delete',
   secondaryText: 'Cancel',
+  primaryIntent: ButtonIntent.DESTRUCTIVE,
 };
 
 export const DELETE_LOCATION_CONFIRMATION_MODAL: IModal = {
@@ -12,6 +13,7 @@ export const DELETE_LOCATION_CONFIRMATION_MODAL: IModal = {
   content: 'Are you sure you want to delete the location?',
   primaryText: 'Delete',
   secondaryText: 'Cancel',
+  primaryIntent: ButtonIntent.DESTRUCTIVE,
 };
 
 export const DELETE_DEVICE_CONFIRMATION_MODAL: IModal = {
@@ -19,6 +21,7 @@ export const DELETE_DEVICE_CONFIRMATION_MODAL: IModal = {
   content: 'Are you sure you want to delete the device?',
   primaryText: 'Delete',
   secondaryText: 'Cancel',
+  primaryIntent: ButtonIntent.DESTRUCTIVE,
 };
 
 export const DELETE_TEMPERATURE_THRESHOLD_CONFIRMATION_MODAL: IModal = {
@@ -26,4 +29,5 @@ export const DELETE_TEMPERATURE_THRESHOLD_CONFIRMATION_MODAL: IModal = {
   content: 'Are you sure you want to delete the temperature threshold?',
   primaryText: 'Delete',
   secondaryText: 'Cancel',
+  primaryIntent: ButtonIntent.DESTRUCTIVE,
 };

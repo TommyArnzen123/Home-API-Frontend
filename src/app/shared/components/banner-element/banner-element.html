@@ -10,11 +10,7 @@
     <div class="banner-card-content">
       @if (bannerInfo().message) {
         <div class="left-side-container">
-          <img
-            class="banner-icon"
-            [src]="getIconPath()"
-            alt="White triangle with black border and black exclamation mark alert icon."
-          />
+          <icon-element [src]="getIconPath()" [width]="40" [height]="40" [alt]="getIconAltText()" />
           <div>{{ bannerInfo().message }}</div>
         </div>
       }

@@ -59,3 +59,8 @@ export const UPDATE_TEMPERATURE_DISPLAY_SETTING_SUCCESS_MODAL: IModal = {
   title: 'Temperature Display Setting Updated',
   content: 'Your temperature display setting has been updated.',
 };
+
+export const UPDATE_THEME_DISPLAY_SETTING_SUCCESS_MODAL: IModal = {
+  title: 'Theme Display Setting Updated',
+  content: 'Your theme display setting has been updated.',
+};

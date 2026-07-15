@@ -12,9 +12,7 @@
   <mat-card-actions class="button-container">
     @if (this.deviceInfo() && this.deviceInfo().entityId) {
       <button matButton="outlined" (click)="viewDeviceById()">View</button>
-      <button matButton="filled" (click)="deleteDeviceConfirmation()">
-        <mat-icon>delete</mat-icon>Delete
-      </button>
+      <delete-button-element [action]="deleteDeviceConfirmation" />
     }
   </mat-card-actions>
 </mat-card>

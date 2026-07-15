@@ -1,25 +1,36 @@
 <div class="captive-error-container">
-  <img
-    class="captive-error-icon"
-    src="captive-error-icon.svg"
+  <icon-element
+    src="captive-error-icon"
+    [width]="150"
+    [height]="150"
     alt="Blue X with black outline icon."
   />
   <div>The application has experienced an error.</div>
-  @if (homeScreenInfoError) {
-    <mat-card appearance="outlined" class="error-card"
-      ><img src="data-unavailable-error-icon.svg" alt="Blue circle with blue line through it." />
+  @if (homescreenInfoError) {
+    <mat-card appearance="outlined" class="error-card">
+      <div class="icon-item-style">
+        <icon-element
+          src="data-unavailable-error-icon"
+          [width]="100"
+          [height]="100"
+          alt="Blue circle with blue line through it."
+        />
+      </div>
       <div>
-        There was an error getting the home screen information. Please log back into the
-        application.
+        There was an error getting the homescreen information. Please log back into the application.
       </div></mat-card
     >
   }
   @if (sessionTimeoutError) {
-    <mat-card appearance="outlined" class="error-card"
-      ><img
-        src="session-timeout-error-icon.svg"
-        alt="Clock icon with white hands, blue background, and black outline."
-      />
+    <mat-card appearance="outlined" class="error-card">
+      <div class="icon-item-style">
+        <icon-element
+          src="session-timeout-error-icon"
+          [width]="100"
+          [height]="100"
+          alt="Clock icon with white hands, blue background, and black outline."
+        />
+      </div>
       <div>The session has timed out. Please log back into the application.</div></mat-card
     >
   }

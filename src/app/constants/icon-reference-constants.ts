@@ -8,7 +8,7 @@ export const ICON_REFERENCES: IconReference[] = [
     license: 'MIT License',
     author: 'etn-ccis',
     url: 'https://www.svgrepo.com/svg/503276/device-activating',
-    iconPath: 'device-icon.svg',
+    iconPath: 'device-icon',
     altText: 'Black device with black signal on top.',
   },
   {
@@ -18,7 +18,7 @@ export const ICON_REFERENCES: IconReference[] = [
     license: 'CC Attribution License',
     author: 'Ruslan Mullakaev',
     url: 'https://www.svgrepo.com/svg/420426/frozen-house-ice',
-    iconPath: 'frozen-house-icon.svg',
+    iconPath: 'frozen-house-icon',
     altText: 'Black house with blue ice on top.',
   },
   {
@@ -28,7 +28,7 @@ export const ICON_REFERENCES: IconReference[] = [
     license: 'CC Attribution License',
     author: 'Dimas nanda',
     url: 'https://www.svgrepo.com/svg/485521/home-2',
-    iconPath: 'home-icon-main.svg',
+    iconPath: 'home-icon-main',
     altText: 'House with blue roof. The walls and base are black.',
   },
   {
@@ -38,7 +38,7 @@ export const ICON_REFERENCES: IconReference[] = [
     license: 'PD License',
     author: 'Mary Akveo',
     url: 'https://www.svgrepo.com/svg/465259/home-alt-3',
-    iconPath: 'home-icon-summary.svg',
+    iconPath: 'home-icon-summary',
     altText: 'Home icon with all black color.',
   },
   {
@@ -48,7 +48,7 @@ export const ICON_REFERENCES: IconReference[] = [
     license: 'MIT License',
     author: 'Orchid',
     url: 'https://www.svgrepo.com/svg/509148/location-pin',
-    iconPath: 'location-icon.svg',
+    iconPath: 'location-icon',
     altText: 'Black location icon with black circle in the middle.',
   },
   {
@@ -58,7 +58,7 @@ export const ICON_REFERENCES: IconReference[] = [
     license: 'CC0 License',
     author: 'SVG Repo',
     url: 'https://www.svgrepo.com/svg/222623/thermometer-temperature',
-    iconPath: 'temperature-icon.svg',
+    iconPath: 'temperature-icon',
     altText: 'Light blue and gray thermometer icon with yellow shapes around the outside.',
   },
   {
@@ -68,7 +68,7 @@ export const ICON_REFERENCES: IconReference[] = [
     license: 'Apache License',
     author: 'bytedance',
     url: 'https://www.svgrepo.com/svg/387486/error',
-    iconPath: 'captive-error-icon.svg',
+    iconPath: 'captive-error-icon',
     altText: 'Blue X Icon with bold black outline.',
   },
   {
@@ -79,7 +79,7 @@ export const ICON_REFERENCES: IconReference[] = [
     author: 'Dazzle UI',
     url: 'https://www.svgrepo.com/svg/533742/triangle-exclamation',
     notes: 'Outline color changed from #000000 to #039ae5.',
-    iconPath: 'data-unavailable-error-icon.svg',
+    iconPath: 'data-unavailable-error-icon',
     altText: 'Blue triangle with blue exclamation inside.',
   },
   {
@@ -89,7 +89,7 @@ export const ICON_REFERENCES: IconReference[] = [
     license: 'Apache License',
     author: 'bytedance',
     url: 'https://www.svgrepo.com/svg/388773/time',
-    iconPath: 'session-timeout-error-icon.svg',
+    iconPath: 'session-timeout-error-icon',
     altText: 'Blue clock with white hands and bold black outline.',
   },
   {
@@ -99,7 +99,7 @@ export const ICON_REFERENCES: IconReference[] = [
     license: 'PD License',
     author: 'Noah Jacobus',
     url: 'https://www.svgrepo.com/svg/535262/circle',
-    iconPath: 'healthy-location-temperature-icon.svg',
+    iconPath: 'healthy-location-temperature-icon',
     altText: 'Green circle alert icon.',
   },
   {
@@ -109,7 +109,7 @@ export const ICON_REFERENCES: IconReference[] = [
     license: 'PD License',
     author: 'Noah Jacobus',
     url: 'https://www.svgrepo.com/svg/535262/circle',
-    iconPath: 'alert-location-temperature-icon.svg',
+    iconPath: 'alert-location-temperature-icon',
     altText: 'Red circle alert icon.',
   },
   {
@@ -119,7 +119,7 @@ export const ICON_REFERENCES: IconReference[] = [
     license: 'CC Attribution License',
     author: 'Dazzle UI',
     url: 'https://www.svgrepo.com/svg/533742/triangle-exclamation',
-    iconPath: 'no-data-location-temperature-icon.svg',
+    iconPath: 'no-data-location-temperature-icon',
     altText: 'White triangle with black border and black exclamation mark alert icon.',
   },
   {
@@ -129,7 +129,7 @@ export const ICON_REFERENCES: IconReference[] = [
     license: 'CC0 License',
     author: 'SVG Repo',
     url: 'https://www.svgrepo.com/svg/225305/thermometer',
-    iconPath: 'thermometer-temperate-icon.svg',
+    iconPath: 'thermometer-temperate-icon',
     altText: 'Orange thermometer icon.',
   },
   {
@@ -139,7 +139,7 @@ export const ICON_REFERENCES: IconReference[] = [
     license: 'CC0 License',
     author: 'SVG Repo',
     url: 'https://www.svgrepo.com/svg/223556/thermometer-temperature',
-    iconPath: 'thermometer-cold-icon.svg',
+    iconPath: 'thermometer-cold-icon',
     altText: 'Blue thermometer icon.',
   },
   {
@@ -149,7 +149,7 @@ export const ICON_REFERENCES: IconReference[] = [
     license: 'CC0 License',
     author: 'SVG Repo',
     url: 'https://www.svgrepo.com/svg/223625/thermometer',
-    iconPath: 'thermometer-alert-icon.svg',
+    iconPath: 'thermometer-alert-icon',
     altText: 'Red thermometer icon (alert icon).',
   },
   {
@@ -159,7 +159,7 @@ export const ICON_REFERENCES: IconReference[] = [
     license: 'CC0 License',
     author: 'SVG Repo',
     url: 'https://www.svgrepo.com/svg/223593/thermometer',
-    iconPath: 'thermometer-success-icon.svg',
+    iconPath: 'thermometer-success-icon',
     altText: 'Green thermometer icon (success icon).',
   },
   {
@@ -169,7 +169,7 @@ export const ICON_REFERENCES: IconReference[] = [
     license: 'CC0 License',
     author: 'SVG Repo',
     url: 'https://www.svgrepo.com/svg/225309/thermometer',
-    iconPath: 'thermometer-warning-icon.svg',
+    iconPath: 'thermometer-warning-icon',
     altText: 'Yellow thermometer icon (warning icon).',
   },
   {
@@ -179,7 +179,7 @@ export const ICON_REFERENCES: IconReference[] = [
     license: 'CC0 License',
     author: 'SVG Repo',
     url: 'https://www.svgrepo.com/svg/223563/thermometer-temperature',
-    iconPath: 'thermometer-info-icon.svg',
+    iconPath: 'thermometer-info-icon',
     altText: 'Blue thermometer icon (info icon).',
   },
 ];

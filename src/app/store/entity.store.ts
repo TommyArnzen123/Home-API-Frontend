@@ -43,8 +43,10 @@ import {
   IAccountSettings,
   IUpdateAccountSetting,
   IUpdateTemperatureDisplaySettingResponse,
+  IUpdateThemeDisplaySettingResponse,
   IUpdateTimeDisplaySettingResponse,
   TemperatureDisplayOptions,
+  ThemeDisplayOptions,
   TimeDisplayOptions,
 } from '../model/account-settings';
 import { AccountSettingsService } from '../services/account-settings';
@@ -74,6 +76,7 @@ export type EntityActions =
   | 'get-account-settings'
   | 'update-time-display-setting'
   | 'update-temperature-display-setting'
+  | 'update-theme-display-setting'
   | null;
 
 export type EntityTypes = 'USER' | 'HOME' | 'LOCATION' | 'DEVICE';
@@ -133,10 +136,8 @@ export type LocationData = EntityData<LocationSummary, LocationDetails>;
 export type DeviceData = EntityData<DeviceSummary, DeviceDetails>;
 
 interface IEntityState {
-  // userId: number | null;
   userInfo: IUserInfo | null;
   jwtToken: string | null;
-  // userFirstName: string | null;
   accountSettings: IAccountSettings | null;
   emailConfirmed: IEmailConfirmed;
   userInitialized: boolean;
@@ -150,8 +151,6 @@ interface IEntityState {
 }
 
 const initialState: IEntityState = {
-  // userId: null,
-  // userFirstName: null,
   userInfo: null,
   jwtToken: null,
   accountSettings: null,
@@ -315,6 +314,52 @@ export const EntityStore = signalStore(
                 error: () =>
                   patchState(store, {
                     errorNotification: { errorAction: 'update-time-display-setting' },
+                  }),
+              }),
+            );
+          }),
+        ),
+      ),
+
+      updateThemeDisplaySetting: rxMethod<ThemeDisplayOptions>(
+        pipe(
+          tap(() =>
+            patchState(store, {
+              successNotification: null,
+              errorNotification: null,
+            }),
+          ),
+          switchMap((setting: ThemeDisplayOptions) => {
+            const userId = store.userInfo()?.userId;
+
+            if (!userId) {
+              patchState(store, {
+                errorNotification: { errorAction: 'update-theme-display-setting' },
+              });
+              return EMPTY;
+            }
+
+            return accountSettingsService.updateThemeDisplaySetting({ userId, setting }).pipe(
+              tapResponse({
+                next: (response: IUpdateThemeDisplaySettingResponse) => {
+                  patchState(store, (state) => {
+                    if (state.accountSettings === null) {
+                      console.log('NOT SET');
+                      return {};
+                    }
+
+                    return {
+                      accountSettings: {
+                        ...state.accountSettings,
+                        themeDisplaySetting: response.themeSetting,
+                      },
+                      successNotification: 'update-theme-display-setting' as EntityActions,
+                    };
+                  });
+                },
+                error: () =>
+                  patchState(store, {
+                    errorNotification: { errorAction: 'update-theme-display-setting' },
                   }),
               }),
             );

@@ -11,7 +11,8 @@
 
     .default-home-icon {
       height: 200px;
-      object-fit: contain;
+      width: 200px;
+      // object-fit: contain;
     }
 
     .entity-totals-container {
@@ -26,6 +27,7 @@
 
         .entity-icon {
           width: 75px;
+          height: 75px;
         }
 
         .total-items {

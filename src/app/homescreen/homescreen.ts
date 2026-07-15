@@ -5,15 +5,16 @@ import { HomeCard } from './home-card/home-card';
 import { ItemTotals } from '../item-totals/item-totals';
 import { formatName, setHomescreenGreetingMessage } from '../shared/utility/utility';
 import { EntityActions, EntityStore, ErrorState, HomeData } from '../store/entity.store';
-import { BannerElement } from '../shared/components/banner/banner-element';
+import { BannerElement } from '../shared/components/banner-element/banner-element';
 import { IBanner, IBannerActions } from '../model/banner';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmEmailModal } from './confirm-email-modal/confirm-email-modal';
 import { Subscription } from 'rxjs';
+import { IconElement } from '../shared/components/icon-element/icon-element';
 
 @Component({
   selector: 'homescreen',
-  imports: [MatButton, HomeCard, ItemTotals, BannerElement],
+  imports: [MatButton, HomeCard, ItemTotals, BannerElement, IconElement],
   templateUrl: './homescreen.html',
   styleUrl: './homescreen.scss',
 })

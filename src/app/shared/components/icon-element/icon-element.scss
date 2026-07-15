@@ -1,0 +1,21 @@
+mat-icon.custom-svg-icon {
+  --svg-primary: var(--icon-primary-color);
+}
+
+// 2. THE MULTI-COLOR OVERRIDES
+$multi-color-icons: (
+  'frozen-house-icon': (
+    '--svg-primary': var(--home-icon-with-snow-house-color),
+  ),
+);
+
+// Compile-time generation loop
+@each $icon-name, $variable-map in $multi-color-icons {
+  // Prepending mat-icon makes this an Element + Class selector, equaling a score of 11.
+  // Because it matches the score of the first block and sits lower in the file, it wins!
+  mat-icon.variant-#{$icon-name} {
+    @each $css-var, $m3-token in $variable-map {
+      #{$css-var}: #{$m3-token};
+    }
+  }
+}

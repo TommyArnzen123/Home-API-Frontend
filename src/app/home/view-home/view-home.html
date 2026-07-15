@@ -9,9 +9,7 @@
       <button class="button-display" matButton="filled" (click)="viewEditHomePage()">
         Edit Home Information
       </button>
-      <button class="button-display" matButton="outlined" (click)="deleteHomeConfirmation()">
-        <mat-icon>delete</mat-icon>Delete Home
-      </button>
+      <delete-button-element [action]="deleteHomeConfirmation" buttonText="Delete Home" />
       <button class="button-display" matButton="filled" (click)="viewRegisterLocationPage()">
         Register New Location
       </button>
@@ -31,7 +29,7 @@
         }
       } @else {
         <div class="no-locations-registered-container">
-          <img class="no-locations-registered-icon" src="location-icon.svg" alt="Location icon." />
+          <icon-element src="location-icon" [width]="125" [height]="125" alt="Location icon." />
           <div class="no-locations-registered-text">
             You currently do not have any locations registered. Click the 'Register New Location'
             button to register a location.

@@ -5,8 +5,12 @@ import {
   MatButtonToggleGroup,
   MatButtonToggleModule,
 } from '@angular/material/button-toggle';
-import { EntityActions, EntityStore, ErrorState } from '../../store/entity.store';
-import { TemperatureDisplayOptions, TimeDisplayOptions } from '../../model/account-settings';
+import { EntityStore, ErrorState } from '../../store/entity.store';
+import {
+  TemperatureDisplayOptions,
+  ThemeDisplayOptions,
+  TimeDisplayOptions,
+} from '../../model/account-settings';
 import { RouterService } from '../../services/router';
 
 @Component({
@@ -27,10 +31,15 @@ export class Settings implements OnInit {
     () => this.entityStore.accountSettings()?.temperatureDisplaySetting,
   );
 
+  protected readonly themeDisplaySetting = computed(
+    () => this.entityStore.accountSettings()?.themeDisplaySetting,
+  );
+
   constructor() {
     effect(() => {
       console.log(this.timeDisplaySetting());
       console.log(this.temperatureDisplaySetting());
+      console.log(this.themeDisplaySetting());
       console.log(this.entityStore.accountSettings());
     });
 
@@ -46,12 +55,7 @@ export class Settings implements OnInit {
       const error: ErrorState | null = this.entityStore.errorNotification();
 
       if (error && error?.errorAction === 'get-account-settings') {
-        console.log('There was an error getting account settings.');
         this.routerService.viewHomescreen();
-      }
-
-      if (error && error?.errorAction === 'update-time-display-setting') {
-        console.log('There was an error updating the time display setting.');
       }
     });
   }
@@ -78,5 +82,17 @@ export class Settings implements OnInit {
     // Make a network call to update the time display setting.
     this.entityStore.updateTimeDisplaySetting(timeDisplayValue);
     group.value = this.timeDisplaySetting();
+  }
+
+  protected updateThemeDisplaySetting(
+    event: MatButtonToggleChange,
+    group: MatButtonToggleGroup,
+  ): void {
+    console.log('Update theme display setting.');
+    const themeDisplayValue: ThemeDisplayOptions = event.value;
+
+    // Make a network call to update the theme display setting.
+    this.entityStore.updateThemeDisplaySetting(themeDisplayValue);
+    group.value = this.themeDisplaySetting();
   }
 }

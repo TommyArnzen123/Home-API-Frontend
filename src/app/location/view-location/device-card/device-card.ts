@@ -12,10 +12,11 @@ import {
   addTemperatureSymbol,
   fahrenheitToCelsius,
 } from '../../../shared/utility/temperature-utility';
+import { DeleteButtonElement } from '../../../shared/components/button-element/delete-button-element';
 
 @Component({
   selector: 'device-card',
-  imports: [MatButton, MatIcon, MatCard, MatCardHeader, MatCardTitle, MatCardActions],
+  imports: [MatButton, MatCard, MatCardHeader, MatCardTitle, MatCardActions, DeleteButtonElement],
   templateUrl: './device-card.html',
   styleUrl: './device-card.scss',
 })
@@ -64,7 +65,7 @@ export class DeviceCard {
     }
   }
 
-  protected deleteDeviceConfirmation(): void {
+  protected deleteDeviceConfirmation = (): void => {
     if (this.deviceInfo && this.deviceInfo().entityId) {
       const deleteDeviceConfirmationActions: IModalActions = {
         primaryAction: () => this.entityStore.deleteDevice(this.deviceInfo().entityId),
@@ -75,5 +76,5 @@ export class DeviceCard {
         deleteDeviceConfirmationActions,
       );
     }
-  }
+  };
 }

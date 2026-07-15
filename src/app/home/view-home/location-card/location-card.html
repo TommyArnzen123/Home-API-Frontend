@@ -25,25 +25,28 @@
           <div class="temperature-threshold-alert-row">
             @if (averageTemperature) {
               @if (isTemperatureThresholdInViolation) {
-                <img
-                  class="temperature-threshold-alert-icon"
-                  src="alert-location-temperature-icon.svg"
+                <icon-element
+                  src="alert-location-temperature-icon"
+                  [width]="25"
+                  [height]="25"
                   alt="Red circle alert icon."
                 />
                 <div>Alert</div>
               } @else {
-                <img
-                  class="temperature-threshold-alert-icon"
-                  src="healthy-location-temperature-icon.svg"
+                <icon-element
+                  src="healthy-location-temperature-icon"
+                  [width]="25"
+                  [height]="25"
                   alt="Green circle alert icon."
                 />
                 <div>Healthy</div>
               }
             } @else {
-              <img
-                class="temperature-threshold-alert-icon"
-                src="no-data-location-temperature-icon.svg"
-                alt="White triangle with black border and black exclamation mark alert icon."
+              <icon-element
+                src="no-data-location-temperature-icon"
+                [width]="25"
+                [height]="25"
+                alt="Triangle with border and exclamation mark alert icon."
               />
               <div>No Reading</div>
             }
@@ -70,7 +73,7 @@
         </div>
       }
       <div class="entity">
-        <img src="device-icon.svg" class="entity-icon" alt="Device icon." />
+        <icon-element src="device-icon" [width]="75" [height]="75" alt="Device icon." />
         @if (locationInfo() && locationInfo().summary && locationInfo().summary.numDevices) {
           <div class="total-items">{{ locationInfo().summary.numDevices }}</div>
         } @else {
@@ -82,9 +85,7 @@
   <mat-card-actions class="button-container">
     @if (this.locationInfo() && this.locationInfo().entityId) {
       <button matButton="outlined" (click)="viewLocationById()">View</button>
-      <button matButton="filled" (click)="deleteLocationConfirmation()">
-        <mat-icon>delete</mat-icon>Delete
-      </button>
+      <delete-button-element [action]="deleteLocationConfirmation" />
     }
   </mat-card-actions>
 </mat-card>

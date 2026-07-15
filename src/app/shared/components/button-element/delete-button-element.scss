@@ -1,0 +1,24 @@
+:host {
+  width: 100%;
+}
+
+.delete-button {
+  background-color: var(--app-danger);
+  color: var(--app-danger-text);
+  width: 100%;
+
+  mat-icon {
+    margin-right: 0.5rem;
+  }
+
+  &:hover {
+    background-color: var(--app-danger-hover);
+    color: var(--app-danger-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--app-danger);
+    color: var(--app-danger-text);
+    outline-offset: 2px;
+  }
+}

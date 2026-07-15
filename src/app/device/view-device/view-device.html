@@ -12,9 +12,7 @@
       <button class="button-display" matButton="filled" (click)="viewEditDevicePage()">
         Edit Device Information
       </button>
-      <button class="button-display" matButton="outlined" (click)="deleteDeviceConfirmation()">
-        <mat-icon>delete</mat-icon>Delete Device
-      </button>
+      <delete-button-element [action]="deleteDeviceConfirmation" buttonText="Delete Device" />
     }
   </div>
 </div>

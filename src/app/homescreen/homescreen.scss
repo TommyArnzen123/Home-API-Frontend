@@ -20,7 +20,7 @@
 .homescreen-container {
   display: flex;
   flex-direction: row;
-  max-height: 80%;
+  max-height: 60%;
 
   .home-container {
     width: 100%;
@@ -43,10 +43,6 @@
         width: 100%;
         margin-top: 50px;
         height: 300px;
-
-        .no-homes-registered-icon {
-          width: 150px;
-        }
 
         .no-homes-registered-text {
           font-size: 20px;

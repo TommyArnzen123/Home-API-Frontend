@@ -16,10 +16,11 @@ import {
   addTemperatureSymbol,
   fahrenheitToCelsius,
 } from '../../shared/utility/temperature-utility';
+import { DeleteButtonElement } from '../../shared/components/button-element/delete-button-element';
 
 @Component({
   selector: 'view-device',
-  imports: [MatButton, MatIcon, DatePipe, DisplayTempByHour],
+  imports: [MatButton, DatePipe, DisplayTempByHour, DeleteButtonElement],
   templateUrl: './view-device.html',
   styleUrl: './view-device.scss',
 })
@@ -151,7 +152,7 @@ export class ViewDevice implements OnInit {
     }
   }
 
-  protected deleteDeviceConfirmation(): void {
+  protected deleteDeviceConfirmation = (): void => {
     const deviceId = this.deviceId();
     if (deviceId) {
       const deleteDeviceConfirmationActions: IModalActions = {
@@ -166,7 +167,7 @@ export class ViewDevice implements OnInit {
         deleteDeviceConfirmationActions,
       );
     }
-  }
+  };
 
   private viewLocationById(): void {
     if (this.locationId !== undefined) {
