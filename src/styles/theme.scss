@@ -54,9 +54,14 @@ $my-dark-theme: mat.define-theme(
   --home-icon-with-snow-house-color: #3b4652;
   --footer-background: lightgrey;
   --primary-text-color: var(--mat-sys-on-surface); /* Used for generic text color. */
+  --primary-title-color: #faf9fd;
   --app-danger: #ba1a1a;
   --app-danger-text: #ffffff;
   --app-danger-hover: #93000a;
+  --information-color: #426ab2;
+  --success-color: #507c5c;
+  --warning-color: #ffc61b;
+  --alert-color: #b3404a;
 }
 
 .dark-theme {
@@ -84,7 +89,12 @@ $my-dark-theme: mat.define-theme(
   --home-icon-with-snow-house-color: var(--icon-primary-color);
   --footer-background: #121212;
   --primary-text-color: #f7f7f7; /* Used for generic text color. */
+  --primary-title-color: var(--primary-text-color);
   --app-danger: #8c1414;
   --app-danger-text: #f5f5f5;
   --app-danger-hover: #b32626;
+  --information-color: #426ab2;
+  --success-color: #507c5c;
+  --warning-color: #ffc61b;
+  --alert-color: #b3404a;
 }

@@ -2,7 +2,7 @@
   width: 100%;
 
   .application-title {
-    color: white;
+    color: var(--primary-title-color);
     font-size: 30px;
     padding-top: 12px;
     float: left;
@@ -14,7 +14,7 @@
     padding-right: 10px;
 
     .button-color {
-      color: white;
+      color: var(--primary-title-color);
     }
   }
 }

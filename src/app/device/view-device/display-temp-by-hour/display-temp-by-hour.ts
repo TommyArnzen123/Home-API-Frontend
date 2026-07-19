@@ -6,7 +6,7 @@ import {
 } from '../../../shared/utility/temperature-utility';
 import { IconElement } from '../../../shared/components/icon-element/icon-element';
 
-enum BackgroundDisplayOptions {
+export enum BackgroundDisplayOptions {
   'HOT' = 'HOT',
   'TEMPERATE' = 'TEMPERATE',
   'COLD' = 'COLD',

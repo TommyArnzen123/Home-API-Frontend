@@ -37,7 +37,10 @@ export class GetInfoService {
     );
   }
 
-  getViewHomeInfo(request: IEntityInfoRequest): Observable<IViewHomeInfoResponse> {
+  getViewHomeInfo(
+    request: IEntityInfoRequest,
+    showLoadingMessage: boolean,
+  ): Observable<IViewHomeInfoResponse> {
     return this.httpClient.get<IViewHomeInfoResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.getInfoRoot +
@@ -45,12 +48,17 @@ export class GetInfoService {
         '/' +
         request.id,
       {
-        context: new HttpContext().set(LoadingContextToken, 'Getting home info'),
+        context: showLoadingMessage
+          ? new HttpContext().set(LoadingContextToken, 'Getting home info')
+          : undefined,
       },
     );
   }
 
-  getViewLocationInfo(request: IEntityInfoRequest): Observable<IViewLocationInfoResponse> {
+  getViewLocationInfo(
+    request: IEntityInfoRequest,
+    showLoadingMessage: boolean,
+  ): Observable<IViewLocationInfoResponse> {
     return this.httpClient.get<IViewLocationInfoResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.getInfoRoot +
@@ -58,12 +66,17 @@ export class GetInfoService {
         '/' +
         request.id,
       {
-        context: new HttpContext().set(LoadingContextToken, 'Getting location info'),
+        context: showLoadingMessage
+          ? new HttpContext().set(LoadingContextToken, 'Getting location info')
+          : undefined,
       },
     );
   }
 
-  getViewDeviceInfo(request: IEntityInfoRequest): Observable<IViewDeviceInfoResponse> {
+  getViewDeviceInfo(
+    request: IEntityInfoRequest,
+    showLoadingMessage: boolean,
+  ): Observable<IViewDeviceInfoResponse> {
     return this.httpClient.get<IViewDeviceInfoResponse>(
       this.environmentService.getEnvironment().backendUrl +
         this.getInfoRoot +
@@ -71,7 +84,9 @@ export class GetInfoService {
         '/' +
         request.id,
       {
-        context: new HttpContext().set(LoadingContextToken, 'Getting device info'),
+        context: showLoadingMessage
+          ? new HttpContext().set(LoadingContextToken, 'Getting device info')
+          : undefined,
       },
     );
   }

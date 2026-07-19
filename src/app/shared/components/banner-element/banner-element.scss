@@ -27,17 +27,17 @@
 }
 
 .info-banner {
-  border: 3px solid #2d527c;
+  border: 3px solid var(--information-color);
 }
 
 .success-banner {
-  border: 3px solid #507c5c;
+  border: 3px solid var(--success-color);
 }
 
 .warning-banner {
-  border: 3px solid #ffc61b;
+  border: 3px solid var(--warning-color);
 }
 
 .alert-banner {
-  border: 3px solid #b3404a;
+  border: 3px solid var(--alert-color);
 }

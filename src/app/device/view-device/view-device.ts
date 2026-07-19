@@ -1,8 +1,7 @@
-import { Component, inject, OnInit, computed, signal, effect } from '@angular/core';
+import { Component, inject, computed, signal, effect } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { DatePipe } from '@angular/common';
-import { MatIcon } from '@angular/material/icon';
 import { ModalService } from '../../services/modal';
 import { RouterService } from '../../services/router';
 import { IModalActions } from '../../model/modal';
@@ -17,15 +16,21 @@ import {
   fahrenheitToCelsius,
 } from '../../shared/utility/temperature-utility';
 import { DeleteButtonElement } from '../../shared/components/button-element/delete-button-element';
+import { HourDisplayReference } from './hour-display-reference/hour-display-reference';
+import { EnvironmentService } from '../../services/environment';
+import { map, timer } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'view-device',
-  imports: [MatButton, DatePipe, DisplayTempByHour, DeleteButtonElement],
+  imports: [MatButton, DatePipe, DisplayTempByHour, DeleteButtonElement, HourDisplayReference],
   templateUrl: './view-device.html',
   styleUrl: './view-device.scss',
 })
-export class ViewDevice implements OnInit {
+export class ViewDevice {
   private readonly entityStore = inject(EntityStore);
+
+  private readonly environmentService = inject(EnvironmentService);
 
   protected deviceId = signal<number | undefined>(undefined);
   private locationId: number | undefined = undefined;
@@ -116,6 +121,8 @@ export class ViewDevice implements OnInit {
       this.deviceId.set(id);
       this.setSuccessEffects();
       this.setErrorEffects();
+      this.setupSignalStore();
+      this.beginGetInfoPolling();
     }
 
     effect(() => {
@@ -143,12 +150,20 @@ export class ViewDevice implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  private setupSignalStore(): void {
     this.entityStore.setPageMode('VIEW');
+    this.entityStore.clearEntityState();
+  }
 
+  private beginGetInfoPolling(): void {
     const deviceId = this.deviceId();
     if (deviceId) {
-      this.entityStore.getViewDeviceInfo(deviceId);
+      this.entityStore.getViewDeviceInfo(
+        timer(0, this.environmentService.getEntityInfoPollingRefreshInterval()).pipe(
+          map(() => deviceId),
+          takeUntilDestroyed(),
+        ),
+      );
     }
   }
 

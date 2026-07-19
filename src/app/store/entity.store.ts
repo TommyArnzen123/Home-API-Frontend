@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { GetInfoService } from '../services/get-info';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { EMPTY, pipe, switchMap, tap } from 'rxjs';
+import { catchError, EMPTY, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import {
   IAverageTemperatureByHour,
@@ -531,17 +531,26 @@ export const EntityStore = signalStore(
         ),
       ),
 
+      clearEntityState(): void {
+        patchState(store, {
+          homes: {},
+          locations: {},
+          devices: {},
+        });
+      },
+
       getViewHomeInfo: rxMethod<number>(
         pipe(
           tap(() =>
             patchState(store, {
               successNotification: null,
               errorNotification: null,
-              locations: {},
+              // locations: {},
             }),
           ),
           switchMap((homeId: number) => {
-            return getInfoService.getViewHomeInfo({ id: homeId }).pipe(
+            const isInitialLoad = isEmptyRecord(store.homes());
+            return getInfoService.getViewHomeInfo({ id: homeId }, isInitialLoad).pipe(
               tapResponse({
                 next: (homeResponse: IViewHomeInfoResponse) =>
                   patchState(store, {
@@ -555,10 +564,13 @@ export const EntityStore = signalStore(
                     locations: generateLocationSummaryObjects(homeResponse.locations),
                     entityPath: homeResponse.entityPath,
                   }),
-                error: () =>
-                  patchState(store, {
-                    errorNotification: { errorAction: 'get-view-home-info' },
-                  }),
+                error: () => {
+                  if (isInitialLoad) {
+                    patchState(store, {
+                      errorNotification: { errorAction: 'get-view-home-info' },
+                    });
+                  }
+                },
               }),
             );
           }),
@@ -571,11 +583,12 @@ export const EntityStore = signalStore(
             patchState(store, {
               successNotification: null,
               errorNotification: null,
-              devices: {},
+              // devices: {},
             }),
           ),
           switchMap((locationId: number) => {
-            return getInfoService.getViewLocationInfo({ id: locationId }).pipe(
+            const isInitialLoad = isEmptyRecord(store.locations());
+            return getInfoService.getViewLocationInfo({ id: locationId }, isInitialLoad).pipe(
               tapResponse({
                 next: (locationResponse: IViewLocationInfoResponse) =>
                   patchState(store, {
@@ -589,13 +602,17 @@ export const EntityStore = signalStore(
                     devices: generateDeviceSummaryObjects(locationResponse.devices),
                     entityPath: locationResponse.entityPath,
                   }),
-                error: () =>
-                  patchState(store, {
-                    errorNotification: { errorAction: 'get-view-location-info' },
-                  }),
+                error: () => {
+                  if (isInitialLoad) {
+                    patchState(store, {
+                      errorNotification: { errorAction: 'get-view-location-info' },
+                    });
+                  }
+                },
               }),
             );
           }),
+          catchError(() => EMPTY),
         ),
       ),
 
@@ -608,7 +625,8 @@ export const EntityStore = signalStore(
             }),
           ),
           switchMap((deviceId: number) => {
-            return getInfoService.getViewDeviceInfo({ id: deviceId }).pipe(
+            const isInitialLoad = isEmptyRecord(store.devices());
+            return getInfoService.getViewDeviceInfo({ id: deviceId }, isInitialLoad).pipe(
               tapResponse({
                 next: (deviceResponse: IViewDeviceInfoResponse) =>
                   patchState(store, {
@@ -621,10 +639,13 @@ export const EntityStore = signalStore(
                     },
                     entityPath: deviceResponse.entityPath,
                   }),
-                error: () =>
-                  patchState(store, {
-                    errorNotification: { errorAction: 'get-view-device-info' },
-                  }),
+                error: () => {
+                  if (isInitialLoad) {
+                    patchState(store, {
+                      errorNotification: { errorAction: 'get-view-device-info' },
+                    });
+                  }
+                },
               }),
             );
           }),
@@ -1112,4 +1133,8 @@ function generateDeviceSummaryObjects(devices: IDeviceSummary[]): Record<number,
   });
 
   return deviceRecords;
+}
+
+function isEmptyRecord<T>(record: Record<number, T>): boolean {
+  return Object.keys(record).length === 0;
 }

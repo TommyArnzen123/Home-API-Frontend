@@ -1,17 +1,7 @@
-import {
-  Component,
-  inject,
-  OnInit,
-  OnDestroy,
-  signal,
-  effect,
-  computed,
-  Signal,
-} from '@angular/core';
+import { Component, inject, OnDestroy, signal, effect, computed, Signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { Subscription } from 'rxjs';
+import { map, Subscription, timer } from 'rxjs';
 import { ModalService } from '../../services/modal';
 import { RouterService } from '../../services/router';
 import { TemperatureThresholdCard } from './temperature-threshold-card/temperature-threshold-card';
@@ -35,6 +25,8 @@ import {
 import { TemperatureDisplayOptions } from '../../model/account-settings';
 import { IconElement } from '../../shared/components/icon-element/icon-element';
 import { DeleteButtonElement } from '../../shared/components/button-element/delete-button-element';
+import { EnvironmentService } from '../../services/environment';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'view-location',
@@ -42,7 +34,7 @@ import { DeleteButtonElement } from '../../shared/components/button-element/dele
   templateUrl: './view-location.html',
   styleUrl: './view-location.scss',
 })
-export class ViewLocation implements OnInit, OnDestroy {
+export class ViewLocation implements OnDestroy {
   private subscriptions: Subscription[] = [];
 
   private entityStore = inject(EntityStore);
@@ -51,6 +43,7 @@ export class ViewLocation implements OnInit, OnDestroy {
   private readonly routerService = inject(RouterService);
   private readonly modalService = inject(ModalService);
   private readonly modal = inject(MatDialog);
+  private readonly environmentService = inject(EnvironmentService);
 
   protected locationId = signal<number | null>(null);
   protected averageTemperature = computed(() => setAverageTemperature(this.deviceInfo()));
@@ -115,6 +108,8 @@ export class ViewLocation implements OnInit, OnDestroy {
       this.locationId.set(id);
       this.setSuccessEffects();
       this.setErrorEffects();
+      this.setupSignalStore();
+      this.beginGetInfoPolling();
     }
   }
 
@@ -138,12 +133,21 @@ export class ViewLocation implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {
+  private setupSignalStore(): void {
     this.entityStore.setPageMode('VIEW');
+    this.entityStore.clearEntityState();
+  }
 
+  private beginGetInfoPolling(): void {
     const locationId = this.locationId();
     if (locationId) {
-      this.entityStore.getViewLocationInfo(locationId);
+      // this.entityStore.getViewLocationInfo(locationId);
+      this.entityStore.getViewLocationInfo(
+        timer(0, this.environmentService.getEntityInfoPollingRefreshInterval()).pipe(
+          map(() => locationId),
+          takeUntilDestroyed(),
+        ),
+      );
     }
   }
 

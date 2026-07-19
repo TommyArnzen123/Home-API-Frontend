@@ -1,0 +1,50 @@
+<div class="hourly-display">
+  <mat-card class="average-temperature-container" appearance="outlined">
+    <div>No Temperature Available</div>
+    <div>
+      <icon-element
+        src="no-data-location-temperature-icon"
+        [width]="30"
+        [height]="30"
+        alt="Triangle with border and exclamation mark alert icon."
+      />
+    </div>
+    <div class="text-display">N/A</div>
+  </mat-card>
+  <mat-card class="average-temperature-container cold-background" appearance="outlined">
+    <div>Cold</div>
+    <div>
+      <icon-element
+        src="thermometer-cold-icon"
+        [width]="30"
+        [height]="30"
+        alt="Blue thermometer icon."
+      />
+    </div>
+    <div class="text-display"><= {{ coldHigh() }}</div>
+  </mat-card>
+  <mat-card class="average-temperature-container temperate-background" appearance="outlined">
+    <div>Temperate</div>
+    <div>
+      <icon-element
+        src="thermometer-temperate-icon"
+        [width]="30"
+        [height]="30"
+        alt="Orange thermometer icon."
+      />
+    </div>
+    <div class="text-display">{{ temperateLow() + ' - ' + temperateHigh() }}</div>
+  </mat-card>
+  <mat-card class="average-temperature-container hot-background" appearance="outlined">
+    <div>Hot</div>
+    <div>
+      <icon-element
+        src="thermometer-alert-icon"
+        [width]="30"
+        [height]="30"
+        alt="Red thermometer icon."
+      />
+    </div>
+    <div class="text-display">>= {{ hotLow() }}</div>
+  </mat-card>
+</div>
