@@ -1,95 +1,136 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
-import { computed, inject, Injectable, Signal, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { EnvironmentService } from './environment';
 import { SessionStorageService } from './session-storage';
-import { ILoginRequest, IUser } from '../model/login';
-import { USER_LOGIN_INFO_KEY } from '../constants/session-storage-constants';
+import { ILoginRequest, ILoginInfo, IUserInfo } from '../model/login';
+import {
+  ACCOUNT_SETTINGS_KEY,
+  JWT_TOKEN_KEY,
+  USER_INFO_KEY,
+} from '../constants/session-storage-constants';
 import { LOGIN_ROUTE } from '../constants/navigation-constants';
 import { LoadingContextToken } from '../interceptor/http-context-tokens';
 import { EntityStore } from '../store/entity.store';
+import { IAccountSettings } from '../model/account-settings';
+import { AccountSettingsService } from './account-settings';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
-  #loginResponseInfo$ = signal<IUser | null>(null);
-  private userLoginInfo = this.#loginResponseInfo$.asReadonly();
   private loginUrl = '/login';
 
   private readonly entityStore = inject(EntityStore);
-
+  private readonly accountSettingsService = inject(AccountSettingsService);
   private readonly httpClient = inject(HttpClient);
   private readonly environmentService = inject(EnvironmentService);
   private readonly sessionStorageService = inject(SessionStorageService);
   private readonly router = inject(Router);
 
-  isLoggedIn = computed(() => !!this.userLoginInfo());
-
   constructor() {
-    this.loadUserFromSessionStorage();
+    this.populateUserFromSessionStorage();
+    this.populateAccountSettingsFromSessionStorage();
+    this.populateJwtTokenFromSessionStorage();
   }
 
-  loadUserFromSessionStorage() {
-    const userInfo: string | null = this.sessionStorageService.getItem(USER_LOGIN_INFO_KEY);
-    let user: IUser | null = null;
+  populateUserFromSessionStorage(): void {
+    const user: string | null = this.sessionStorageService.getItem(USER_INFO_KEY);
+    let userInfo: IUserInfo | null = null;
 
-    if (userInfo) {
-      user = JSON.parse(userInfo);
+    if (user) {
+      userInfo = JSON.parse(user);
+
+      if (userInfo) {
+        this.setUserInformation(userInfo);
+      }
     }
-    this.updateUserLoginInfo(user);
   }
 
-  getUserLoginInfo(): Signal<IUser | null> {
-    return this.userLoginInfo;
+  setUserInformation(userInfo: IUserInfo | null): void {
+    this.entityStore.setUserInformation(userInfo);
   }
 
-  getJwtToken(): string | undefined {
-    return this.userLoginInfo()?.jwtToken;
+  // Store the account settings in the signal store.
+  setAccountSettingsSignalStore(accountSettings: IAccountSettings | null): void {
+    this.entityStore.setAccountSettings(accountSettings);
   }
 
-  private updateUserLoginInfo(userInfo: IUser | null): void {
-    if (userInfo) {
-      // If the user login info is set, store the userId and user first name in the signal store.
-      this.entityStore.setUserInformation(userInfo.userId, userInfo.firstName);
+  populateAccountSettingsFromSessionStorage(): void {
+    const accountSettingsInfo: string | null =
+      this.sessionStorageService.getItem(ACCOUNT_SETTINGS_KEY);
+    let accountSettings: IAccountSettings | null = null;
+
+    if (accountSettingsInfo) {
+      accountSettings = JSON.parse(accountSettingsInfo);
+
+      if (accountSettings) {
+        this.setAccountSettingsSignalStore(accountSettings);
+      }
     }
-    this.#loginResponseInfo$.set(userInfo);
   }
 
-  login(loginRequest: ILoginRequest): Observable<IUser> {
+  populateJwtTokenFromSessionStorage(): void {
+    const jwtTokenInfo: string | null = this.sessionStorageService.getItem(JWT_TOKEN_KEY);
+    let jwtToken: string | null = null;
+
+    if (jwtTokenInfo) {
+      jwtToken = JSON.parse(jwtTokenInfo);
+
+      if (jwtToken) {
+        this.setJwtToken(jwtToken);
+      }
+    }
+  }
+
+  setJwtToken(jwtToken: string | null): void {
+    this.entityStore.setJwtToken(jwtToken);
+  }
+
+  login(loginRequest: ILoginRequest): Observable<ILoginInfo> {
     return this.httpClient
-      .post<IUser>(
+      .post<ILoginInfo>(
         this.environmentService.getEnvironment().backendUrl + this.loginUrl,
         loginRequest,
         { context: new HttpContext().set(LoadingContextToken, 'Logging In') },
       )
       .pipe(
-        tap((response: IUser) => {
-          this.sessionStorageService.setItem(USER_LOGIN_INFO_KEY, JSON.stringify(response));
-          this.updateUserLoginInfo(response);
+        tap((response: ILoginInfo) => {
+          const accountSettings: IAccountSettings = {
+            accountSettingId: response.accountSettings.accountSettingId,
+            timeDisplaySetting: response.accountSettings.timeDisplaySetting,
+            temperatureDisplaySetting: response.accountSettings.temperatureDisplaySetting,
+            themeDisplaySetting: response.accountSettings.themeDisplaySetting,
+          };
+
+          this.sessionStorageService.setItem(USER_INFO_KEY, JSON.stringify(response.userInfo));
+          this.accountSettingsService.setAccountSettingsSessionStorage(accountSettings);
+          this.sessionStorageService.setItem(JWT_TOKEN_KEY, JSON.stringify(response.jwtToken));
+          this.setUserInformation(response.userInfo);
+          this.setAccountSettingsSignalStore(accountSettings);
+          this.setJwtToken(response.jwtToken);
         }),
       );
   }
 
   logout(): void {
     this.entityStore.reset(); // Clear the entity store.
-    this.sessionStorageService.removeItem(USER_LOGIN_INFO_KEY); // Remove the user login info from session storage.
-    this.updateUserLoginInfo(null); // Remove the user login info from memory.
+    this.sessionStorageService.clearSessionStorage(); // Clear the session storage variables.
     this.router.navigateByUrl(LOGIN_ROUTE); // Route to the login screen.
   }
 
   logoutWithoutRoute(): void {
-    this.sessionStorageService.removeItem(USER_LOGIN_INFO_KEY); // Remove the user login info from session storage.
-    this.updateUserLoginInfo(null); // Remove the user login info from memory.
+    this.entityStore.reset(); // Clear the entity store.
+    this.sessionStorageService.clearSessionStorage(); // Clear the session storage variables.
   }
 
-  isIUser(value: IUser | null): value is IUser {
+  isIUser(value: ILoginInfo | null): value is ILoginInfo {
     return (
       value !== null &&
-      typeof value.userId === 'number' &&
-      typeof value.firstName === 'string' &&
-      typeof value.username === 'string' &&
+      typeof value.userInfo.userId === 'number' &&
+      typeof value.userInfo.firstName === 'string' &&
+      // typeof value.userInfo.username === 'string' &&
       typeof value.jwtToken === 'string'
     );
   }

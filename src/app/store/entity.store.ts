@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { GetInfoService } from '../services/get-info';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { EMPTY, pipe, switchMap, tap } from 'rxjs';
+import { catchError, EMPTY, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import {
   IAverageTemperatureByHour,
@@ -39,6 +39,20 @@ import {
   IConfirmEmailError,
   IEmailConfirmed,
 } from '../model/confirm-email';
+import {
+  IAccountSettings,
+  IUpdateAccountSetting,
+  IUpdateTemperatureDisplaySettingResponse,
+  IUpdateThemeDisplaySettingResponse,
+  IUpdateTimeDisplaySettingResponse,
+  TemperatureDisplayOptions,
+  ThemeDisplayOptions,
+  TimeDisplayOptions,
+} from '../model/account-settings';
+import { AccountSettingsService } from '../services/account-settings';
+import { IUserInfo } from '../model/login';
+import { celsiusToFahrenheit } from '../shared/utility/temperature-utility';
+import { IBreadcrumb } from '../model/breadcrumb';
 
 export type EntityActions =
   | 'get-view-homescreen-info'
@@ -59,16 +73,15 @@ export type EntityActions =
   | 'delete-home'
   | 'delete-location'
   | 'delete-device'
+  | 'get-account-settings'
+  | 'update-time-display-setting'
+  | 'update-temperature-display-setting'
+  | 'update-theme-display-setting'
   | null;
 
 export type EntityTypes = 'USER' | 'HOME' | 'LOCATION' | 'DEVICE';
 
 export type PageModes = 'VIEW' | 'EDIT' | 'ADD_CHILD';
-
-export interface IBreadcrumb {
-  type: EntityTypes;
-  id: number;
-}
 
 interface EntityData<TSummary, TDetails> {
   entityId: number;
@@ -123,8 +136,9 @@ export type LocationData = EntityData<LocationSummary, LocationDetails>;
 export type DeviceData = EntityData<DeviceSummary, DeviceDetails>;
 
 interface IEntityState {
-  userId: number | null;
-  userFirstName: string | null;
+  userInfo: IUserInfo | null;
+  jwtToken: string | null;
+  accountSettings: IAccountSettings | null;
   emailConfirmed: IEmailConfirmed;
   userInitialized: boolean;
   homes: Record<number, HomeData>;
@@ -137,8 +151,9 @@ interface IEntityState {
 }
 
 const initialState: IEntityState = {
-  userId: null,
-  userFirstName: null,
+  userInfo: null,
+  jwtToken: null,
+  accountSettings: null,
   emailConfirmed: {
     isConfirmed: false,
   },
@@ -164,13 +179,25 @@ export const EntityStore = signalStore(
     const editService = inject(EditService);
     const thresholdService = inject(TemperatureThresholdService);
     const deleteService = inject(DeleteService);
+    const accountSettingsService = inject(AccountSettingsService);
 
     return {
-      setUserInformation(userId: number, userFirstName: string): void {
+      setUserInformation(userInfo: IUserInfo | null): void {
         patchState(store, {
-          userId,
-          userFirstName,
-          userInitialized: true,
+          userInfo,
+          userInitialized: userInfo ? true : false,
+        });
+      },
+
+      setAccountSettings(accountSettings: IAccountSettings | null): void {
+        patchState(store, {
+          accountSettings,
+        });
+      },
+
+      setJwtToken(jwtToken: string | null): void {
+        patchState(store, {
+          jwtToken,
         });
       },
 
@@ -184,7 +211,7 @@ export const EntityStore = signalStore(
             }),
           ),
           switchMap(() => {
-            const userId = store.userId();
+            const userId = store.userInfo()?.userId;
 
             if (!userId) {
               patchState(store, {
@@ -214,6 +241,178 @@ export const EntityStore = signalStore(
         ),
       ),
 
+      getAccountSettings: rxMethod<void>(
+        pipe(
+          tap(() =>
+            patchState(store, {
+              successNotification: null,
+              errorNotification: null,
+            }),
+          ),
+          switchMap(() => {
+            const userId = store.userInfo()?.userId;
+
+            if (!userId) {
+              patchState(store, {
+                errorNotification: { errorAction: 'get-account-settings' },
+              });
+              return EMPTY;
+            }
+
+            return accountSettingsService.getAccountSettings(userId).pipe(
+              tapResponse({
+                next: (accountSettings: IAccountSettings) =>
+                  patchState(store, {
+                    accountSettings,
+                  }),
+                error: () =>
+                  patchState(store, {
+                    errorNotification: { errorAction: 'get-account-settings' },
+                  }),
+              }),
+            );
+          }),
+        ),
+      ),
+
+      updateTimeDisplaySetting: rxMethod<TimeDisplayOptions>(
+        pipe(
+          tap(() =>
+            patchState(store, {
+              successNotification: null,
+              errorNotification: null,
+            }),
+          ),
+          switchMap((setting: TimeDisplayOptions) => {
+            const userId = store.userInfo()?.userId;
+
+            if (!userId) {
+              patchState(store, {
+                errorNotification: { errorAction: 'update-time-display-setting' },
+              });
+              return EMPTY;
+            }
+
+            return accountSettingsService.updateTimeDisplaySetting({ userId, setting }).pipe(
+              tapResponse({
+                next: (response: IUpdateTimeDisplaySettingResponse) => {
+                  patchState(store, (state) => {
+                    if (state.accountSettings === null) {
+                      console.log('NOT SET');
+                      return {};
+                    }
+
+                    return {
+                      accountSettings: {
+                        ...state.accountSettings,
+                        timeDisplaySetting: response.timeSetting,
+                      },
+                      successNotification: 'update-time-display-setting' as EntityActions,
+                    };
+                  });
+                },
+                error: () =>
+                  patchState(store, {
+                    errorNotification: { errorAction: 'update-time-display-setting' },
+                  }),
+              }),
+            );
+          }),
+        ),
+      ),
+
+      updateThemeDisplaySetting: rxMethod<ThemeDisplayOptions>(
+        pipe(
+          tap(() =>
+            patchState(store, {
+              successNotification: null,
+              errorNotification: null,
+            }),
+          ),
+          switchMap((setting: ThemeDisplayOptions) => {
+            const userId = store.userInfo()?.userId;
+
+            if (!userId) {
+              patchState(store, {
+                errorNotification: { errorAction: 'update-theme-display-setting' },
+              });
+              return EMPTY;
+            }
+
+            return accountSettingsService.updateThemeDisplaySetting({ userId, setting }).pipe(
+              tapResponse({
+                next: (response: IUpdateThemeDisplaySettingResponse) => {
+                  patchState(store, (state) => {
+                    if (state.accountSettings === null) {
+                      console.log('NOT SET');
+                      return {};
+                    }
+
+                    return {
+                      accountSettings: {
+                        ...state.accountSettings,
+                        themeDisplaySetting: response.themeSetting,
+                      },
+                      successNotification: 'update-theme-display-setting' as EntityActions,
+                    };
+                  });
+                },
+                error: () =>
+                  patchState(store, {
+                    errorNotification: { errorAction: 'update-theme-display-setting' },
+                  }),
+              }),
+            );
+          }),
+        ),
+      ),
+
+      updateTemperatureDisplaySetting: rxMethod<TemperatureDisplayOptions>(
+        pipe(
+          tap(() =>
+            patchState(store, {
+              successNotification: null,
+              errorNotification: null,
+            }),
+          ),
+          switchMap((setting: TemperatureDisplayOptions) => {
+            const userId = store.userInfo()?.userId;
+
+            if (!userId) {
+              patchState(store, {
+                errorNotification: { errorAction: 'update-temperature-display-setting' },
+              });
+              return EMPTY;
+            }
+
+            return accountSettingsService.updateTemperatureDisplaySetting({ userId, setting }).pipe(
+              tapResponse({
+                next: (response: IUpdateTemperatureDisplaySettingResponse) => {
+                  patchState(store, (state) => {
+                    if (state.accountSettings === null) {
+                      console.log('NOT SET');
+                      return {};
+                    }
+
+                    return {
+                      accountSettings: {
+                        ...state.accountSettings,
+                        temperatureDisplaySetting: response.temperatureSetting,
+                      },
+                      successNotification: 'update-temperature-display-setting' as EntityActions,
+                    };
+                  });
+                },
+                error: () =>
+                  patchState(store, {
+                    errorNotification: { errorAction: 'update-temperature-display-setting' },
+                  }),
+              }),
+            );
+          }),
+        ),
+      ),
+
       generateEmailConfirmationCode: rxMethod<void>(
         pipe(
           tap(() =>
@@ -223,7 +422,7 @@ export const EntityStore = signalStore(
             }),
           ),
           switchMap(() => {
-            const userId = store.userId();
+            const userId = store.userInfo()?.userId;
 
             if (!userId) {
               patchState(store, {
@@ -273,7 +472,7 @@ export const EntityStore = signalStore(
           ),
           switchMap((emailConfirmationCode: number) => {
             // ID of the user making the request.
-            const userId = store.userId();
+            const userId = store.userInfo()?.userId;
 
             // ID of the confirmation object in focus.
             const confirmationId = store.emailConfirmed().generatedCode?.confirmationId;
@@ -332,17 +531,26 @@ export const EntityStore = signalStore(
         ),
       ),
 
+      clearEntityState(): void {
+        patchState(store, {
+          homes: {},
+          locations: {},
+          devices: {},
+        });
+      },
+
       getViewHomeInfo: rxMethod<number>(
         pipe(
           tap(() =>
             patchState(store, {
               successNotification: null,
               errorNotification: null,
-              locations: {},
+              // locations: {},
             }),
           ),
           switchMap((homeId: number) => {
-            return getInfoService.getViewHomeInfo({ id: homeId }).pipe(
+            const isInitialLoad = isEmptyRecord(store.homes());
+            return getInfoService.getViewHomeInfo({ id: homeId }, isInitialLoad).pipe(
               tapResponse({
                 next: (homeResponse: IViewHomeInfoResponse) =>
                   patchState(store, {
@@ -356,10 +564,13 @@ export const EntityStore = signalStore(
                     locations: generateLocationSummaryObjects(homeResponse.locations),
                     entityPath: homeResponse.entityPath,
                   }),
-                error: () =>
-                  patchState(store, {
-                    errorNotification: { errorAction: 'get-view-home-info' },
-                  }),
+                error: () => {
+                  if (isInitialLoad) {
+                    patchState(store, {
+                      errorNotification: { errorAction: 'get-view-home-info' },
+                    });
+                  }
+                },
               }),
             );
           }),
@@ -372,11 +583,12 @@ export const EntityStore = signalStore(
             patchState(store, {
               successNotification: null,
               errorNotification: null,
-              devices: {},
+              // devices: {},
             }),
           ),
           switchMap((locationId: number) => {
-            return getInfoService.getViewLocationInfo({ id: locationId }).pipe(
+            const isInitialLoad = isEmptyRecord(store.locations());
+            return getInfoService.getViewLocationInfo({ id: locationId }, isInitialLoad).pipe(
               tapResponse({
                 next: (locationResponse: IViewLocationInfoResponse) =>
                   patchState(store, {
@@ -390,13 +602,17 @@ export const EntityStore = signalStore(
                     devices: generateDeviceSummaryObjects(locationResponse.devices),
                     entityPath: locationResponse.entityPath,
                   }),
-                error: () =>
-                  patchState(store, {
-                    errorNotification: { errorAction: 'get-view-location-info' },
-                  }),
+                error: () => {
+                  if (isInitialLoad) {
+                    patchState(store, {
+                      errorNotification: { errorAction: 'get-view-location-info' },
+                    });
+                  }
+                },
               }),
             );
           }),
+          catchError(() => EMPTY),
         ),
       ),
 
@@ -409,7 +625,8 @@ export const EntityStore = signalStore(
             }),
           ),
           switchMap((deviceId: number) => {
-            return getInfoService.getViewDeviceInfo({ id: deviceId }).pipe(
+            const isInitialLoad = isEmptyRecord(store.devices());
+            return getInfoService.getViewDeviceInfo({ id: deviceId }, isInitialLoad).pipe(
               tapResponse({
                 next: (deviceResponse: IViewDeviceInfoResponse) =>
                   patchState(store, {
@@ -422,10 +639,13 @@ export const EntityStore = signalStore(
                     },
                     entityPath: deviceResponse.entityPath,
                   }),
-                error: () =>
-                  patchState(store, {
-                    errorNotification: { errorAction: 'get-view-device-info' },
-                  }),
+                error: () => {
+                  if (isInitialLoad) {
+                    patchState(store, {
+                      errorNotification: { errorAction: 'get-view-device-info' },
+                    });
+                  }
+                },
               }),
             );
           }),
@@ -436,7 +656,7 @@ export const EntityStore = signalStore(
         pipe(
           tap(() => patchState(store, { successNotification: null, errorNotification: null })),
           switchMap((homeName: string) => {
-            const userId = store.userId();
+            const userId = store.userInfo()?.userId;
 
             if (!userId) {
               patchState(store, {
@@ -578,8 +798,21 @@ export const EntityStore = signalStore(
       addTemperatureThreshold: rxMethod<ITemperatureThreshold>(
         pipe(
           tap(() => patchState(store, { successNotification: null, errorNotification: null })),
-          switchMap((thresholdRequest: ITemperatureThreshold) =>
-            thresholdService.addTemperatureThreshold(thresholdRequest).pipe(
+          switchMap((thresholdRequest: ITemperatureThreshold) => {
+            // Convert the Celsius temperatures to Fahrenheit if the temperature display setting is 'CELSIUS'.
+            if (
+              store.accountSettings()?.temperatureDisplaySetting ===
+              TemperatureDisplayOptions.CELSIUS
+            ) {
+              thresholdRequest.minimumTemperature = thresholdRequest.minimumTemperature
+                ? Number(celsiusToFahrenheit(thresholdRequest.minimumTemperature))
+                : thresholdRequest.minimumTemperature;
+              thresholdRequest.maximumTemperature = thresholdRequest.maximumTemperature
+                ? Number(celsiusToFahrenheit(thresholdRequest.maximumTemperature))
+                : thresholdRequest.maximumTemperature;
+            }
+
+            return thresholdService.addTemperatureThreshold(thresholdRequest).pipe(
               tapResponse({
                 next: (thresholdResponse: ITemperatureThreshold) =>
                   patchState(store, {
@@ -597,16 +830,29 @@ export const EntityStore = signalStore(
                     errorNotification: { errorAction: 'add-temperature-threshold' },
                   }),
               }),
-            ),
-          ),
+            );
+          }),
         ),
       ),
 
       updateTemperatureThreshold: rxMethod<ITemperatureThreshold>(
         pipe(
           tap(() => patchState(store, { successNotification: null, errorNotification: null })),
-          switchMap((thresholdRequest: ITemperatureThreshold) =>
-            thresholdService.updateTemperatureThreshold(thresholdRequest).pipe(
+          switchMap((thresholdRequest: ITemperatureThreshold) => {
+            // Convert the Celsius temperatures to Fahrenheit if the temperature display setting is 'CELSIUS'.
+            if (
+              store.accountSettings()?.temperatureDisplaySetting ===
+              TemperatureDisplayOptions.CELSIUS
+            ) {
+              thresholdRequest.minimumTemperature = thresholdRequest.minimumTemperature
+                ? Number(celsiusToFahrenheit(thresholdRequest.minimumTemperature))
+                : thresholdRequest.minimumTemperature;
+              thresholdRequest.maximumTemperature = thresholdRequest.maximumTemperature
+                ? Number(celsiusToFahrenheit(thresholdRequest.maximumTemperature))
+                : thresholdRequest.maximumTemperature;
+            }
+
+            return thresholdService.updateTemperatureThreshold(thresholdRequest).pipe(
               tapResponse({
                 next: () =>
                   patchState(store, {
@@ -624,8 +870,8 @@ export const EntityStore = signalStore(
                     errorNotification: { errorAction: 'update-temperature-threshold' },
                   }),
               }),
-            ),
-          ),
+            );
+          }),
         ),
       ),
 
@@ -887,4 +1133,8 @@ function generateDeviceSummaryObjects(devices: IDeviceSummary[]): Record<number,
   });
 
   return deviceRecords;
+}
+
+function isEmptyRecord<T>(record: Record<number, T>): boolean {
+  return Object.keys(record).length === 0;
 }

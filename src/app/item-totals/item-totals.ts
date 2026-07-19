@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
+import { IconElement } from '../shared/components/icon-element/icon-element';
 
 @Component({
   selector: 'item-totals',
-  imports: [],
+  imports: [IconElement],
   templateUrl: './item-totals.html',
   styleUrl: './item-totals.scss',
 })

@@ -32,7 +32,7 @@
     @for (icon of iconReferences; track icon.id) {
       <div class="icon-display">
         <div>
-          <img src="{{ icon.iconPath }}" alt="{{ icon.altText }}" />
+          <icon-element [src]="icon.iconPath" [width]="150" [height]="150" [alt]="icon.altText" />
         </div>
         <div>
           <b>Title:</b> {{ icon.title }}<br />

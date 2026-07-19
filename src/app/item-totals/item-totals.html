@@ -3,7 +3,7 @@
   @if (displayTotalHomes) {
     <div class="item-display">
       <div>
-        <img src="home-icon-summary.svg" class="item-icon" alt="Home icon." />
+        <icon-element src="home-icon-summary" [width]="100" [height]="100" alt="Home icon." />
       </div>
       <div class="item-title">Total Homes</div>
       <div class="item-value">{{ totalHomes }}</div>
@@ -13,7 +13,7 @@
   @if (displayTotalLocations) {
     <div class="item-display">
       <div>
-        <img src="location-icon.svg" class="item-icon" alt="Location icon." />
+        <icon-element src="location-icon" [width]="100" [height]="100" alt="Location icon." />
       </div>
       <div class="item-title">Total Locations</div>
       <div class="item-value">{{ totalLocations }}</div>
@@ -23,7 +23,7 @@
   @if (displayTotalDevices) {
     <div class="item-display">
       <div>
-        <img src="device-icon.svg" class="item-icon" alt="Device icon." />
+        <icon-element src="device-icon" [width]="100" [height]="100" alt="Device icon." />
       </div>
       <div class="item-title">Total Devices</div>
       <div class="item-value">{{ totalDevices }}</div>

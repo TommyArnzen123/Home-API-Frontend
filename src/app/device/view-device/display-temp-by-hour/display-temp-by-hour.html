@@ -1,46 +1,50 @@
 <mat-card
   class="average-temperature-container"
-  [class.hot-background]="temperature && temperature > 80"
-  [class.temperate-background]="temperature && temperature <= 80 && temperature >= 60"
-  [class.cold-background]="temperature && temperature < 60"
+  [class.hot-background]="backgroundDisplayStyle() === 'HOT'"
+  [class.temperate-background]="backgroundDisplayStyle() === 'TEMPERATE'"
+  [class.cold-background]="backgroundDisplayStyle() === 'COLD'"
   appearance="outlined"
 >
-  @if (currentHour !== hour) {
-    <div>{{ hour }}</div>
+  @if (currentHour !== hour()) {
+    <div class="text-display">{{ hourDisplay() }}</div>
   } @else {
     <div>Now</div>
   }
   <div>
-    @if (temperature) {
-      @if (temperature > 80) {
-        <img
-          class="average-temperature-icon"
-          src="thermometer-alert-icon.svg"
+    @if (temperature(); as temp) {
+      @if (temp > 80) {
+        <icon-element
+          src="thermometer-alert-icon"
+          [width]="30"
+          [height]="30"
           alt="Red thermometer icon."
         />
-      } @else if (temperature < 60) {
-        <img
-          class="average-temperature-icon"
-          src="thermometer-cold-icon.svg"
+      } @else if (temp < 60) {
+        <icon-element
+          src="thermometer-cold-icon"
+          [width]="30"
+          [height]="30"
           alt="Blue thermometer icon."
         />
       } @else {
-        <img
-          class="average-temperature-icon"
-          src="thermometer-temperate-icon.svg"
+        <icon-element
+          src="thermometer-temperate-icon"
+          [width]="30"
+          [height]="30"
           alt="Orange thermometer icon."
         />
       }
     } @else {
-      <img
-        class="average-temperature-icon"
-        src="no-data-location-temperature-icon.svg"
-        alt="White triangle with black border and black exclamation mark alert icon."
+      <icon-element
+        src="no-data-location-temperature-icon"
+        [width]="30"
+        [height]="30"
+        alt="Triangle with border and exclamation mark alert icon."
       />
     }
   </div>
-  @if (temperature) {
-    <div>{{ temperature | number: '1.2-2' }}°F</div>
+  @if (temperatureDisplay() !== undefined) {
+    <div class="text-display">{{ temperatureDisplay() }}</div>
   } @else {
     <div>N/A</div>
   }

@@ -5,24 +5,23 @@
   gap: 8px;
   padding: 20px;
   min-height: 120px;
-  min-width: 100px;
+  min-width: 110px;
   font-size: 20px;
   font-weight: bold;
 
-  .average-temperature-icon {
-    width: 30px;
-    height: 30px;
+  .text-display {
+    direction: ltr;
   }
 }
 
 .hot-background {
-  background-color: #fadede;
+  background-color: var(--hourly-temperature-hot-background-color);
 }
 
 .temperate-background {
-  background-color: #fff7eb;
+  background-color: var(--hourly-temperature-temperate-background-color);
 }
 
 .cold-background {
-  background-color: #ebf3ff;
+  background-color: var(--hourly-temperature-cold-background-color);
 }

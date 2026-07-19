@@ -1,10 +1,11 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, computed } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LoginService } from '../services/login';
 import { RouterService } from '../services/router';
 import { LOGIN_ROUTE } from '../constants/navigation-constants';
+import { EntityStore } from '../store/entity.store';
 
 @Component({
   selector: 'header',
@@ -18,10 +19,11 @@ export class Header implements OnInit, OnDestroy {
   private readonly loginService = inject(LoginService);
   private readonly router = inject(Router);
   private readonly routerService = inject(RouterService);
+  private readonly entityStore = inject(EntityStore);
 
   protected showLoginOption = false;
 
-  protected isLoggedIn = this.loginService.isLoggedIn;
+  protected isLoggedIn = computed(() => this.entityStore.userInitialized());
 
   ngOnInit(): void {
     this.subscriptions.push(

@@ -1,18 +1,7 @@
-import {
-  Component,
-  inject,
-  OnInit,
-  OnDestroy,
-  signal,
-  effect,
-  computed,
-  Signal,
-} from '@angular/core';
+import { Component, inject, OnDestroy, signal, effect, computed, Signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { DecimalPipe } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { map, Subscription, timer } from 'rxjs';
 import { ModalService } from '../../services/modal';
 import { RouterService } from '../../services/router';
 import { TemperatureThresholdCard } from './temperature-threshold-card/temperature-threshold-card';
@@ -22,20 +11,30 @@ import { INVALID_LOCATION_ID_ERROR_MODAL } from '../../constants/error-constants
 import { DELETE_LOCATION_CONFIRMATION_MODAL } from '../../constants/dialog-confirmation-constants';
 import { MatDialog } from '@angular/material/dialog';
 import {
+  ITemperatureThresholdModal,
   ITemperatureThresholdModalLimits,
   TemperatureThresholdModal,
   TemperatureThresholdModalFlow,
 } from './temperature-threshold-modal/temperature-threshold-modal';
 import { DeviceData, EntityActions, EntityStore } from '../../store/entity.store';
-import { setAverageTemperature } from '../../shared/utility/temperature-utility';
+import {
+  addTemperatureSymbol,
+  fahrenheitToCelsius,
+  setAverageTemperature,
+} from '../../shared/utility/temperature-utility';
+import { TemperatureDisplayOptions } from '../../model/account-settings';
+import { IconElement } from '../../shared/components/icon-element/icon-element';
+import { DeleteButtonElement } from '../../shared/components/button-element/delete-button-element';
+import { EnvironmentService } from '../../services/environment';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'view-location',
-  imports: [MatButton, MatIcon, DeviceCard, TemperatureThresholdCard, DecimalPipe],
+  imports: [MatButton, DeviceCard, TemperatureThresholdCard, IconElement, DeleteButtonElement],
   templateUrl: './view-location.html',
   styleUrl: './view-location.scss',
 })
-export class ViewLocation implements OnInit, OnDestroy {
+export class ViewLocation implements OnDestroy {
   private subscriptions: Subscription[] = [];
 
   private entityStore = inject(EntityStore);
@@ -44,10 +43,25 @@ export class ViewLocation implements OnInit, OnDestroy {
   private readonly routerService = inject(RouterService);
   private readonly modalService = inject(ModalService);
   private readonly modal = inject(MatDialog);
+  private readonly environmentService = inject(EnvironmentService);
 
   protected locationId = signal<number | null>(null);
   protected averageTemperature = computed(() => setAverageTemperature(this.deviceInfo()));
+  protected averageTemperatureDisplay = computed(() => {
+    const averageTemp = this.averageTemperature();
+    if (averageTemp) {
+      return this.formatTemperatureDisplay(averageTemp);
+    } else {
+      return null;
+    }
+  });
   protected temperatureThreshold = computed(() => this.locationInfo()?.details?.threshold);
+
+  private isFahrenheitDisplay = computed(
+    () =>
+      this.entityStore.accountSettings()?.temperatureDisplaySetting ===
+      TemperatureDisplayOptions.FAHRENHEIT,
+  );
 
   protected locationInfo = computed(() => {
     const locationId = this.locationId();
@@ -64,6 +78,17 @@ export class ViewLocation implements OnInit, OnDestroy {
   protected readonly deviceInfo: Signal<DeviceData[]> = computed(() =>
     Object.values(this.entityStore.devices()),
   );
+
+  formatTemperatureDisplay(originalTemp: number | undefined): string {
+    let temp = '';
+    if (originalTemp && !this.isFahrenheitDisplay()) {
+      temp = fahrenheitToCelsius(originalTemp);
+    } else if (originalTemp && this.isFahrenheitDisplay()) {
+      temp = String(originalTemp);
+    }
+
+    return addTemperatureSymbol(temp, this.isFahrenheitDisplay());
+  }
 
   constructor() {
     const id = Number(this.route.snapshot.paramMap.get('locationId'));
@@ -83,6 +108,8 @@ export class ViewLocation implements OnInit, OnDestroy {
       this.locationId.set(id);
       this.setSuccessEffects();
       this.setErrorEffects();
+      this.setupSignalStore();
+      this.beginGetInfoPolling();
     }
   }
 
@@ -106,12 +133,21 @@ export class ViewLocation implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {
+  private setupSignalStore(): void {
     this.entityStore.setPageMode('VIEW');
+    this.entityStore.clearEntityState();
+  }
 
+  private beginGetInfoPolling(): void {
     const locationId = this.locationId();
     if (locationId) {
-      this.entityStore.getViewLocationInfo(locationId);
+      // this.entityStore.getViewLocationInfo(locationId);
+      this.entityStore.getViewLocationInfo(
+        timer(0, this.environmentService.getEntityInfoPollingRefreshInterval()).pipe(
+          map(() => locationId),
+          takeUntilDestroyed(),
+        ),
+      );
     }
   }
 
@@ -139,7 +175,7 @@ export class ViewLocation implements OnInit, OnDestroy {
     this.routerService.viewHomescreen();
   }
 
-  protected deleteLocationConfirmation(): void {
+  protected deleteLocationConfirmation = (): void => {
     const locationId = this.locationId();
     if (locationId) {
       const deleteLocationConfirmationActions: IModalActions = {
@@ -154,7 +190,7 @@ export class ViewLocation implements OnInit, OnDestroy {
         deleteLocationConfirmationActions,
       );
     }
-  }
+  };
 
   protected displayTemperatureThresholdModal(): void {
     const flowType: TemperatureThresholdModalFlow = 'add-temperature-threshold';
@@ -162,7 +198,10 @@ export class ViewLocation implements OnInit, OnDestroy {
       width: '400px',
       data: {
         flow: flowType,
-      },
+        isFahrenheitDisplay: this.isFahrenheitDisplay(),
+        minimumTemperature: undefined,
+        maximumTemperature: undefined,
+      } as ITemperatureThresholdModal,
     });
 
     const locationId = this.locationId();

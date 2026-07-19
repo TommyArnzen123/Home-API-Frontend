@@ -40,3 +40,25 @@ export function isThresholdViolated(
 
   return false;
 }
+
+// Convert temperature from Fahrenheit to Celsius if needed.
+export function fahrenheitToCelsius(fahrenheitTemp: number): string {
+  return ((fahrenheitTemp - 32) * (5 / 9)).toFixed(2);
+}
+
+export function celsiusToFahrenheit(celsiusTemp: number): string {
+  return (celsiusTemp * (9 / 5) + 32).toFixed(2);
+}
+
+// Add the temperature symbol formatting to the temperature value for display.
+export function addTemperatureSymbol(temp: string | undefined, isFahrenheit: boolean): string {
+  if (!temp) {
+    temp = '-';
+  }
+
+  if (isFahrenheit) {
+    return temp + '°F';
+  } else {
+    return temp + '°C';
+  }
+}

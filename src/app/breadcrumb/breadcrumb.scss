@@ -5,10 +5,10 @@
 
   .clickable {
     cursor: pointer;
-    color: blue;
+    color: var(--breadcrumb-item-color-clickable);
   }
 
   .non-clickable {
-    color: black;
+    color: var(--breadcrumb-item-color-non-clickable);
   }
 }

@@ -49,3 +49,18 @@ export const EMAIL_ADDRESS_CONFIRMATION_SUCCESS_MODAL: IModal = {
   title: 'Email Address Confirmed',
   content: 'Your email address has been confirmed.',
 };
+
+export const UPDATE_TIME_DISPLAY_SETTING_SUCCESS_MODAL: IModal = {
+  title: 'Time Display Setting Updated',
+  content: 'Your time display setting has been updated.',
+};
+
+export const UPDATE_TEMPERATURE_DISPLAY_SETTING_SUCCESS_MODAL: IModal = {
+  title: 'Temperature Display Setting Updated',
+  content: 'Your temperature display setting has been updated.',
+};
+
+export const UPDATE_THEME_DISPLAY_SETTING_SUCCESS_MODAL: IModal = {
+  title: 'Theme Display Setting Updated',
+  content: 'Your theme display setting has been updated.',
+};

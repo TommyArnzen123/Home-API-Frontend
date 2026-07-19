@@ -1,5 +1,6 @@
 import { IBreadcrumbItemDisplay } from '../model/breadcrumb';
-import { EntityTypes, IBreadcrumb, PageModes } from '../store/entity.store';
+import { EntityTypes, PageModes } from '../store/entity.store';
+import { IBreadcrumb } from '../model/breadcrumb';
 
 export function generateBreadcrumbEntityPath(path: IBreadcrumb[]): IBreadcrumbItemDisplay[] {
   return path.map((item) => ({

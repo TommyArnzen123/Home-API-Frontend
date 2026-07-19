@@ -1,3 +1,8 @@
+export enum ButtonIntent {
+  PRIMARY = 'primary',
+  DESTRUCTIVE = 'destructive',
+}
+
 export interface IModal {
   title: string;
   content: string;
@@ -5,6 +10,7 @@ export interface IModal {
   primaryText?: string;
   secondaryText?: string;
   disableClose?: boolean;
+  primaryIntent?: ButtonIntent;
 }
 
 export interface IModalActions {

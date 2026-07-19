@@ -9,8 +9,23 @@
   }
 </mat-dialog-content>
 <mat-dialog-actions>
-  @if (secondaryText) {
-    <button matButton="outlined" (click)="secondaryButtonAction()">{{ secondaryText }}</button>
-  }
-  <button matButton="filled" (click)="primaryButtonAction()">{{ primaryText }}</button>
+  <div class="button-container">
+    @if (secondaryText) {
+      <button matButton="outlined" class="button-item" (click)="secondaryButtonAction()">
+        {{ secondaryText }}
+      </button>
+    }
+
+    @if (primaryIntent === ButtonIntent.PRIMARY) {
+      <button matButton="filled" class="button-item" (click)="primaryButtonAction()">
+        {{ primaryText }}
+      </button>
+    } @else if (primaryIntent === ButtonIntent.DESTRUCTIVE) {
+      <delete-button-element
+        class="button-item"
+        [buttonText]="primaryText"
+        [action]="primaryButtonAction"
+      />
+    }
+  </div>
 </mat-dialog-actions>

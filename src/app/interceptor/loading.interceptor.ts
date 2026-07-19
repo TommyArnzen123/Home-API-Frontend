@@ -18,9 +18,10 @@ export const LoadingInterceptor: HttpInterceptorFn = (
 
   if (loadingContextToken) {
     loadingService.loadingOn(loadingContextToken);
-  } else {
-    loadingService.loadingOn('');
   }
+  // else {
+  //   loadingService.loadingOn('');
+  // }
 
   return next(req).pipe(
     finalize(() => {

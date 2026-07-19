@@ -8,11 +8,11 @@
   </mat-card-header>
   <div class="home-card-content">
     <div>
-      <img class="default-home-icon" mat-card-image src="home-icon-main.svg" alt="Home icon." />
+      <icon-element src="home-icon-main" [width]="200" [height]="200" alt="Home icon." />
     </div>
     <div class="entity-totals-container">
       <div class="entity">
-        <img src="location-icon.svg" class="entity-icon" alt="Location icon." />
+        <icon-element src="location-icon" [width]="75" [height]="75" alt="Location icon." />
         @if (
           homeInfo &&
           homeInfo.summary &&
@@ -24,7 +24,7 @@
         }
       </div>
       <div class="entity">
-        <img src="device-icon.svg" class="entity-icon" alt="Device icon." />
+        <icon-element src="device-icon" [width]="75" [height]="75" alt="Device icon." />
         @if (
           homeInfo &&
           homeInfo.summary &&
@@ -40,9 +40,7 @@
   <mat-card-actions class="button-container">
     @if (this.homeInfo && this.homeInfo.entityId) {
       <button matButton="outlined" (click)="viewHomeById()">View</button>
-      <button matButton="filled" (click)="deleteHomeConfirmation()">
-        <mat-icon>delete</mat-icon>Delete
-      </button>
+      <delete-button-element [action]="deleteHomeConfirmation" />
     }
   </mat-card-actions>
 </mat-card>
