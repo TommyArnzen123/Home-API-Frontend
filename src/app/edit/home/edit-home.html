@@ -10,6 +10,9 @@
       @if (form.get('homeName')?.touched && form.get('homeName')?.hasError('required')) {
         <mat-error>Please enter home name.</mat-error>
       }
+      @if (form.hasError('noUpdateMadeError')) {
+        <mat-error>Please update the value.</mat-error>
+      }
       <br />
       @if (homeId()) {
         <div class="left-button">

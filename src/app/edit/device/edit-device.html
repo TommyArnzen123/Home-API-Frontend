@@ -10,6 +10,9 @@
       @if (form.get('deviceName')?.touched && form.get('deviceName')?.hasError('required')) {
         <mat-error>Please enter device name.</mat-error>
       }
+      @if (form.hasError('noUpdateMadeError')) {
+        <mat-error>Please update the value.</mat-error>
+      }
       <br />
       @if (deviceId()) {
         <div class="left-button">
