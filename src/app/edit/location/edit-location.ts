@@ -4,7 +4,7 @@ import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
-import { EntityActions, EntityStore } from '../../store/entity.store';
+import { EntityActions, EntityStore, LocationDetails } from '../../store/entity.store';
 import { RouterService } from '../../services/router';
 import { ModalService } from '../../services/modal';
 import {
@@ -121,13 +121,24 @@ export class EditLocation implements OnInit {
     this.form.markAllAsTouched();
 
     if (this.form.valid) {
-      const locationName = this.form.get('locationName')?.value || '';
+      let locationName: string = this.form.get('locationName')?.value || '';
+      locationName = locationName.trim();
 
-      const locationId = this.locationId();
-      if (locationId && locationName) {
-        this.entityStore.editLocation({ entityId: locationId, name: locationName });
+      if (this.updateWasMade({ locationName })) {
+        const locationId = this.locationId();
+        if (locationId && locationName) {
+          this.entityStore.editLocation({ entityId: locationId, name: locationName });
+        } else {
+          this.modalService.showModalElement(EDIT_LOCATION_ERROR_MODAL);
+        }
       } else {
-        this.modalService.showModalElement(EDIT_LOCATION_ERROR_MODAL);
+        // Display the 'No update made' error.
+        console.log('No Update Was Made.');
+        const errors = this.form.errors ?? {};
+        this.form.setErrors({
+          ...errors,
+          noUpdateMadeError: true,
+        });
       }
     }
   }
@@ -144,5 +155,14 @@ export class EditLocation implements OnInit {
 
   private viewHomescreen(): void {
     this.routerService.viewHomescreen();
+  }
+
+  private updateWasMade(locationDetails: LocationDetails): boolean {
+    let counter = 0;
+    if (this.locationInfo()?.details?.locationName !== locationDetails.locationName) {
+      counter++; // An update was made to the 'locationName' field.
+    }
+
+    return counter > 0 ? true : false;
   }
 }

@@ -4,14 +4,12 @@ import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
-import { EntityActions, EntityStore } from '../../store/entity.store';
+import { DeviceInfo, EntityActions, EntityStore } from '../../store/entity.store';
 import { RouterService } from '../../services/router';
 import { ModalService } from '../../services/modal';
 import {
   EDIT_DEVICE_ERROR_MODAL,
-  EDIT_LOCATION_ERROR_MODAL,
   INVALID_DEVICE_ID_ERROR_MODAL,
-  INVALID_LOCATION_ID_ERROR_MODAL,
 } from '../../constants/error-constants';
 import { IModalActions } from '../../model/modal';
 import { ActivatedRoute } from '@angular/router';
@@ -123,13 +121,24 @@ export class EditDevice implements OnInit {
     this.form.markAllAsTouched();
 
     if (this.form.valid) {
-      const deviceName = this.form.get('deviceName')?.value || '';
+      let deviceName: string = this.form.get('deviceName')?.value || '';
+      deviceName = deviceName.trim();
 
-      const deviceId = this.deviceId();
-      if (deviceId && deviceName) {
-        this.entityStore.editDevice({ entityId: deviceId, name: deviceName });
+      if (this.updateWasMade({ deviceName })) {
+        const deviceId = this.deviceId();
+        if (deviceId && deviceName) {
+          this.entityStore.editDevice({ entityId: deviceId, name: deviceName });
+        } else {
+          this.modalService.showModalElement(EDIT_DEVICE_ERROR_MODAL);
+        }
       } else {
-        this.modalService.showModalElement(EDIT_DEVICE_ERROR_MODAL);
+        // Display the 'No update made' error.
+        console.log('No Update Was Made.');
+        const errors = this.form.errors ?? {};
+        this.form.setErrors({
+          ...errors,
+          noUpdateMadeError: true,
+        });
       }
     }
   }
@@ -146,5 +155,14 @@ export class EditDevice implements OnInit {
 
   private viewHomescreen(): void {
     this.routerService.viewHomescreen();
+  }
+
+  private updateWasMade(deviceDetails: DeviceInfo): boolean {
+    let counter = 0;
+    if (this.deviceInfo()?.details?.deviceName !== deviceDetails.deviceName) {
+      counter++; // An update was made to the 'deviceName' field.
+    }
+
+    return counter > 0 ? true : false;
   }
 }

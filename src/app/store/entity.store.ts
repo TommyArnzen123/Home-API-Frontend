@@ -104,7 +104,7 @@ interface HomeSummary {
   totalDevices: number;
 }
 
-interface HomeDetails {
+export interface HomeDetails {
   homeName: string;
 }
 
@@ -115,7 +115,7 @@ interface LocationSummary {
   threshold: ITemperatureThreshold;
 }
 
-interface LocationDetails {
+export interface LocationDetails {
   locationName: string;
   threshold?: ITemperatureThreshold;
 }
@@ -125,10 +125,13 @@ interface DeviceSummary {
   temperature: ITemperature;
 }
 
-interface DeviceDetails {
-  deviceName: string;
+interface DeviceDetails extends DeviceInfo {
   temperature: ITemperature;
   averageTemperaturesByHourCurrentDate: IAverageTemperatureByHour[];
+}
+
+export interface DeviceInfo {
+  deviceName: string;
 }
 
 export type HomeData = EntityData<HomeSummary, HomeDetails>;

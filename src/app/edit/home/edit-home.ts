@@ -4,7 +4,7 @@ import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
-import { EntityActions, EntityStore } from '../../store/entity.store';
+import { EntityActions, EntityStore, HomeDetails } from '../../store/entity.store';
 import { RouterService } from '../../services/router';
 import { ModalService } from '../../services/modal';
 import {
@@ -121,13 +121,24 @@ export class EditHome implements OnInit {
     this.form.markAllAsTouched();
 
     if (this.form.valid) {
-      const homeName = this.form.get('homeName')?.value || '';
+      let homeName: string = this.form.get('homeName')?.value || '';
+      homeName = homeName.trim();
 
-      const homeId = this.homeId();
-      if (homeId && homeName) {
-        this.entityStore.editHome({ entityId: homeId, name: homeName });
+      if (this.updateWasMade({ homeName })) {
+        const homeId = this.homeId();
+        if (homeId && homeName) {
+          this.entityStore.editHome({ entityId: homeId, name: homeName });
+        } else {
+          this.modalService.showModalElement(EDIT_HOME_ERROR_MODAL);
+        }
       } else {
-        this.modalService.showModalElement(EDIT_HOME_ERROR_MODAL);
+        // Display the 'No update made' error.
+        console.log('No Update Was Made.');
+        const errors = this.form.errors ?? {};
+        this.form.setErrors({
+          ...errors,
+          noUpdateMadeError: true,
+        });
       }
     }
   }
@@ -144,5 +155,14 @@ export class EditHome implements OnInit {
 
   private viewHomescreen(): void {
     this.routerService.viewHomescreen();
+  }
+
+  private updateWasMade(homeDetails: HomeDetails): boolean {
+    let counter = 0;
+    if (this.homeInfo()?.details?.homeName !== homeDetails.homeName) {
+      counter++; // An update was made to the 'homeName' field.
+    }
+
+    return counter > 0 ? true : false;
   }
 }
